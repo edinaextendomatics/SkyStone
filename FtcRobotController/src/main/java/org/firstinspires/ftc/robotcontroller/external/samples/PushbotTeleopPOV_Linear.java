@@ -49,7 +49,6 @@ import com.qualcomm.robotcore.util.Range;
  */
 
 @TeleOp(name="Pushbot: Teleop POV", group="Pushbot")
-@Disabled
 public class PushbotTeleopPOV_Linear extends LinearOpMode {
 
     /* Declare OpMode members. */
