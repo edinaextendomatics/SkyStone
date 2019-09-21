@@ -91,12 +91,12 @@ public class ExHolonomicDrive_TeleOp extends OpMode{
         double X;
         double Z;
 
-        // collect user input from lett gamepad controls and set internal variable X & Y
+        // collect user input from left and right gamepad controls and set internal variable X & Y
         Y = -gamepad1.left_stick_y;
         X = gamepad1.left_stick_x;
         Z = gamepad1.right_stick_x;
 
-        // use X & Y to set power for each of the motors
+        // use X, Y, & Z to set power for each of the motors
         robot.leftFrontDrive.setPower(Range.clip(Y+X+Z,-1, 1));
         robot.rightFrontDrive.setPower(Range.clip(X-Y+Z,-1, 1));
         robot.leftRearDrive.setPower(Range.clip(Y-X+Z,-1, 1));
