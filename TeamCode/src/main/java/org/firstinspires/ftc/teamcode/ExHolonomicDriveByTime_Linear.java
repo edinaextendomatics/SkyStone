@@ -115,7 +115,7 @@ public class ExHolonomicDriveByTime_Linear extends LinearOpMode {
             telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
             telemetry.update();
         }
-        // Turn for 2 seconds
+        // Turn for 1 seconds
         robot.setPowerTurnRight(TURN_SPEED);
         while (opModeIsActive() && (runtime.seconds() < 2)) {
             telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
