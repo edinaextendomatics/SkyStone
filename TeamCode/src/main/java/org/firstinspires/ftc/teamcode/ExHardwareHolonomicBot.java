@@ -32,6 +32,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
@@ -57,6 +58,8 @@ public class ExHardwareHolonomicBot
     public DcMotor  rightFrontDrive  = null;
     public DcMotor  leftRearDrive = null;
     public DcMotor  rightRearDrive = null;
+    public Servo    grabber = null;
+
 
 
 
@@ -83,6 +86,9 @@ public class ExHardwareHolonomicBot
         rightRearDrive = hwMap.get(DcMotor.class, "right_rear_drive");
         leftRearDrive.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
         rightRearDrive.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
+        // Define and Initialize Servo
+        grabber = hwMap.get(Servo.class, "grabber");
+
 
         // Set all motors to zero power
         leftFrontDrive.setPower(0);
