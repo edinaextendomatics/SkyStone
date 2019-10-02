@@ -108,7 +108,7 @@ public class ExHolonomicDrive_TeleOp extends OpMode{
         X = gamepad1.left_stick_x;
         Z = gamepad1.right_stick_x;
 
-        if (Z == 0 && Ztracker != 0)
+        if (Math.abs(Z) <= 0.05 && Math.abs(Ztracker) >= 0.05)
         {
             telemetry.addData("We are going the opposite way!","&.2f", Ztracker);
             motorZ = -Ztracker;
