@@ -31,6 +31,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
 /**
@@ -57,13 +58,18 @@ public class ExHolonomicDrive_TeleOp extends OpMode{
     /*
      * Code to run ONCE when the driver hits INIT
      */
+    static final double INCREMENT   = 0.02;     // amount to slew servo each CYCLE_MS cycle
+    static final int    CYCLE_MS    =   50;     // period of each cycle
+    static final double MAX_POS     =  1.0;     // Maximum rotational position
+    static final double MIN_POS     =  0.0;     // Minimum rotational position
+    double Ztracker = 0;
     @Override
     public void init() {
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
          */
         robot.init(hardwareMap);
-
+        robot.grabber.setPosition((MAX_POS+MIN_POS)/2);
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Say", "Hello, Good Luck!");    //
     }
@@ -80,6 +86,7 @@ public class ExHolonomicDrive_TeleOp extends OpMode{
      */
     @Override
     public void start() {
+        Ztracker = 0;
     }
 
     /*
@@ -87,24 +94,57 @@ public class ExHolonomicDrive_TeleOp extends OpMode{
      */
     @Override
     public void loop() {
+        // define motor class variables
         double Y;
         double X;
         double Z;
+        double motorZ;
+        // Define grabber variables
+        double  position = robot.grabber.getPosition(); // Start at halfway position
 
+        // MOTOR contols section
         // collect user input from left and right gamepad controls and set internal variable X & Y
         Y = -gamepad1.left_stick_y;
         X = gamepad1.left_stick_x;
         Z = gamepad1.right_stick_x;
 
+        if (Math.abs(Z) <= 0.05 && Math.abs(Ztracker) >= 0.05)
+        {
+            telemetry.addData("We are going the opposite way!","&.2f", Ztracker);
+            motorZ = -Ztracker;
+        }
+        else
+        {
+            motorZ = Z;
+        }
         // use X, Y, & Z to set power for each of the motors
-        robot.leftFrontDrive.setPower(Range.clip(Y+X+Z,-1, 1));
-        robot.rightFrontDrive.setPower(Range.clip(X-Y+Z,-1, 1));
-        robot.leftRearDrive.setPower(Range.clip(Y-X+Z,-1, 1));
-        robot.rightRearDrive.setPower(Range.clip(-X-Y+Z,-1, 1));
-
+        robot.leftFrontDrive.setPower(Range.clip(Y+X+motorZ,-1, 1));
+        robot.rightFrontDrive.setPower(Range.clip(X-Y+motorZ,-1, 1));
+        robot.leftRearDrive.setPower(Range.clip(Y-X+motorZ,-1, 1));
+        robot.rightRearDrive.setPower(Range.clip(-X-Y+motorZ,-1, 1));
+        Ztracker = Z;
         // Send telemetry message to signify robot running;
         telemetry.addData("leftpad Y",  "%.2f", Y);
         telemetry.addData("leftpad X", "%.2f", X);
+        telemetry.addData("rightpad Z", "%.2f", Z);
+        // GRABBER controls section
+        if(gamepad1.right_trigger > 0)
+        {
+            position+=INCREMENT;
+            if(position >= MAX_POS){
+                position = MAX_POS;
+            }
+        }
+        if(gamepad1.left_trigger > 0){
+            position-=INCREMENT;
+            if(position <= MIN_POS){
+                position = MIN_POS;
+            }
+        }
+        robot.grabber.setPosition(position);
+        telemetry.addData("grabber position", "%.2f", position);
+        telemetry.addData("grabber right trigger", "%.2f", gamepad1.right_trigger);
+        telemetry.addData("grabber left trigger", "%.2f", gamepad1.left_trigger);
     }
     /*
      * Code to run ONCE after the driver hits STOP

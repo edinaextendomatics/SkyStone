@@ -32,6 +32,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
@@ -57,6 +58,8 @@ public class ExHardwareHolonomicBot
     public DcMotor  rightFrontDrive  = null;
     public DcMotor  leftRearDrive = null;
     public DcMotor  rightRearDrive = null;
+    public Servo    grabber = null;
+
 
 
 
@@ -83,6 +86,9 @@ public class ExHardwareHolonomicBot
         rightRearDrive = hwMap.get(DcMotor.class, "right_rear_drive");
         leftRearDrive.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
         rightRearDrive.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
+        // Define and Initialize Servo
+        grabber = hwMap.get(Servo.class, "grabber");
+
 
         // Set all motors to zero power
         leftFrontDrive.setPower(0);
@@ -93,11 +99,37 @@ public class ExHardwareHolonomicBot
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
         leftFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftRearDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftRearDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightRearDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightRearDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Define and initialize ALL installed servos.
+    }
+    public  void  setPowerForward(double speed)
+    {
+        // Set all motors to zero power
+        leftFrontDrive.setPower(speed);
+        rightFrontDrive.setPower(-speed);
+        leftRearDrive.setPower(speed);
+        rightRearDrive.setPower(-speed);
+    }
+    public  void  setPowerRight(double speed)
+    {
+        leftFrontDrive.setPower(speed);
+        rightFrontDrive.setPower(speed);
+        leftRearDrive.setPower(-speed);
+        rightRearDrive.setPower(-speed);
+    }
+    public  void setPowerTurnRight (double speed)
+    {
+        leftFrontDrive.setPower(speed);
+        rightFrontDrive.setPower(speed);
+        leftRearDrive.setPower(speed);
+        rightRearDrive.setPower(speed);
     }
  }
 
