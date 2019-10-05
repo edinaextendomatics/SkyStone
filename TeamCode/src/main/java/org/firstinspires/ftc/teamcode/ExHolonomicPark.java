@@ -29,9 +29,11 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 /**
@@ -49,29 +51,30 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Pushbot:TeleOpHolonomic", group="Pushbot")
-public class ExHolonomicDrive_TeleOp extends OpMode{
+@Autonomous(name="Holonomic Park", group="Holonomic bot")
+public class ExHolonomicPark extends OpMode{
 
     /* Declare OpMode members. */
-     ExHardwareHolonomicBot robot       = new ExHardwareHolonomicBot(); // use the class created to define a Pushbot's hardware
+    ExHardwareHolonomicBot robot       = new ExHardwareHolonomicBot(); // use the class created to define a Pushbot's hardware
+    private ElapsedTime runtime = new ElapsedTime();
 
-    /*
-     * Code to run ONCE when the driver hits INIT
-     */
-    static final double INCREMENT   = 0.02;     // amount to slew servo each CYCLE_MS cycle
-    static final int    CYCLE_MS    =   50;     // period of each cycle
-    static final double MAX_POS     =  1.0;     // Maximum rotational position
-    static final double MIN_POS     =  0.0;     // Minimum rotational position
+    // Setting speed constants for turning and moving sideways or forward
+    static final double     FORWARD_SPEED = 0.5;
+    static final double     TURN_SPEED    = 0.5;
+    static final double     SIDE_SPEED    = 0.5;
 
+    static boolean isRed = false;
+    static boolean isFoundationSide = false;
+    static double forwardDriveTime = 1.5;
     @Override
     public void init() {
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
          */
         robot.init(hardwareMap);
-        robot.grabber.setPosition((MAX_POS+MIN_POS)/2);
         // Send telemetry message to signify robot waiting;
-        telemetry.addData("Say", "Hello, Good Luck!");    //
+        telemetry.addData("Say", "Press X for Blue Team, B for Red Team");
+        telemetry.addData("Say", "Press Y for Foundation Side, A for Blocks Side");    //
     }
 
     /*
@@ -79,6 +82,23 @@ public class ExHolonomicDrive_TeleOp extends OpMode{
      */
     @Override
     public void init_loop() {
+        if (gamepad1.b) {
+            isRed = true;
+            telemetry.addData("Say","Red Team selected!");
+        }
+        if (gamepad1.x) {
+            isRed = false;
+            telemetry.addData("Say","Blue Team selected!");
+        }
+        if (gamepad1.a) {
+            isFoundationSide = false;
+            telemetry.addData("say", "you are near the blocks");
+        }
+        if (gamepad1.y) {
+            isFoundationSide = true;
+            telemetry.addData("say", "you are near the foundation");
+        }
+
     }
 
     /*
@@ -87,6 +107,20 @@ public class ExHolonomicDrive_TeleOp extends OpMode{
     @Override
     public void start() {
 
+        if(isRed)
+        {
+            telemetry.addData("Say","Red Team");
+        }
+        else
+        {
+            telemetry.addData("Say","Blue Team");
+        }
+        if (isFoundationSide) {
+            telemetry.addData("say", "you selected foundation side");
+        }
+        else {
+            telemetry.addData("say", "you selected blocks side");
+        }
     }
 
     /*
@@ -94,49 +128,26 @@ public class ExHolonomicDrive_TeleOp extends OpMode{
      */
     @Override
     public void loop() {
-        // define motor class variables
-        double Y;
-        double X;
-        double Z;
-        // Define grabber variables
-        double  position = robot.grabber.getPosition(); // Start at halfway position
-
-        // MOTOR contols section
-        // collect user input from left and right gamepad controls and set internal variable X & Y
-        Y = -gamepad1.left_stick_y;
-        X = gamepad1.left_stick_x;
-        Z = gamepad1.right_stick_x;
-
-
-        // use X, Y, & Z to set power for each of the motors
-        robot.leftFrontDrive.setPower(Range.clip(Y+X+Z,-1, 1));
-        robot.rightFrontDrive.setPower(Range.clip(X-Y+Z,-1, 1));
-        robot.leftRearDrive.setPower(Range.clip(Y-X+Z,-1, 1));
-        robot.rightRearDrive.setPower(Range.clip(-X-Y+Z,-1, 1));
-
-        // Send telemetry message to signify robot running;
-        telemetry.addData("leftpad Y",  "%.2f", Y);
-        telemetry.addData("leftpad X", "%.2f", X);
-        telemetry.addData("rightpad Z", "%.2f", Z);
-        // GRABBER controls section
-        if(gamepad1.right_trigger > 0)
-        {
-            position+=INCREMENT;
-            if(position >= MAX_POS){
-                position = MAX_POS;
-            }
+        int rightDirection = isRed ? -1 : 1;
+        int foundationDirection = isFoundationSide ? -1 : 1;
+        robot.setPowerForward(FORWARD_SPEED);
+        runtime.reset();
+        while (runtime.seconds() < forwardDriveTime) {
+            telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
+            telemetry.update();
         }
-        if(gamepad1.left_trigger > 0){
-            position-=INCREMENT;
-            if(position <= MIN_POS){
-                position = MIN_POS;
-            }
+
+        robot.setPowerRight(foundationDirection * rightDirection * FORWARD_SPEED);
+        runtime.reset();
+        while (runtime.seconds() < 0.5) {
+            telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
+            telemetry.update();
         }
-        robot.grabber.setPosition(position);
-        telemetry.addData("grabber position", "%.2f", position);
-        telemetry.addData("grabber right trigger", "%.2f", gamepad1.right_trigger);
-        telemetry.addData("grabber left trigger", "%.2f", gamepad1.left_trigger);
     }
+
+
+
+
     /*
      * Code to run ONCE after the driver hits STOP
      */
