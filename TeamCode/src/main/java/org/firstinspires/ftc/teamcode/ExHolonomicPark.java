@@ -65,7 +65,9 @@ public class ExHolonomicPark extends OpMode{
 
     static boolean isRed = false;
     static boolean isFoundationSide = false;
-    static double forwardDriveTime = 1.5;
+    static boolean parkCenter = false;
+    static double forwardDriveTime = 1.2;
+    static double sideDriveTime = 0.7;
     @Override
     public void init() {
         /* Initialize the hardware variables.
@@ -74,7 +76,8 @@ public class ExHolonomicPark extends OpMode{
         robot.init(hardwareMap);
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Say", "Press X for Blue Team, B for Red Team");
-        telemetry.addData("Say", "Press Y for Foundation Side, A for Blocks Side");    //
+        telemetry.addData("Say", "Press Y for Foundation Side, A for Blocks Side");
+        telemetry.addData("Say", "Press Start for center parking, press back for side parking");
     }
 
     /*
@@ -82,23 +85,34 @@ public class ExHolonomicPark extends OpMode{
      */
     @Override
     public void init_loop() {
+        if (gamepad1.start) {
+            parkCenter = true;
+        }
+        if (gamepad1.back)
+        {
+            parkCenter = false;
+        }
         if (gamepad1.b) {
             isRed = true;
-            telemetry.addData("Say","Red Team selected!");
         }
         if (gamepad1.x) {
             isRed = false;
-            telemetry.addData("Say","Blue Team selected!");
         }
         if (gamepad1.a) {
             isFoundationSide = false;
-            telemetry.addData("say", "you are near the blocks");
         }
         if (gamepad1.y) {
             isFoundationSide = true;
-            telemetry.addData("say", "you are near the foundation");
         }
-
+        String teamMessage = (isRed ? "Red " : "Blue ") + "Team selected";
+        String positionMessage = (isFoundationSide ? "Foundation " : "Block ") + "Side selected";
+        String parkMessage = (parkCenter ? "Center " : "Side ") + "park selected";
+        telemetry.addData("Say", teamMessage);
+        telemetry.addData("Say", positionMessage);
+        telemetry.addData("Say", parkMessage);
+        telemetry.addData("Say", "Press X for Blue Team, B for Red Team");
+        telemetry.addData("Say", "Press Y for Foundation Side, A for Blocks Side");
+        telemetry.addData("Say", "Press Start for center parking, press back for side parking");
     }
 
     /*
@@ -106,21 +120,29 @@ public class ExHolonomicPark extends OpMode{
      */
     @Override
     public void start() {
+        int rightDirection = isRed ? -1 : 1;
+        // driving forward for a number of seconds defined by forwardDrive time
+        robot.setPowerForward(FORWARD_SPEED);
+        runtime.reset();
+        while (runtime.seconds() < (parkCenter ? 1 : 0.2) * forwardDriveTime) {
+            telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
+            telemetry.update();
+        }
 
-        if(isRed)
-        {
-            telemetry.addData("Say","Red Team");
+        //this multiplies the 2 varibles foundation direction and right direction to output
+        // then drives right for 0.5 seconds
+        robot.setPowerRight(rightDirection * FORWARD_SPEED);
+        runtime.reset();
+        while (runtime.seconds() < sideDriveTime) {
+            telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
+            telemetry.update();
         }
-        else
-        {
-            telemetry.addData("Say","Blue Team");
-        }
-        if (isFoundationSide) {
-            telemetry.addData("say", "you selected foundation side");
-        }
-        else {
-            telemetry.addData("say", "you selected blocks side");
-        }
+        // stop the robot
+        robot.setPowerRight(0);
+        robot.setPowerForward(0);
+        robot.setPowerTurnRight(0);
+        telemetry.addData("Say", "Robot stopped");
+        telemetry.update();
     }
 
     /*
@@ -128,21 +150,6 @@ public class ExHolonomicPark extends OpMode{
      */
     @Override
     public void loop() {
-        int rightDirection = isRed ? -1 : 1;
-        int foundationDirection = isFoundationSide ? -1 : 1;
-        robot.setPowerForward(FORWARD_SPEED);
-        runtime.reset();
-        while (runtime.seconds() < forwardDriveTime) {
-            telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
-            telemetry.update();
-        }
-
-        robot.setPowerRight(foundationDirection * rightDirection * FORWARD_SPEED);
-        runtime.reset();
-        while (runtime.seconds() < 0.5) {
-            telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
-            telemetry.update();
-        }
     }
 
 
