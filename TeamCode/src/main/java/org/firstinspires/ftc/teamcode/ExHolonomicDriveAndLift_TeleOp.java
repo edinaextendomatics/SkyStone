@@ -103,15 +103,21 @@ public class ExHolonomicDriveAndLift_TeleOp extends OpMode{
         double X;
         double Z;
         // lift MOTOR controls section
-        double A;
-        A = gamepad2.right_stick_y;
-        if((robot.lift.getCurrentPosition()>1000 && A>0)||(robot.lift.getCurrentPosition()<=0 && A<0)){
+        double liftInput = gamepad2.right_stick_y;
+        if ((robot.lift.getCurrentPosition() > 1000 && liftInput > 0) ||
+                (robot.lift.getCurrentPosition() <= 0 && liftInput < 0)
+        ) {
             robot.lift.setPower(0);
         } else {
-            robot.lift.setPower(A*LIFT_SPEED);
+            robot.lift.setPower(liftInput * LIFT_SPEED);
         }
-        telemetry.addData("lift control value (gamepad y)", "%.2f", gamepad2.right_stick_y);
-        telemetry.addData("lift encoder value", "%.2f", robot.lift.getCurrentPosition());
+
+        telemetry.addData("lift input value (Gamepad 2 right stick)",
+                "%.2f",
+                gamepad2.right_stick_y);
+        telemetry.addData("lift encoder value",
+                "%.2f",
+                robot.lift.getCurrentPosition());
         telemetry.update();
 /*
         // MOTOR contols section
