@@ -109,6 +109,7 @@ public class ExHolonomicDriveAndLift_TeleOp extends OpMode{
                 (robot.lift.getCurrentPosition() <= 0 && liftInput < 0)
         ) {
             robot.lift.setPower(0);
+            telemetry.addData("You have reached the max or min position", "%.2f");
         } else {
             robot.lift.setPower(liftInput * LIFT_SPEED);
         }
@@ -126,8 +127,6 @@ public class ExHolonomicDriveAndLift_TeleOp extends OpMode{
         Y = -gamepad1.left_stick_y;
         X = gamepad1.left_stick_x;
         Z = gamepad1.right_stick_x;
-
-
 
         // use X, Y, & Z to set power for each of the motors
         robot.leftFrontDrive.setPower(Range.clip(Y+X+Z,-1, 1));
