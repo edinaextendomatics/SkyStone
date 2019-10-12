@@ -53,7 +53,7 @@ import com.qualcomm.robotcore.util.Range;
 public class ExHolonomicDriveAndLift_TeleOp extends OpMode{
 
     /* Declare OpMode members. */
-     ExHardwareLiftForHolonomic robot       = new ExHardwareLiftForHolonomic(); // use the class created to define a Pushbot's hardware
+     ExHardwareLiftForHolonomic robot       = new ExHardwareLiftForHolonomic(telemetry); // use the class created to define a Pushbot's hardware
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -73,9 +73,9 @@ public class ExHolonomicDriveAndLift_TeleOp extends OpMode{
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
          */
-        robot.init(hardwareMap);
+        robot.init(hardwareMap, false, false, true);
         // Send telemetry message to signify robot waiting;
-        telemetry.addData("Say", "Hello, Good Luck!");    //
+        telemetry.addData("Say", "Hello, Good Luck!");
     }
 
     /*
@@ -110,7 +110,10 @@ public class ExHolonomicDriveAndLift_TeleOp extends OpMode{
         } else {
             robot.lift.setPower(A*LIFT_SPEED);
         }
-
+        telemetry.addData("lift control value (gamepad y)", "%.2f", gamepad2.right_stick_y);
+        telemetry.addData("lift encoder value", "%.2f", robot.lift.getCurrentPosition());
+        telemetry.update();
+/*
         // MOTOR contols section
         // collect user input from left and right gamepad controls and set internal variable X & Y
         Y = -gamepad1.left_stick_y;
@@ -132,7 +135,7 @@ public class ExHolonomicDriveAndLift_TeleOp extends OpMode{
         // GRABBER controls section
 
         telemetry.addData("grabber right trigger", "%.2f", gamepad1.right_trigger);
-        telemetry.addData("grabber left trigger", "%.2f", gamepad1.left_trigger);
+        telemetry.addData("grabber left trigger", "%.2f", gamepad1.left_trigger);*/
     }
     /*
      * Code to run ONCE after the driver hits STOP

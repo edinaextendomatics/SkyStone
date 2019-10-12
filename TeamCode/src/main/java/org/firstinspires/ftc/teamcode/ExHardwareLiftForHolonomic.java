@@ -35,6 +35,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
 /**
  * This is NOT an opmode.
  *
@@ -53,71 +55,88 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 public class ExHardwareLiftForHolonomic
 {
+    Telemetry telemetry;
+
     /* Public OpMode members. */
     public DcMotor  leftFrontDrive   = null;
     public DcMotor  rightFrontDrive  = null;
     public DcMotor  leftRearDrive = null;
     public DcMotor  rightRearDrive = null;
     public DcMotor  lift = null;
-    public DcMotor    grabber = null;
-
-
-
+    public DcMotor  grabber = null;
 
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
     private ElapsedTime period  = new ElapsedTime();
 
     /* Constructor */
-    public ExHardwareLiftForHolonomic(){
-
+    public ExHardwareLiftForHolonomic(Telemetry telemetry){
+        this.telemetry = telemetry;
     }
-
     /* Initialize standard Hardware interfaces */
     public void init(HardwareMap ahwMap) {
+        init(ahwMap, true, true, true);
+    }
+
+    public void init(HardwareMap ahwMap, boolean initDriveMotors, boolean initGrabber, boolean initLift) {
         // Save reference to Hardware map
         hwMap = ahwMap;
 
-        // Define and Initialize Motors
-        leftFrontDrive  = hwMap.get(DcMotor.class, "left_front_drive");
-        rightFrontDrive = hwMap.get(DcMotor.class, "right_front_drive");
-        leftFrontDrive.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
-        rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
-        leftRearDrive  = hwMap.get(DcMotor.class, "left_rear_drive");
-        rightRearDrive = hwMap.get(DcMotor.class, "right_rear_drive");
-        leftRearDrive.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
-        rightRearDrive.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
-        lift = hwMap.get(DcMotor.class, "lift");
-        lift.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
-        // Define and Initialize grabber
-        grabber = hwMap.get(DcMotor.class, "grabber");
-        grabber.setDirection(DcMotor.Direction.REVERSE);
+        telemetry.addData("Init()",
+                "initDriveMotors=%b; initGrabber=%b; initLift=%b",
+                initDriveMotors,
+                initGrabber,
+                initLift);
 
+        if (initDriveMotors){
+            leftFrontDrive  = hwMap.get(DcMotor.class, "left_front_drive");
+            rightFrontDrive = hwMap.get(DcMotor.class, "right_front_drive");
+            leftFrontDrive.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
+            rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
+            leftRearDrive  = hwMap.get(DcMotor.class, "left_rear_drive");
+            rightRearDrive = hwMap.get(DcMotor.class, "right_rear_drive");
+            leftRearDrive.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
+            rightRearDrive.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
 
-        // Set all motors to zero power
-        leftFrontDrive.setPower(0);
-        rightFrontDrive.setPower(0);
-        leftRearDrive.setPower(0);
-        rightRearDrive.setPower(0);
+            // Set all motors to zero power
+            leftFrontDrive.setPower(0);
+            rightFrontDrive.setPower(0);
+            leftRearDrive.setPower(0);
+            rightRearDrive.setPower(0);
 
+            // Set all motors to run without encoders.
+            // May want to use RUN_USING_ENCODERS if encoders are installed.
+            leftFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            leftFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            rightFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            leftRearDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            leftRearDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            rightRearDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            rightRearDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        // Set all motors to run without encoders.
-        // May want to use RUN_USING_ENCODERS if encoders are installed.
-        leftFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        leftFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        leftRearDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        leftRearDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightRearDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightRearDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        grabber.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        grabber.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            telemetry.addData("Init()", "Drive motors initialized.");
+        }
 
+        if (initGrabber){
+            grabber = hwMap.get(DcMotor.class, "grabber");
+            grabber.setDirection(DcMotor.Direction.REVERSE);
 
-        // Define and initialize ALL installed servos.
+            grabber.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            grabber.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+            telemetry.addData("Init()", "Grabber motor initialized.");
+        }
+
+        if (initLift) {
+            lift = hwMap.get(DcMotor.class, "lift");
+            lift.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
+
+            lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+            telemetry.addData("Init()", "Lift motor initialized.");
+        }
     }
     public  void  setPowerForward(double speed)
     {
