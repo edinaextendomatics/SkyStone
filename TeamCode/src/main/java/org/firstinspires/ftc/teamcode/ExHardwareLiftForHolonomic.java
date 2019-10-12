@@ -51,15 +51,15 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Servo channel:  Servo to open left claw:  "left_hand"
  * Servo channel:  Servo to open right claw: "right_hand"
  */
-public class ExHardwareHolonomicBot
+public class ExHardwareLiftForHolonomic
 {
     /* Public OpMode members. */
     public DcMotor  leftFrontDrive   = null;
     public DcMotor  rightFrontDrive  = null;
     public DcMotor  leftRearDrive = null;
     public DcMotor  rightRearDrive = null;
-    public Servo    grabber = null;
     public DcMotor  lift = null;
+    public DcMotor    grabber = null;
 
 
 
@@ -69,7 +69,7 @@ public class ExHardwareHolonomicBot
     private ElapsedTime period  = new ElapsedTime();
 
     /* Constructor */
-    public ExHardwareHolonomicBot(){
+    public ExHardwareLiftForHolonomic(){
 
     }
 
@@ -87,8 +87,11 @@ public class ExHardwareHolonomicBot
         rightRearDrive = hwMap.get(DcMotor.class, "right_rear_drive");
         leftRearDrive.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
         rightRearDrive.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
-        // Define and Initialize Servo
-        grabber = hwMap.get(Servo.class, "grabber");
+        lift = hwMap.get(DcMotor.class, "lift");
+        lift.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
+        // Define and Initialize grabber
+        grabber = hwMap.get(DcMotor.class, "grabber");
+        grabber.setDirection(DcMotor.Direction.REVERSE);
 
 
         // Set all motors to zero power
@@ -96,6 +99,7 @@ public class ExHardwareHolonomicBot
         rightFrontDrive.setPower(0);
         leftRearDrive.setPower(0);
         rightRearDrive.setPower(0);
+
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
@@ -107,6 +111,11 @@ public class ExHardwareHolonomicBot
         leftRearDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightRearDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightRearDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        grabber.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        grabber.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
 
         // Define and initialize ALL installed servos.
     }
