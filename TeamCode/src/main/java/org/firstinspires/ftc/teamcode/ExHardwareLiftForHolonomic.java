@@ -138,27 +138,6 @@ public class ExHardwareLiftForHolonomic
             telemetry.addData("Init()", "Lift motor initialized.");
         }
     }
-    public  void  setPowerForward(double speed)
-    {
-        // Set all motors to zero power
-        leftFrontDrive.setPower(speed);
-        rightFrontDrive.setPower(-speed);
-        leftRearDrive.setPower(speed);
-        rightRearDrive.setPower(-speed);
-    }
-    public  void  setPowerRight(double speed)
-    {
-        leftFrontDrive.setPower(speed);
-        rightFrontDrive.setPower(speed);
-        leftRearDrive.setPower(-speed);
-        rightRearDrive.setPower(-speed);
-    }
-    public  void setPowerTurnRight (double speed)
-    {
-        leftFrontDrive.setPower(speed);
-        rightFrontDrive.setPower(speed);
-        leftRearDrive.setPower(speed);
-        rightRearDrive.setPower(speed);
-    }
+    
  }
 
