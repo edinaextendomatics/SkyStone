@@ -53,7 +53,7 @@ import com.qualcomm.robotcore.util.Range;
 public class ExHolonomicDrive_TeleOp extends OpMode{
 
     /* Declare OpMode members. */
-     ExHardwareHolonomicBot robot       = new ExHardwareHolonomicBot(telemetry); // use the class created to define a Pushbot's hardware
+     ExHardwareHolonomicBot robot       = new ExHardwareHolonomicBot(); // use the class created to define a Pushbot's hardware
 
     /*
      * Code to run ONCE when the driver hits INIT
