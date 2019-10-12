@@ -31,8 +31,6 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.Range;
 
 /**
  * This file provides basic Telop driving for a Pushbot robot.
@@ -62,11 +60,12 @@ public class ExHolonomicDriveAndLift_TeleOp extends OpMode{
     static final int    CYCLE_MS    =   50;     // period of each cycle
     static final double MAX_POS     =  1.0;     // Maximum rotational position
     static final double MIN_POS     =  0.0;     // Minimum rotational position
-    static final double COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
-    static final double DRIVE_GEAR_REDUCTION    = 2.0 ;     // This is < 1.0 if geared UP
+    static final double COUNTS_PER_MOTOR_REV_CORE_HEX    = 288 ;    // Rev core hex motor counts per rev
+    static final double DRIVE_GEAR_REDUCTION    = 1.0 ;     // This is < 1.0 if geared UP
     static final double WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
-    static final double COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * 3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679);
+    static final double COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV_CORE_HEX * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * 3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679);
     static final double LIFT_SPEED = 0.6;
+    static final double LIFT_MAX_EXTENSION_LIMIT = 10000;
 
     @Override
     public void init() {
@@ -104,7 +103,9 @@ public class ExHolonomicDriveAndLift_TeleOp extends OpMode{
         double Z;
         // lift MOTOR controls section
         double liftInput = gamepad2.right_stick_y;
-        if ((robot.lift.getCurrentPosition() > 1000 && liftInput > 0) ||
+
+        // do not allow movement beyond limits
+        if ((robot.lift.getCurrentPosition() > LIFT_MAX_EXTENSION_LIMIT && liftInput > 0) ||
                 (robot.lift.getCurrentPosition() <= 0 && liftInput < 0)
         ) {
             robot.lift.setPower(0);
