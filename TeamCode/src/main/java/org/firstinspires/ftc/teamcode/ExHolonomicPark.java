@@ -130,7 +130,7 @@ public class ExHolonomicPark extends OpMode{
         }
 
         //this multiplies the 2 varibles foundation direction and right direction to output
-        // then drives right for 0.5 seconds
+        // then drives right for sideDriveTime seconds
         robot.setPowerRight(rightDirection * FORWARD_SPEED);
         runtime.reset();
         while (runtime.seconds() < sideDriveTime) {
