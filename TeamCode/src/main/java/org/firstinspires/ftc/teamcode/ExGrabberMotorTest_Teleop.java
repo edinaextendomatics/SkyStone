@@ -32,8 +32,6 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.Range;
 
 /**
  * This file provides basic Telop driving for a Pushbot robot.
@@ -50,11 +48,11 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Pushbot:TeleOpGrabberHolonomic", group="Pushbot")
-public class ExGrabberDrive_Teleop extends OpMode{
+@TeleOp(name="Pushbot:TeleOp Grabber Motor Test", group="Pushbot")
+public class ExGrabberMotorTest_Teleop extends OpMode{
 
     /* Declare OpMode members. */
-    ExHardwareLiftForHolonomic robot       = new ExHardwareLiftForHolonomic(); // use the class created to define a Pushbot's hardware
+    ExGrabberBot robot       = new ExGrabberBot(); // use the class created to define a Pushbot's hardware
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -62,15 +60,17 @@ public class ExGrabberDrive_Teleop extends OpMode{
     static final int Closed_Position = 0;
     static final int Open_Position = 600;
     static final int Grabbing_Position = 400;
-    static final double Grabber_Power = 0.75;
+    static final double Grabber_Power = 1;
     @Override
     public void init() {
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
          */
         robot.init(hardwareMap);
+        robot.grabber.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         // Send telemetry message to signify robot waiting;
-        telemetry.addData("Say", "Hello, Good Luck!");    //
+        telemetry.addData("Say", "Hello, Good Grabbing! Set target to closed");    //            // Display it for the driver.);
+
     }
 
     /*
@@ -85,7 +85,6 @@ public class ExGrabberDrive_Teleop extends OpMode{
      */
     @Override
     public void start() {
-
     }
 
     /*
@@ -93,60 +92,8 @@ public class ExGrabberDrive_Teleop extends OpMode{
      */
     @Override
     public void loop() {
-        // define motor class variables
-        double Y;
-        double X;
-        double Z;
-
-        // MOTOR contols section
-        // collect user input from left and right gamepad controls and set internal variable X & Y
-        Y = -gamepad1.left_stick_y;
-        X = gamepad1.left_stick_x;
-        Z = gamepad1.right_stick_x;
-
-        // use X, Y, & Z to set power for each of the motors
-        robot.leftFrontDrive.setPower(Range.clip(Y+X+Z,-1, 1));
-        robot.rightFrontDrive.setPower(Range.clip(X-Y+Z,-1, 1));
-        robot.leftRearDrive.setPower(Range.clip(Y-X+Z,-1, 1));
-        robot.rightRearDrive.setPower(Range.clip(-X-Y+Z,-1, 1));
-
-        // Send telemetry message to signify robot running;
-        telemetry.addData("leftpad Y",  "%.2f", Y);
-        telemetry.addData("leftpad X", "%.2f", X);
-        telemetry.addData("rightpad Z", "%.2f", Z);
-        // GRABBER controls section
-        if (!robot.grabber.isBusy())
-        {
-            robot.grabber.setPower(0);
-            boolean isButtonPressed = false;
-
-            // x is open.
-            if (gamepad2.x) {
-                robot.grabber.setTargetPosition(Open_Position);
-                isButtonPressed = true;
-            }
-            // y is grab.
-            else if(gamepad2.y){
-                robot.grabber.setTargetPosition(Grabbing_Position);
-                isButtonPressed = true;
-            }
-            // b is closed.
-            else if(gamepad2.b){
-                robot.grabber.setTargetPosition(Closed_Position);
-                isButtonPressed = true;
-            }
-            if (isButtonPressed){
-                robot.grabber.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                robot.grabber.setPower(Grabber_Power);
-            }
-
-        }
-        else {
-            // Display it for the driver.);
-            telemetry.addData("Path2",  "Running at %7d, moving towards %7d",robot.grabber.getCurrentPosition(), robot.grabber.getTargetPosition());
-            telemetry.update();
-        }
-
+        robot.grabber.setPower(gamepad1.left_stick_y);
+        telemetry.addData("leftpad Y",  "%.2f", gamepad1.left_stick_y);
     }
     /*
      * Code to run ONCE after the driver hits STOP
