@@ -31,8 +31,6 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
 /**
@@ -50,19 +48,20 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Pushbot:TeleOpGrabberHolonomic", group="Pushbot")
-public class ExGrabberDrive_Teleop extends OpMode{
+@TeleOp(name="Pushbot:TeleOp HoloDrive", group="Pushbot")
+public class ExHoloDriveOnly_TeleOp extends OpMode{
 
     /* Declare OpMode members. */
-    ExHardwareLiftForHolonomic robot       = new ExHardwareLiftForHolonomic(); // use the class created to define a Pushbot's hardware
+     ExHoloDriveBot robot       = new ExHoloDriveBot(); // use the class created to define a Pushbot's hardware
 
     /*
      * Code to run ONCE when the driver hits INIT
      */
-    static final int Closed_Position = 0;
-    static final int Open_Position = 600;
-    static final int Grabbing_Position = 400;
-    static final double Grabber_Power = 0.75;
+    static final double INCREMENT   = 0.02;     // amount to slew servo each CYCLE_MS cycle
+    static final int    CYCLE_MS    =   50;     // period of each cycle
+    static final double MAX_POS     =  1.0;     // Maximum rotational position
+    static final double MIN_POS     =  0.0;     // Minimum rotational position
+
     @Override
     public void init() {
         /* Initialize the hardware variables.
@@ -97,12 +96,13 @@ public class ExGrabberDrive_Teleop extends OpMode{
         double Y;
         double X;
         double Z;
-
         // MOTOR contols section
         // collect user input from left and right gamepad controls and set internal variable X & Y
         Y = -gamepad1.left_stick_y;
         X = gamepad1.left_stick_x;
         Z = gamepad1.right_stick_x;
+
+
 
         // use X, Y, & Z to set power for each of the motors
         robot.leftFrontDrive.setPower(Range.clip(Y+X+Z,-1, 1));
@@ -114,39 +114,6 @@ public class ExGrabberDrive_Teleop extends OpMode{
         telemetry.addData("leftpad Y",  "%.2f", Y);
         telemetry.addData("leftpad X", "%.2f", X);
         telemetry.addData("rightpad Z", "%.2f", Z);
-        // GRABBER controls section
-        if (!robot.grabber.isBusy())
-        {
-            robot.grabber.setPower(0);
-            boolean isButtonPressed = false;
-
-            // x is open.
-            if (gamepad2.x) {
-                robot.grabber.setTargetPosition(Open_Position);
-                isButtonPressed = true;
-            }
-            // y is grab.
-            else if(gamepad2.y){
-                robot.grabber.setTargetPosition(Grabbing_Position);
-                isButtonPressed = true;
-            }
-            // b is closed.
-            else if(gamepad2.b){
-                robot.grabber.setTargetPosition(Closed_Position);
-                isButtonPressed = true;
-            }
-            if (isButtonPressed){
-                robot.grabber.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                robot.grabber.setPower(Grabber_Power);
-            }
-
-        }
-        else {
-            // Display it for the driver.);
-            telemetry.addData("Path2",  "Running at %7d, moving towards %7d",robot.grabber.getCurrentPosition(), robot.grabber.getTargetPosition());
-            telemetry.update();
-        }
-
     }
     /*
      * Code to run ONCE after the driver hits STOP
