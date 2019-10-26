@@ -30,7 +30,9 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
@@ -49,15 +51,15 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Servo channel:  Servo to open left claw:  "left_hand"
  * Servo channel:  Servo to open right claw: "right_hand"
  */
-public class ExGrabberBot
+public class ExtendomaticsHardware
 {
     /* Public OpMode members. */
-//    public DcMotor  leftFrontDrive   = null;
-//    public DcMotor  rightFrontDrive  = null;
-//    public DcMotor  leftRearDrive = null;
-//    public DcMotor  rightRearDrive = null;
-//    public DcMotor  lift = null;
-    public DcMotor    grabber = null;
+    public DcMotor  leftFrontDrive   = null;
+    public DcMotor  rightFrontDrive  = null;
+    public DcMotor  leftRearDrive = null;
+    public DcMotor  rightRearDrive = null;
+    public DcMotor  lift = null;
+    public DcMotor  grabber = null;
 
 
 
@@ -67,7 +69,7 @@ public class ExGrabberBot
     private ElapsedTime period  = new ElapsedTime();
 
     /* Constructor */
-    public ExGrabberBot(){
+    public ExtendomaticsHardware(){
 
     }
 
@@ -77,67 +79,66 @@ public class ExGrabberBot
         hwMap = ahwMap;
 
         // Define and Initialize Motors
-//        leftFrontDrive  = hwMap.get(DcMotor.class, "left_front_drive");
-//        rightFrontDrive = hwMap.get(DcMotor.class, "right_front_drive");
-//        leftFrontDrive.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
-//        rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
-//        leftRearDrive  = hwMap.get(DcMotor.class, "left_rear_drive");
-//        rightRearDrive = hwMap.get(DcMotor.class, "right_rear_drive");
-//        leftRearDrive.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
-//        rightRearDrive.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
-//        lift = hwMap.get(DcMotor.class, "lift");
-//        lift.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
+        leftFrontDrive  = hwMap.get(DcMotor.class, "left_front_drive");
+        rightFrontDrive = hwMap.get(DcMotor.class, "right_front_drive");
+        leftFrontDrive.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
+        rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
+        leftRearDrive  = hwMap.get(DcMotor.class, "left_rear_drive");
+        rightRearDrive = hwMap.get(DcMotor.class, "right_rear_drive");
+        leftRearDrive.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
+        rightRearDrive.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
+        lift = hwMap.get(DcMotor.class, "lift");
+        lift.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
         // Define and Initialize grabber
         grabber = hwMap.get(DcMotor.class, "grabber");
         grabber.setDirection(DcMotor.Direction.REVERSE);
 
 
         // Set all motors to zero power
-//        leftFrontDrive.setPower(0);
-//        rightFrontDrive.setPower(0);
-//        leftRearDrive.setPower(0);
-//        rightRearDrive.setPower(0);
-//
-//
-//        // Set all motors to run without encoders.
-//        // May want to use RUN_USING_ENCODERS if encoders are installed.
-//        leftFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-//        leftFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-//        rightFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-//        rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-//        leftRearDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-//        leftRearDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-//        rightRearDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-//        rightRearDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-//        lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftFrontDrive.setPower(0);
+        rightFrontDrive.setPower(0);
+        leftRearDrive.setPower(0);
+        rightRearDrive.setPower(0);
+
+
+        // Set all motors to run without encoders.
+        // May want to use RUN_USING_ENCODERS if encoders are installed.
+        leftFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftRearDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftRearDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightRearDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightRearDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         grabber.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         grabber.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 
-        // Define and initialize ALL installed servos.
+
     }
-//    public  void  setPowerForward(double speed)
-//    {
-//        // Set all motors to zero power
-//        leftFrontDrive.setPower(speed);
-//        rightFrontDrive.setPower(-speed);
-//        leftRearDrive.setPower(speed);
-//        rightRearDrive.setPower(-speed);
-//    }
-//    public  void  setPowerRight(double speed)
-//    {
-//        leftFrontDrive.setPower(speed);
-//        rightFrontDrive.setPower(speed);
-//        leftRearDrive.setPower(-speed);
-//        rightRearDrive.setPower(-speed);
-//    }
-//    public  void setPowerTurnRight (double speed)
-//    {
-//        leftFrontDrive.setPower(speed);
-//        rightFrontDrive.setPower(speed);
-//        leftRearDrive.setPower(speed);
-//        rightRearDrive.setPower(speed);
-//    }
+    public  void  setPowerForward(double speed)
+    {
+        leftFrontDrive.setPower(speed);
+        rightFrontDrive.setPower(-speed);
+        leftRearDrive.setPower(speed);
+        rightRearDrive.setPower(-speed);
+    }
+    public  void  setPowerRight(double speed)
+    {
+        leftFrontDrive.setPower(speed);
+        rightFrontDrive.setPower(speed);
+        leftRearDrive.setPower(-speed);
+        rightRearDrive.setPower(-speed);
+    }
+    public  void setPowerTurnRight (double speed)
+    {
+        leftFrontDrive.setPower(speed);
+        rightFrontDrive.setPower(speed);
+        leftRearDrive.setPower(speed);
+        rightRearDrive.setPower(speed);
+    }
  }
 

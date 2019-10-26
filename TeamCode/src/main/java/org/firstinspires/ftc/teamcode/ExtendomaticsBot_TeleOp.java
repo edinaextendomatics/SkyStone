@@ -31,8 +31,6 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.Range;
 
 /**
  * This file provides basic Telop driving for a Pushbot robot.
@@ -49,31 +47,38 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Pushbot:TeleOpGrabberOnly", group="Pushbot")
-public class ExGrabberOnly_Teleop extends OpMode{
+@TeleOp(name="Pushbot:TeleOpHolonomic", group="Pushbot")
+public class ExtendomaticsBot_TeleOp extends OpMode{
 
     /* Declare OpMode members. */
-    ExGrabberBot robot       = new ExGrabberBot(); // use the class created to define a Pushbot's hardware
+     ExHardwareLiftForHolonomic robot       = new ExHardwareLiftForHolonomic(telemetry); // use the class created to define a Pushbot's hardware
 
     /*
      * Code to run ONCE when the driver hits INIT
      */
+    static final double INCREMENT   = 0.02;     // amount to slew servo each CYCLE_MS cycle
+    static final int    CYCLE_MS    =   50;     // period of each cycle
+    static final double MAX_POS     =  1.0;     // Maximum rotational position
+    static final double MIN_POS     =  0.0;     // Minimum rotational position
+    static final double COUNTS_PER_MOTOR_REV_CORE_HEX    = 288 ;    // Rev core hex motor counts per rev
+    static final double DRIVE_GEAR_REDUCTION    = 1.0 ;     // This is < 1.0 if geared UP
+    static final double WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
+    static final double COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV_CORE_HEX * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * 3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679);
+    static final double LIFT_SPEED = 0.6;
     static final int Closed_Position = 0;
     static final int Open_Position = 600;
     static final int Grabbing_Position = 400;
     static final double Grabber_Power = 1;
+    static final double LIFT_MAX_EXTENSION_LIMIT = 10000;
+
     @Override
     public void init() {
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
          */
-        robot.init(hardwareMap);
-        robot.grabber.setTargetPosition(Closed_Position);
+        robot.init(hardwareMap, false, false, true);
         // Send telemetry message to signify robot waiting;
-        telemetry.addData("Say", "Hello, Good Grabbing! Set target to closed");    //            // Display it for the driver.)
-        telemetry.addData("Path2",  "Current position %7d, moving towards %7d",robot.grabber.getCurrentPosition(), robot.grabber.getTargetPosition());
-        telemetry.update();
-
+        telemetry.addData("Say", "Hello, Good Luck!");
     }
 
     /*
@@ -81,7 +86,6 @@ public class ExGrabberOnly_Teleop extends OpMode{
      */
     @Override
     public void init_loop() {
-
     }
 
     /*
@@ -89,13 +93,60 @@ public class ExGrabberOnly_Teleop extends OpMode{
      */
     @Override
     public void start() {
+
     }
 
     /*
      * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
      */
     @Override
-    public void loop() {
+    public void loop( ) {
+        // define motor class variables
+        double Y;
+        double X;
+        double Z;
+        // lift MOTOR controls section
+        double liftInput = gamepad2.right_stick_y;
+
+        // do not allow movement beyond limits
+        if ((robot.lift.getCurrentPosition() > LIFT_MAX_EXTENSION_LIMIT && liftInput > 0) ||
+                (robot.lift.getCurrentPosition() <= 0 && liftInput < 0)
+        ) {
+            robot.lift.setPower(0);
+            telemetry.addData("You have reached the max or min position", "%.2f");
+        } else {
+            robot.lift.setPower(liftInput * LIFT_SPEED);
+        }
+
+        telemetry.addData("lift input value (Gamepad 2 right stick)",
+                "%.2f",
+                gamepad2.right_stick_y);
+        telemetry.addData("lift encoder value",
+                "%.2f",
+                robot.lift.getCurrentPosition());
+        telemetry.update();
+/*
+        // MOTOR contols section
+        // collect user input from left and right gamepad controls and set internal variable X & Y
+        Y = -gamepad1.left_stick_y;
+        X = gamepad1.left_stick_x;
+        Z = gamepad1.right_stick_x;
+
+        // use X, Y, & Z to set power for each of the motors
+        robot.leftFrontDrive.setPower(Range.clip(Y+X+Z,-1, 1));
+        robot.rightFrontDrive.setPower(Range.clip(X-Y+Z,-1, 1));
+        robot.leftRearDrive.setPower(Range.clip(Y-X+Z,-1, 1));
+        robot.rightRearDrive.setPower(Range.clip(-X-Y+Z,-1, 1));
+
+        // Send telemetry message to signify robot running;
+        telemetry.addData("leftpad Y",  "%.2f", Y);
+        telemetry.addData("leftpad X", "%.2f", X);
+        telemetry.addData("rightpad Z", "%.2f", Z);
+
+        // GRABBER controls section
+
+        telemetry.addData("grabber right trigger", "%.2f", gamepad1.right_trigger);
+        telemetry.addData("grabber left trigger", "%.2f", gamepad1.left_trigger);
 
         if (robot.grabber.getCurrentPosition() == robot.grabber.getTargetPosition())
         {
@@ -136,7 +187,6 @@ public class ExGrabberOnly_Teleop extends OpMode{
             telemetry.addData("Path2",  "Running at %7d, moving towards %7d",robot.grabber.getCurrentPosition(), robot.grabber.getTargetPosition());
             telemetry.update();
         }
-
     }
     /*
      * Code to run ONCE after the driver hits STOP

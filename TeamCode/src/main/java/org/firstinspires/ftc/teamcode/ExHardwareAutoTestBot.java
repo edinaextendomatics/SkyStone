@@ -30,6 +30,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -50,13 +51,15 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Servo channel:  Servo to open left claw:  "left_hand"
  * Servo channel:  Servo to open right claw: "right_hand"
  */
-public class ExHoloDriveBot
+public class ExHardwareAutoTestBot
 {
     /* Public OpMode members. */
     public DcMotor  leftFrontDrive   = null;
     public DcMotor  rightFrontDrive  = null;
     public DcMotor  leftRearDrive = null;
     public DcMotor  rightRearDrive = null;
+    public Servo    grabber = null;
+    public DcMotor  lift = null;
 
 
 
@@ -66,7 +69,7 @@ public class ExHoloDriveBot
     private ElapsedTime period  = new ElapsedTime();
 
     /* Constructor */
-    public ExHoloDriveBot(){
+    public ExHardwareAutoTestBot(){
 
     }
 
@@ -84,6 +87,8 @@ public class ExHoloDriveBot
         rightRearDrive = hwMap.get(DcMotor.class, "right_rear_drive");
         leftRearDrive.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
         rightRearDrive.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
+        // Define and Initialize Servo
+        grabber = hwMap.get(Servo.class, "grabber");
 
 
         // Set all motors to zero power
