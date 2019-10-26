@@ -53,7 +53,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
  * Servo channel:  Servo to open left claw:  "left_hand"
  * Servo channel:  Servo to open right claw: "right_hand"
  */
-public class ExHardwareLiftForHolonomic
+public class ExtendomaticsHardware
 {
     Telemetry telemetry;
 
@@ -70,7 +70,7 @@ public class ExHardwareLiftForHolonomic
     private ElapsedTime period  = new ElapsedTime();
 
     /* Constructor */
-    public ExHardwareLiftForHolonomic(Telemetry telemetry){
+    public ExtendomaticsHardware(Telemetry telemetry){
         this.telemetry = telemetry;
     }
     /* Initialize standard Hardware interfaces */
@@ -137,10 +137,10 @@ public class ExHardwareLiftForHolonomic
 
             telemetry.addData("Init()", "Lift motor initialized.");
         }
+
     }
     public  void  setPowerForward(double speed)
     {
-        // Set all motors to zero power
         leftFrontDrive.setPower(speed);
         rightFrontDrive.setPower(-speed);
         leftRearDrive.setPower(speed);
