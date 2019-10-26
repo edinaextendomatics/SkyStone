@@ -49,7 +49,7 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Pushbot:TeleOpHolonomic", group="Pushbot")
+@TeleOp(name="Pushbot:Extendomatics_TeleOp", group="Pushbot")
 public class ExtendomaticsBot_TeleOp extends OpMode{
 
     /* Declare OpMode members. */
@@ -107,7 +107,7 @@ public class ExtendomaticsBot_TeleOp extends OpMode{
         double Y;
         double X;
         double Z;
-        // lift MOTOR controls section
+        // LIFT MOTOR controls section
         double liftInput = gamepad2.right_stick_y;
 
         // do not allow movement beyond limits
@@ -128,7 +128,7 @@ public class ExtendomaticsBot_TeleOp extends OpMode{
                 robot.lift.getCurrentPosition());
         telemetry.update();
 
-        // MOTOR contols section
+        // DRIVE MOTOR contols section
         // collect user input from left and right gamepad controls and set internal variable X & Y
         Y = -gamepad1.left_stick_y;
         X = gamepad1.left_stick_x;
