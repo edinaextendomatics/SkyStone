@@ -31,6 +31,8 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.Range;
 
 /**
  * This file provides basic Telop driving for a Pushbot robot.
@@ -51,7 +53,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 public class ExtendomaticsBot_TeleOp extends OpMode{
 
     /* Declare OpMode members. */
-     ExHardwareLiftForHolonomic robot       = new ExHardwareLiftForHolonomic(telemetry); // use the class created to define a Pushbot's hardware
+     ExtendomaticsHardware robot       = new ExtendomaticsHardware(telemetry); // use the class created to define a Pushbot's hardware
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -76,7 +78,7 @@ public class ExtendomaticsBot_TeleOp extends OpMode{
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
          */
-        robot.init(hardwareMap, false, false, true);
+        robot.init(hardwareMap, true, true, true);
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Say", "Hello, Good Luck!");
     }
@@ -125,7 +127,7 @@ public class ExtendomaticsBot_TeleOp extends OpMode{
                 "%.2f",
                 robot.lift.getCurrentPosition());
         telemetry.update();
-/*
+
         // MOTOR contols section
         // collect user input from left and right gamepad controls and set internal variable X & Y
         Y = -gamepad1.left_stick_y;

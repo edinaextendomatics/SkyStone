@@ -52,7 +52,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class ExHolonomicPark extends OpMode{
 
     /* Declare OpMode members. */
-    ExtendomaticsHardware robot       = new ExtendomaticsHardware(); // use the class created to define a Pushbot's hardware
+    ExtendomaticsHardware robot       = new ExtendomaticsHardware(telemetry); // use the class created to define a Pushbot's hardware
     private ElapsedTime runtime = new ElapsedTime();
 
     // Setting speed constants for turning and moving sideways or forward
