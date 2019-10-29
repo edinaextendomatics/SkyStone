@@ -81,7 +81,7 @@ public class ExtendomaticsBot_TeleOp extends OpMode{
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
          */
-        robot.init(hardwareMap, true, true, true);
+        robot.init(hardwareMap, isDriveEnabled, isGrabberEnabled, isLiftEnabled);
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Say", "Hello, Good Luck!");
     }
