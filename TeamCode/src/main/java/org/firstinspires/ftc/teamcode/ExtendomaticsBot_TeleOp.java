@@ -49,7 +49,7 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Pushbot:Extendomatics_TeleOp", group="Pushbot")
+@TeleOp(name="Pushbot:Extendomatic TeleOp", group="Pushbot")
 public class ExtendomaticsBot_TeleOp extends OpMode{
 
     /* Declare OpMode members. */
@@ -110,6 +110,7 @@ public class ExtendomaticsBot_TeleOp extends OpMode{
         double Y;
         double X;
         double Z;
+
         // LIFT MOTOR controls section
         double liftInput = gamepad2.right_stick_y;
         // do not allow movement beyond limits
@@ -151,8 +152,8 @@ public class ExtendomaticsBot_TeleOp extends OpMode{
         }
         // GRABBER controls section
         if(isGrabberEnabled) {
-            telemetry.addData("grabber right trigger", "%.2f", gamepad1.right_trigger);
-            telemetry.addData("grabber left trigger", "%.2f", gamepad1.left_trigger);
+            telemetry.addData("grabber right trigger", "%.2f", gamepad2.right_trigger);
+            telemetry.addData("grabber left trigger", "%.2f", gamepad2.left_trigger);
 
             if (robot.grabber.getCurrentPosition() == robot.grabber.getTargetPosition()) {
                 robot.grabber.setPower(0);
@@ -164,17 +165,17 @@ public class ExtendomaticsBot_TeleOp extends OpMode{
                 boolean isButtonPressed = false;
 
                 // x is open.
-                if (gamepad1.x) {
+                if (gamepad2.x) {
                     robot.grabber.setTargetPosition(Open_Position);
                     isButtonPressed = true;
                 }
                 // y is grab.
-                else if (gamepad1.y) {
+                else if (gamepad2.y) {
                     robot.grabber.setTargetPosition(Grabbing_Position);
                     isButtonPressed = true;
                 }
                 // b is closed.
-                else if (gamepad1.b) {
+                else if (gamepad2.b) {
                     robot.grabber.setTargetPosition(Closed_Position);
                     isButtonPressed = true;
                 }

@@ -29,9 +29,15 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import android.graphics.Color;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+
+import java.util.Locale;
 
 /**
  * This file provides basic Telop driving for a Pushbot robot.
@@ -48,23 +54,34 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Holonomic Park", group="Holonomic bot")
-public class ExHolonomicPark extends OpMode{
+@Autonomous(name="Color Park", group="Autonomous Park")
+public class ExColorPark extends OpMode{
 
     /* Declare OpMode members. */
-    ExAutoDriveBot robot       = new ExAutoDriveBot(telemetry); // use the class created to define a Pushbot's hardware
+    ExAutoColorBot robot       = new ExAutoColorBot(telemetry); // use the class created to define a Pushbot's hardware
     private ElapsedTime runtime = new ElapsedTime();
 
     // Setting speed constants for turning and moving sideways or forward
-    static final double     FORWARD_SPEED = 0.5;
-    static final double     TURN_SPEED    = 0.5;
-    static final double     SIDE_SPEED    = 0.5;
+    static final double     FORWARD_SPEED = 0.15;
+    static final double     TURN_SPEED    = 0.2;
+    static final double     SIDE_SPEED    = 0.2;
 
     static boolean isRed = false;
     static boolean isFoundationSide = false;
     static boolean parkCenter = false;
     static double forwardDriveTime = 1.2;
     static double sideDriveTime = 0.7;
+    static double MaxTime = 3.0;
+    // hsvValues is an array that will hold the hue, saturation, and value information.
+    float hsvValues[] = {0F, 0F, 0F};
+
+    // values is a reference to the hsvValues array.
+    final float values[] = hsvValues;
+
+    // sometimes it helps to multiply the raw RGB values with a scale factor
+    // to amplify/attentuate the measured values.
+    final double SCALE_FACTOR = 255;
+
     @Override
     public void init() {
         /* Initialize the hardware variables.
@@ -117,23 +134,39 @@ public class ExHolonomicPark extends OpMode{
      */
     @Override
     public void start() {
-        int rightDirection = isRed ? -1 : 1;
         // driving forward for a number of seconds defined by forwardDrive time
         robot.setPowerForward(FORWARD_SPEED);
         runtime.reset();
-        while (runtime.seconds() < (parkCenter ? 1 : 0.2) * forwardDriveTime) {
+        double hueLow;
+        double hueHigh;
+        if (isRed)
+        {
+            hueLow = 10;
+            hueHigh = 40;
+        }
+        else
+        {
+            hueLow =  195;
+            hueHigh =  225;
+        }
+        while (runtime.seconds() < MaxTime && !IsInRange(hsvValues[0],hueLow,hueHigh)) {
+            Color.RGBToHSV((int) (robot.sensorColor.red() * SCALE_FACTOR),
+                    (int) (robot.sensorColor.green() * SCALE_FACTOR),
+                    (int) (robot.sensorColor.blue() * SCALE_FACTOR),
+                    hsvValues);
+            // send the info back to driver station using telemetry function.
+            telemetry.addData("Distance (cm)",
+                    String.format(Locale.US, "%.02f", robot.sensorDistance.getDistance(DistanceUnit.CM)));
+            telemetry.addData("Alpha", robot.sensorColor.alpha());
+            telemetry.addData("Red  ", robot.sensorColor.red());
+            telemetry.addData("Green", robot.sensorColor.green());
+            telemetry.addData("Blue ", robot.sensorColor.blue());
+            telemetry.addData("Hue", hsvValues[0]);
             telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
             telemetry.update();
         }
 
-        //this multiplies the 2 varibles foundation direction and right direction to output
-        // then drives right for sideDriveTime seconds
-        robot.setPowerRight(rightDirection * FORWARD_SPEED);
-        runtime.reset();
-        while (runtime.seconds() < sideDriveTime) {
-            telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
-            telemetry.update();
-        }
+
         // stop the robot
         robot.setPowerRight(0);
         robot.setPowerForward(0);
@@ -141,12 +174,16 @@ public class ExHolonomicPark extends OpMode{
         telemetry.addData("Say", "Robot stopped");
         telemetry.update();
     }
-
+    public boolean IsInRange(double hueValue, double low, double high)
+    {
+        return  hueValue > low && hueValue < high;
+    }
     /*
      * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
      */
     @Override
     public void loop() {
+
     }
 
 
