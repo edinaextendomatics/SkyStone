@@ -29,9 +29,10 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.Range;
 
 /**
  * This file provides basic Telop driving for a Pushbot robot.
@@ -48,33 +49,24 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Holonomic Park", group="Holonomic bot")
-public class ExHolonomicPark extends OpMode{
+@TeleOp(name="Pushbot:ExtendoDrive Only TeleOp", group="Pushbot")
+public class ExtendoDrive_TeleOp extends OpMode{
 
     /* Declare OpMode members. */
-    ExAutoDriveBot robot       = new ExAutoDriveBot(telemetry); // use the class created to define a Pushbot's hardware
-    private ElapsedTime runtime = new ElapsedTime();
+     ExAutoDriveBot robot       = new ExAutoDriveBot(telemetry); // use the class created to define a Pushbot's hardware
 
-    // Setting speed constants for turning and moving sideways or forward
-    static final double     FORWARD_SPEED = 0.5;
-    static final double     TURN_SPEED    = 0.5;
-    static final double     SIDE_SPEED    = 0.5;
+    /*
+     * Code to run ONCE when the driver hits INIT
+     */
 
-    static boolean isRed = false;
-    static boolean isFoundationSide = false;
-    static boolean parkCenter = false;
-    static double forwardDriveTime = 1.2;
-    static double sideDriveTime = 0.7;
     @Override
     public void init() {
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
          */
-        robot.init(hardwareMap);
+        robot.init(hardwareMap, true);
         // Send telemetry message to signify robot waiting;
-        telemetry.addData("Say", "Press X for Blue Team, B for Red Team");
-        telemetry.addData("Say", "Press Y for Foundation Side, A for Blocks Side");
-        telemetry.addData("Say", "Press Start for center parking, press back for side parking");
+        telemetry.addData("Say", "Hello, Good Luck!");
     }
 
     /*
@@ -82,34 +74,6 @@ public class ExHolonomicPark extends OpMode{
      */
     @Override
     public void init_loop() {
-        if (gamepad1.start) {
-            parkCenter = true;
-        }
-        if (gamepad1.back)
-        {
-            parkCenter = false;
-        }
-        if (gamepad1.b) {
-            isRed = true;
-        }
-        if (gamepad1.x) {
-            isRed = false;
-        }
-        if (gamepad1.a) {
-            isFoundationSide = false;
-        }
-        if (gamepad1.y) {
-            isFoundationSide = true;
-        }
-        String teamMessage = (isRed ? "Red " : "Blue ") + "Team selected";
-        String positionMessage = (isFoundationSide ? "Foundation " : "Block ") + "Side selected";
-        String parkMessage = (parkCenter ? "Center " : "Side ") + "park selected";
-        telemetry.addData("Say", teamMessage);
-        telemetry.addData("Say", positionMessage);
-        telemetry.addData("Say", parkMessage);
-        telemetry.addData("Say", "Press X for Blue Team, B for Red Team");
-        telemetry.addData("Say", "Press Y for Foundation Side, A for Blocks Side");
-        telemetry.addData("Say", "Press Start for center parking, press back for side parking");
     }
 
     /*
@@ -117,41 +81,38 @@ public class ExHolonomicPark extends OpMode{
      */
     @Override
     public void start() {
-        int rightDirection = isRed ? -1 : 1;
-        // driving forward for a number of seconds defined by forwardDrive time
-        robot.setPowerForward(FORWARD_SPEED);
-        runtime.reset();
-        while (runtime.seconds() < (parkCenter ? 1 : 0.2) * forwardDriveTime) {
-            telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
-            telemetry.update();
-        }
 
-        //this multiplies the 2 varibles foundation direction and right direction to output
-        // then drives right for sideDriveTime seconds
-        robot.setPowerRight(rightDirection * FORWARD_SPEED);
-        runtime.reset();
-        while (runtime.seconds() < sideDriveTime) {
-            telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
-            telemetry.update();
-        }
-        // stop the robot
-        robot.setPowerRight(0);
-        robot.setPowerForward(0);
-        robot.setPowerTurnRight(0);
-        telemetry.addData("Say", "Robot stopped");
-        telemetry.update();
     }
 
     /*
      * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
      */
     @Override
-    public void loop() {
+    public void loop( ) {
+        // define motor class variables
+        double Y;
+        double X;
+        double Z;
+
+        // MOTOR contols section
+        // collect user input from left and right gamepad controls and set internal variable X & Y
+        Y = -gamepad1.left_stick_y;
+        X = gamepad1.left_stick_x;
+        Z = gamepad1.right_stick_x;
+
+        // use X, Y, & Z to set power for each of the motors
+        robot.leftFrontDrive.setPower(Range.clip(Y+X+Z,-1, 1));
+        robot.rightFrontDrive.setPower(Range.clip(X-Y+Z,-1, 1));
+        robot.leftRearDrive.setPower(Range.clip(Y-X+Z,-1, 1));
+        robot.rightRearDrive.setPower(Range.clip(-X-Y+Z,-1, 1));
+
+        // Send telemetry message to signify robot running;
+        telemetry.addData("leftpad Y",  "%.2f", Y);
+        telemetry.addData("leftpad X", "%.2f", X);
+        telemetry.addData("rightpad Z", "%.2f", Z);
+
+
     }
-
-
-
-
     /*
      * Code to run ONCE after the driver hits STOP
      */
