@@ -106,13 +106,8 @@ public class ExtendomaticsBot_TeleOp extends OpMode{
      */
     @Override
     public void loop( ) {
-        // define motor class variables
-        double Y;
-        double X;
-        double Z;
-
         // LIFT MOTOR controls section
-        double liftInput = gamepad2.right_stick_y;
+        double liftInput = -gamepad2.left_stick_y;
         // do not allow movement beyond limits
         if(isLiftEnabled) {
             if ((robot.lift.getCurrentPosition() > LIFT_MAX_EXTENSION_LIMIT && liftInput > 0) ||
@@ -130,12 +125,16 @@ public class ExtendomaticsBot_TeleOp extends OpMode{
             telemetry.addData("lift encoder value",
                     "%.2f",
                     robot.lift.getCurrentPosition());
-            telemetry.update();
         }
         // DRIVE MOTOR contols section
+        // define motor class variables
+        double X;
+        double Y;
+        double Z;
+
         // collect user input from left and right gamepad controls and set internal variable X & Y
-        Y = -gamepad1.left_stick_y;
-        X = gamepad1.left_stick_x;
+        X = -gamepad1.left_stick_y;
+        Y = gamepad1.left_stick_x;
         Z = gamepad1.right_stick_x;
 
         // use X, Y, & Z to set power for each of the motors
@@ -152,9 +151,6 @@ public class ExtendomaticsBot_TeleOp extends OpMode{
         }
         // GRABBER controls section
         if(isGrabberEnabled) {
-            telemetry.addData("grabber right trigger", "%.2f", gamepad2.right_trigger);
-            telemetry.addData("grabber left trigger", "%.2f", gamepad2.left_trigger);
-
             if (robot.grabber.getCurrentPosition() == robot.grabber.getTargetPosition()) {
                 robot.grabber.setPower(0);
             } else {
@@ -187,9 +183,9 @@ public class ExtendomaticsBot_TeleOp extends OpMode{
             } else {
                 // Display it for the driver.);
                 telemetry.addData("Path2", "Running at %7d, moving towards %7d", robot.grabber.getCurrentPosition(), robot.grabber.getTargetPosition());
-                telemetry.update();
             }
         }
+        telemetry.update();
     }
     /*
      * Code to run ONCE after the driver hits STOP
