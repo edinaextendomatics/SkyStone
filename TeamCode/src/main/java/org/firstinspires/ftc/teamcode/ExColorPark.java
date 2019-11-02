@@ -62,7 +62,7 @@ public class ExColorPark extends OpMode{
     private ElapsedTime runtime = new ElapsedTime();
 
     // Setting speed constants for turning and moving sideways or forward
-    static final double     FORWARD_SPEED = 0.2;
+    static final double     FORWARD_SPEED = 0.15;
     static final double     TURN_SPEED    = 0.2;
     static final double     SIDE_SPEED    = 0.2;
 

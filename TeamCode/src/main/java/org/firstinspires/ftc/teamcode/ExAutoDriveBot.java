@@ -84,7 +84,7 @@ public class ExAutoDriveBot
         hwMap = ahwMap;
 
         telemetry.addData("Init()",
-                "initDriveMotors=%b; initGrabber=%b; initLift=%b",
+                "initDriveMotors=%b",
                 initDriveMotors);
 
         if (initDriveMotors){
