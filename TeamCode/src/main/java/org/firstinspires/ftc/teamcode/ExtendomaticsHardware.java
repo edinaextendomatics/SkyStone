@@ -106,13 +106,13 @@ public class ExtendomaticsHardware
 
             // Set all motors to run without encoders.
             // May want to use RUN_USING_ENCODERS if encoders are installed.
-            leftFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            leftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             leftFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            rightFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            leftRearDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            leftRearDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             leftRearDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            rightRearDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            rightRearDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             rightRearDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
             telemetry.addData("Init()", "Drive motors initialized.");

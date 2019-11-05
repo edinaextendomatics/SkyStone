@@ -48,8 +48,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Simple Park", group="Holonomic bot")
-public class ExHolonomicPark extends OpMode{
+@Autonomous(name="Motor Test", group="Holonomic bot")
+public class ExMotorTest extends OpMode{
 
     /* Declare OpMode members. */
     ExAutoDriveBot robot       = new ExAutoDriveBot(telemetry); // use the class created to define a Pushbot's hardware
@@ -57,105 +57,44 @@ public class ExHolonomicPark extends OpMode{
 
     // Setting speed constants for turning and moving sideways or forward
     static final double     FORWARD_SPEED = 0.5;
-    static final double     TURN_SPEED    = 0.5;
-    static final double     SIDE_SPEED    = 0.5;
 
-    static boolean isRed = false;
-    static boolean isFoundationSide = false;
-    static boolean parkCenter = false;
-    static double forwardDriveTime = 1.2;
-    static double sideDriveTime = 0.7;
-    @Override
-    public void init() {
-        /* Initialize the hardware variables.
-         * The init() method of the hardware class does all the work here
-         */
+    public void init(){
         robot.init(hardwareMap);
-        // Send telemetry message to signify robot waiting;
-        telemetry.addData("Say", "Press X for Blue Team, B for Red Team");
-        telemetry.addData("Say", "Press Y for Foundation Side, A for Blocks Side");
-        telemetry.addData("Say", "Press Start for center parking, press back for side parking");
     }
-
-    /*
-     * Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
-     */
-    @Override
     public void init_loop() {
-        if (gamepad1.start) {
-            parkCenter = true;
-        }
-        if (gamepad1.back)
-        {
-            parkCenter = false;
-        }
-        if (gamepad1.b) {
-            isRed = true;
-        }
-        if (gamepad1.x) {
-            isRed = false;
-        }
-        if (gamepad1.a) {
-            isFoundationSide = false;
-        }
-        if (gamepad1.y) {
-            isFoundationSide = true;
-        }
-        String teamMessage = (isRed ? "Red " : "Blue ") + "Team selected";
-        String positionMessage = (isFoundationSide ? "Foundation " : "Block ") + "Side selected";
-        String parkMessage = (parkCenter ? "Center " : "Side ") + "park selected";
-        telemetry.addData("Say", teamMessage);
-        telemetry.addData("Say", positionMessage);
-        telemetry.addData("Say", parkMessage);
-        telemetry.addData("Say", "Press X for Blue Team, B for Red Team");
-        telemetry.addData("Say", "Press Y for Foundation Side, A for Blocks Side");
-        telemetry.addData("Say", "Press Start for center parking, press back for side parking");
     }
-
-    /*
-     * Code to run ONCE when the driver hits PLAY
-     */
-    @Override
     public void start() {
-        int rightDirection = isRed ? -1 : 1;
-        // driving forward for a number of seconds defined by forwardDrive time
-        robot.setPowerForward(FORWARD_SPEED);
+        robot.leftFrontDrive.setPower(FORWARD_SPEED);
         runtime.reset();
-        while (runtime.seconds() < (parkCenter ? 1 : 0.2) * forwardDriveTime) {
-            telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
+        while (runtime.seconds() < 2){
+            telemetry.addData("Path", "left Front: %2.5f S Elapsed", runtime.seconds());
             telemetry.update();
         }
-
-        //this multiplies the 2 varibles foundation direction and right direction to output
-        // then drives right for sideDriveTime seconds
-        robot.setPowerRight(rightDirection * FORWARD_SPEED);
+        robot.leftFrontDrive.setPower(0);
+        robot.rightFrontDrive.setPower(FORWARD_SPEED);
         runtime.reset();
-        while (runtime.seconds() < sideDriveTime) {
-            telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
+        while (runtime.seconds() < 2){
+            telemetry.addData("Path", "Right Front: %2.5f S Elapsed", runtime.seconds());
             telemetry.update();
         }
-        // stop the robot
-        robot.setPowerRight(0);
-        robot.setPowerForward(0);
-        robot.setPowerTurnRight(0);
-        telemetry.addData("Say", "Robot stopped");
-        telemetry.update();
+        robot.rightFrontDrive.setPower(0);
+        robot.rightRearDrive.setPower(FORWARD_SPEED);
+        runtime.reset();
+        while (runtime.seconds() < 2) {
+            telemetry.addData("Path", "Right Rear: %2.5f S Elapsed", runtime.seconds());
+            telemetry.update();
+        }
+        robot.rightRearDrive.setPower(0);
+        robot.leftRearDrive.setPower(FORWARD_SPEED);
+        runtime.reset();
+        while (runtime.seconds() < 2) {
+            telemetry.addData("Path", "Left Rear: %2.5f S Elapsed", runtime.seconds());
+            telemetry.update();
+        }
+        robot.leftRearDrive.setPower(0);
     }
-
-    /*
-     * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
-     */
-    @Override
     public void loop() {
     }
-
-
-
-
-    /*
-     * Code to run ONCE after the driver hits STOP
-     */
-    @Override
     public void stop() {
     }
 }
