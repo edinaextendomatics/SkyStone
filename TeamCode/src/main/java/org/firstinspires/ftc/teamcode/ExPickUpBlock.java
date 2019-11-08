@@ -68,13 +68,13 @@ public class ExPickUpBlock extends LinearOpMode {
     ExtendomaticsHardware robot = new ExtendomaticsHardware(telemetry);
     private ElapsedTime runtime = new ElapsedTime();
     //we will have to run alot of experiments to find this out
-    static final double COUNTS_PER_INCH = 1200;
+    static final double COUNTS_PER_INCH = 200;
     static final double COUNTS_PER_DEGREE = 100;
     static final int LIFT_TOP_POSITION = 800;
     static final double DRIVE_SPEED = 0.6;
     static final double TURN_SPEED = 0.5;
-    static final int OPEN_POSITION = 2880;
-    static final int GRABBING_POSITION = 1440;
+    static final int OPEN_POSITION = 3200;
+    static final int GRABBING_POSITION = 2400;
 
     @Override
     public void runOpMode() {

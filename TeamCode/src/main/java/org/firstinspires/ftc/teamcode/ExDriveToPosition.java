@@ -72,7 +72,7 @@ public class ExDriveToPosition extends LinearOpMode {
     ExAutoDriveBot         robot   = new ExAutoDriveBot(telemetry);   // Use a Pushbot's hardware
     private ElapsedTime     runtime = new ElapsedTime();
     //we will have to run alot of experiments to find this out
-    static final double     COUNTS_PER_INCH         = 1200;
+    static final double     COUNTS_PER_INCH         = 200;
     static final double     COUNTS_PER_DEGREE       = 100;
     static final double     DRIVE_SPEED             = 0.6;
     static final double     TURN_SPEED              = 0.5;
@@ -114,8 +114,8 @@ public class ExDriveToPosition extends LinearOpMode {
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
         driveForward(DRIVE_SPEED,  24,   4.0);  // S1: Forward 47 Inches with 5 Sec timeout
-        driveRight(TURN_SPEED,   12,  3.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
-        turnRight(DRIVE_SPEED, -90, 3.0);  // S3: Reverse 24 Inches with 4 Sec timeout
+        //driveRight(TURN_SPEED,   12,  3.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
+        turnRight(DRIVE_SPEED, 90, 3.0);  // S3: Reverse 24 Inches with 4 Sec timeout
 
 
 
@@ -168,8 +168,8 @@ public class ExDriveToPosition extends LinearOpMode {
                     (robot.leftFrontDrive.isBusy() && robot.rightFrontDrive.isBusy() && robot.leftRearDrive.isBusy() && robot.rightRearDrive.isBusy())) {
 
                 // Display it for the driver.
-                telemetry.addData("Path1",  "Running to %7d :%7d", newLeftFrontTarget,  newRightFrontTarget,  newLeftRearTarget,  newRightRearTarget);
-                telemetry.addData("Path2",  "Running at %7d :%7d",
+                telemetry.addData("Path1",  "Running to %7d :%7d %7d :%7d", newLeftFrontTarget,  newRightFrontTarget,  newLeftRearTarget,  newRightRearTarget);
+                telemetry.addData("Path2",  "Running at %7d :%7d %7d :%7d",
                         robot.leftFrontDrive.getCurrentPosition(),
                         robot.rightFrontDrive.getCurrentPosition(),
                         robot.leftRearDrive.getCurrentPosition(),

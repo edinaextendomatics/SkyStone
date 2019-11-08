@@ -121,9 +121,11 @@ public class ExtendomaticsHardware
         if (initGrabber){
             grabber = hwMap.get(DcMotor.class, "grabber");
             grabber.setDirection(DcMotor.Direction.REVERSE);
+            grabber.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
             grabber.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            grabber.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            grabber.setTargetPosition(0);
+            grabber.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             telemetry.addData("Init()", "Grabber motor initialized.");
         }
@@ -131,6 +133,7 @@ public class ExtendomaticsHardware
         if (initLift) {
             lift = hwMap.get(DcMotor.class, "lift");
             lift.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
+            lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
             lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);

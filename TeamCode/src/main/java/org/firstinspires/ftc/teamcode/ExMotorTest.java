@@ -66,28 +66,28 @@ public class ExMotorTest extends OpMode{
     public void start() {
         robot.leftFrontDrive.setPower(FORWARD_SPEED);
         runtime.reset();
-        while (runtime.seconds() < 2){
+        while (runtime.seconds() < 1){
             telemetry.addData("Path", "left Front: %2.5f S Elapsed", runtime.seconds());
             telemetry.update();
         }
         robot.leftFrontDrive.setPower(0);
         robot.rightFrontDrive.setPower(FORWARD_SPEED);
         runtime.reset();
-        while (runtime.seconds() < 2){
+        while (runtime.seconds() < 1){
             telemetry.addData("Path", "Right Front: %2.5f S Elapsed", runtime.seconds());
             telemetry.update();
         }
         robot.rightFrontDrive.setPower(0);
         robot.rightRearDrive.setPower(FORWARD_SPEED);
         runtime.reset();
-        while (runtime.seconds() < 2) {
+        while (runtime.seconds() < 1) {
             telemetry.addData("Path", "Right Rear: %2.5f S Elapsed", runtime.seconds());
             telemetry.update();
         }
         robot.rightRearDrive.setPower(0);
         robot.leftRearDrive.setPower(FORWARD_SPEED);
         runtime.reset();
-        while (runtime.seconds() < 2) {
+        while (runtime.seconds() < 1) {
             telemetry.addData("Path", "Left Rear: %2.5f S Elapsed", runtime.seconds());
             telemetry.update();
         }
