@@ -60,7 +60,7 @@ public class ExtendomaticsBot_TeleOp extends OpMode{
     static final int Open_Position = 3200;
     static final int Grabbing_Position = 2400;
     static final double Grabber_Power = 1;
-    static final double LIFT_MAX_EXTENSION_LIMIT = 10000;
+    static final double LIFT_MAX_EXTENSION_LIMIT = 455;
     static final boolean isDriveEnabled = true;
     static final boolean isLiftEnabled = true;
     static final boolean isGrabberEnabled = true;
@@ -105,7 +105,7 @@ public class ExtendomaticsBot_TeleOp extends OpMode{
                 telemetry.addData("Lift", "You have reached the max position, please stop moving");
                 robot.lift.setPower(0);
             }
-            else if (robot.lift.getCurrentPosition() <= 0 && liftInput < 0) {
+            else if (robot.lift.getCurrentPosition() < 0 && liftInput < 0) {
                 telemetry.addData("Lift", "You have reached the Minimum position, please stop moving");
                 robot.lift.setPower(0);
             }
@@ -129,7 +129,7 @@ public class ExtendomaticsBot_TeleOp extends OpMode{
         // collect user input from left and right gamepad controls and set internal variable X & Y & Z
         X = gamepad1.left_stick_x;
         Y = -gamepad1.left_stick_y;
-        Z = gamepad1.right_stick_x;
+        Z = -gamepad1.right_stick_x;
 
         // use X, Y, & Z to set power for each of the motors
         if(isDriveEnabled) {
@@ -137,7 +137,6 @@ public class ExtendomaticsBot_TeleOp extends OpMode{
             robot.rightFrontDrive.setPower(Range.clip(X - Y + Z, -1, 1));
             robot.leftRearDrive.setPower(Range.clip(Y - X + Z, -1, 1));
             robot.rightRearDrive.setPower(Range.clip(-X - Y + Z, -1, 1));
-
             // Send telemetry message to signify robot running;
             telemetry.addData("leftpad Y", "%.2f", Y);
             telemetry.addData("leftpad X", "%.2f", X);
