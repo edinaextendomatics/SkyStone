@@ -31,7 +31,6 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
 /**
@@ -70,8 +69,7 @@ public class ExtendomaticsBot_TeleOp extends OpMode{
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
          */
-        robot.init(hardwareMap, isDriveEnabled, isGrabberEnabled, isLiftEnabled);
-        robot.grabber.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.init(super.hardwareMap, isDriveEnabled, isGrabberEnabled, isLiftEnabled);
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Say", "Hello, Good Luck!");
     }
@@ -96,11 +94,17 @@ public class ExtendomaticsBot_TeleOp extends OpMode{
      */
     @Override
     public void loop( ) {
+        RunLift();
+        RunDrive();
+        RunGrabber();
 
-        // LIFT MOTOR controls section
-        double liftInput = -gamepad2.left_stick_y;
-        // do not allow movement beyond limits
+        telemetry.update();
+    }
+
+    private void RunLift() {
         if(isLiftEnabled) {
+            double liftInput = -gamepad2.left_stick_y;
+            // do not allow movement beyond limits
             if (robot.lift.getCurrentPosition() > LIFT_MAX_EXTENSION_LIMIT && liftInput > 0) {
                 telemetry.addData("Lift", "You have reached the max position, please stop moving");
                 robot.lift.setPower(0);
@@ -120,29 +124,9 @@ public class ExtendomaticsBot_TeleOp extends OpMode{
                     "%7d",
                     robot.lift.getCurrentPosition());
         }
+    }
 
-        // define motor class variables
-        double X;
-        double Y;
-        double Z;
-        // DRIVE MOTOR contols section
-        // collect user input from left and right gamepad controls and set internal variable X & Y & Z
-        X = gamepad1.left_stick_x;
-        Y = -gamepad1.left_stick_y;
-        Z = -gamepad1.right_stick_x;
-
-        // use X, Y, & Z to set power for each of the motors
-        if(isDriveEnabled) {
-            robot.leftFrontDrive.setPower(Range.clip(Y + X + Z, -1, 1));
-            robot.rightFrontDrive.setPower(Range.clip(X - Y + Z, -1, 1));
-            robot.leftRearDrive.setPower(Range.clip(Y - X + Z, -1, 1));
-            robot.rightRearDrive.setPower(Range.clip(-X - Y + Z, -1, 1));
-            // Send telemetry message to signify robot running;
-            telemetry.addData("leftpad Y", "%.2f", Y);
-            telemetry.addData("leftpad X", "%.2f", X);
-            telemetry.addData("rightpad Z", "%.2f", Z);
-        }
-        // GRABBER controls section
+    private void RunGrabber() {
         if(isGrabberEnabled) {
 
             if (robot.grabber.getCurrentPosition() != robot.grabber.getTargetPosition()) {
@@ -172,8 +156,32 @@ public class ExtendomaticsBot_TeleOp extends OpMode{
                 telemetry.addData("grabber",  "grabber is running, no input accepted");
             }
         }
-        telemetry.update();
     }
+
+    private void RunDrive() {
+        // define motor class variables
+        double X;
+        double Y;
+        double Z;
+
+        // collect user input from left and right gamepad controls and set internal variable X & Y & Z
+        X = gamepad1.left_stick_x;
+        Y = -gamepad1.left_stick_y;
+        Z = -gamepad1.right_stick_x;
+
+        // use X, Y, & Z to set power for each of the motors
+        if(isDriveEnabled) {
+            robot.leftFrontDrive.setPower(Range.clip(Y + X + Z, -1, 1));
+            robot.rightFrontDrive.setPower(Range.clip(X - Y + Z, -1, 1));
+            robot.leftRearDrive.setPower(Range.clip(Y - X + Z, -1, 1));
+            robot.rightRearDrive.setPower(Range.clip(-X - Y + Z, -1, 1));
+            // Send telemetry message to signify robot running;
+            telemetry.addData("leftpad Y", "%.2f", Y);
+            telemetry.addData("leftpad X", "%.2f", X);
+            telemetry.addData("rightpad Z", "%.2f", Z);
+        }
+    }
+
     /*
      * Code to run ONCE after the driver hits STOP
      */
