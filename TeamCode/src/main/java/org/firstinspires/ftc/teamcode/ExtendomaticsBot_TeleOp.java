@@ -55,23 +55,12 @@ public class ExtendomaticsBot_TeleOp extends OpMode{
     /* Declare OpMode members. */
      ExtendomaticsHardware robot       = new ExtendomaticsHardware(telemetry); // use the class created to define a Pushbot's hardware
 
-    /*
-     * Code to run ONCE when the driver hits INIT
-     */
-    static final double INCREMENT   = 0.02;     // amount to slew servo each CYCLE_MS cycle
-    static final int    CYCLE_MS    =   50;     // period of each cycle
-    static final double MAX_POS     =  1.0;     // Maximum rotational position
-    static final double MIN_POS     =  0.0;     // Minimum rotational position
-    static final double COUNTS_PER_MOTOR_REV_CORE_HEX    = 288 ;    // Rev core hex motor counts per rev
-    static final double DRIVE_GEAR_REDUCTION    = 1.0 ;     // This is < 1.0 if geared UP
-    static final double WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
-    static final double COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV_CORE_HEX * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * 3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679);
     static final double LIFT_SPEED = 0.6;
     static final int Closed_Position = 0;
-    static final int Open_Position = 600;
-    static final int Grabbing_Position = 400;
+    static final int Open_Position = 3200;
+    static final int Grabbing_Position = 2400;
     static final double Grabber_Power = 1;
-    static final double LIFT_MAX_EXTENSION_LIMIT = 10000;
+    static final double LIFT_MAX_EXTENSION_LIMIT = 455;
     static final boolean isDriveEnabled = true;
     static final boolean isLiftEnabled = true;
     static final boolean isGrabberEnabled = true;
@@ -82,6 +71,7 @@ public class ExtendomaticsBot_TeleOp extends OpMode{
          * The init() method of the hardware class does all the work here
          */
         robot.init(hardwareMap, isDriveEnabled, isGrabberEnabled, isLiftEnabled);
+        robot.grabber.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Say", "Hello, Good Luck!");
     }
@@ -106,37 +96,40 @@ public class ExtendomaticsBot_TeleOp extends OpMode{
      */
     @Override
     public void loop( ) {
-        // define motor class variables
-        double Y;
-        double X;
-        double Z;
 
         // LIFT MOTOR controls section
-        double liftInput = gamepad2.right_stick_y;
+        double liftInput = -gamepad2.left_stick_y;
         // do not allow movement beyond limits
         if(isLiftEnabled) {
-            if ((robot.lift.getCurrentPosition() > LIFT_MAX_EXTENSION_LIMIT && liftInput > 0) ||
-                    (robot.lift.getCurrentPosition() <= 0 && liftInput < 0)
-            ) {
+            if (robot.lift.getCurrentPosition() > LIFT_MAX_EXTENSION_LIMIT && liftInput > 0) {
+                telemetry.addData("Lift", "You have reached the max position, please stop moving");
                 robot.lift.setPower(0);
-                telemetry.addData("You have reached the max or min position", "%.2f");
-            } else {
+            }
+            else if (robot.lift.getCurrentPosition() < 0 && liftInput < 0) {
+                telemetry.addData("Lift", "You have reached the Minimum position, please stop moving");
+                robot.lift.setPower(0);
+            }
+            else {
                 robot.lift.setPower(liftInput * LIFT_SPEED);
             }
 
-            telemetry.addData("lift input value (Gamepad 2 right stick)",
+            telemetry.addData("lift input value (Gamepad 2 left stick)",
                     "%.2f",
-                    gamepad2.right_stick_y);
+                    liftInput);
             telemetry.addData("lift encoder value",
-                    "%.2f",
+                    "%7d",
                     robot.lift.getCurrentPosition());
-            telemetry.update();
         }
+
+        // define motor class variables
+        double X;
+        double Y;
+        double Z;
         // DRIVE MOTOR contols section
-        // collect user input from left and right gamepad controls and set internal variable X & Y
-        Y = -gamepad1.left_stick_y;
+        // collect user input from left and right gamepad controls and set internal variable X & Y & Z
         X = gamepad1.left_stick_x;
-        Z = gamepad1.right_stick_x;
+        Y = -gamepad1.left_stick_y;
+        Z = -gamepad1.right_stick_x;
 
         // use X, Y, & Z to set power for each of the motors
         if(isDriveEnabled) {
@@ -144,7 +137,6 @@ public class ExtendomaticsBot_TeleOp extends OpMode{
             robot.rightFrontDrive.setPower(Range.clip(X - Y + Z, -1, 1));
             robot.leftRearDrive.setPower(Range.clip(Y - X + Z, -1, 1));
             robot.rightRearDrive.setPower(Range.clip(-X - Y + Z, -1, 1));
-
             // Send telemetry message to signify robot running;
             telemetry.addData("leftpad Y", "%.2f", Y);
             telemetry.addData("leftpad X", "%.2f", X);
@@ -152,44 +144,35 @@ public class ExtendomaticsBot_TeleOp extends OpMode{
         }
         // GRABBER controls section
         if(isGrabberEnabled) {
-            telemetry.addData("grabber right trigger", "%.2f", gamepad2.right_trigger);
-            telemetry.addData("grabber left trigger", "%.2f", gamepad2.left_trigger);
 
-            if (robot.grabber.getCurrentPosition() == robot.grabber.getTargetPosition()) {
-                robot.grabber.setPower(0);
+            if (robot.grabber.getCurrentPosition() != robot.grabber.getTargetPosition()) {
+                robot.grabber.setPower(Grabber_Power);
+                telemetry.addData("Path2", "Running at %7d, moving towards %7d", robot.grabber.getCurrentPosition(), robot.grabber.getTargetPosition());
             } else {
-                telemetry.addData("Path1", "Not yet at your target");
+                robot.grabber.setPower(0);
+                telemetry.addData("Path1", "grabber reached target of %7d", robot.grabber.getTargetPosition());
             }
             // GRABBER controls section
             if (!robot.grabber.isBusy()) {
-                boolean isButtonPressed = false;
-
                 // x is open.
                 if (gamepad2.x) {
                     robot.grabber.setTargetPosition(Open_Position);
-                    isButtonPressed = true;
                 }
                 // y is grab.
                 else if (gamepad2.y) {
                     robot.grabber.setTargetPosition(Grabbing_Position);
-                    isButtonPressed = true;
-                }
+            }
                 // b is closed.
                 else if (gamepad2.b) {
                     robot.grabber.setTargetPosition(Closed_Position);
-                    isButtonPressed = true;
-                }
-                if (isButtonPressed) {
-                    robot.grabber.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    robot.grabber.setPower(Grabber_Power);
                 }
 
             } else {
                 // Display it for the driver.);
-                telemetry.addData("Path2", "Running at %7d, moving towards %7d", robot.grabber.getCurrentPosition(), robot.grabber.getTargetPosition());
-                telemetry.update();
+                telemetry.addData("grabber",  "grabber is running, no input accepted");
             }
         }
+        telemetry.update();
     }
     /*
      * Code to run ONCE after the driver hits STOP
