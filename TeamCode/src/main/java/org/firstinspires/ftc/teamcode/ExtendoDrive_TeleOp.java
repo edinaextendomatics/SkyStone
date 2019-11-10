@@ -53,7 +53,7 @@ import com.qualcomm.robotcore.util.Range;
 public class ExtendoDrive_TeleOp extends OpMode{
 
     /* Declare OpMode members. */
-     ExAutoDriveBot robot       = new ExAutoDriveBot(telemetry); // use the class created to define a Pushbot's hardware
+     ExtendomaticsHardware robot       = new ExtendomaticsHardware(telemetry); // use the class created to define a Pushbot's hardware
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -64,7 +64,7 @@ public class ExtendoDrive_TeleOp extends OpMode{
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
          */
-        robot.init(hardwareMap, true);
+        robot.init(hardwareMap, true, false, false);
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Say", "Hello, Good Luck!");
     }

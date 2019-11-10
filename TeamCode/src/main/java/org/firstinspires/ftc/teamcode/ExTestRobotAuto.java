@@ -9,16 +9,16 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class ExTestRobotAuto extends OpMode {
 
         /* Declare OpMode members. */
-        ExtendomaticsHardware robot       = new ExtendomaticsHardware(telemetry); // use the class created to define a Pushbot's hardware
+    ExtendomaticsHardware robot       = new ExtendomaticsHardware(telemetry); // use the class created to define a Pushbot's hardware
     private ElapsedTime runtime = new ElapsedTime();
-    static final double COUNTS_PER_INCH = 200;
+    static final double COUNTS_PER_INCH = 98.36;
     static final double COUNTS_PER_DEGREE = 100;
     static final int LIFT_TOP_POSITION = 800;
     static final double DRIVE_SPEED = 0.6;
     static final double TURN_SPEED = 0.5;
-    static final int OPEN_POSITION = 600;
-    static final int GRABBING_POSITION = 400;
-    int TestNumber;
+    static final int OPEN_POSITION = -6100;
+    static final int GRABBING_POSITION = -5500;
+    int TestNumber = 1;
     @Override
     public void init() {
         robot.init(hardwareMap);
@@ -44,15 +44,19 @@ public class ExTestRobotAuto extends OpMode {
                 robot.rightRearDrive.getCurrentPosition());
 
         telemetry.update();
-        robot.lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.liftleft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.liftright.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.liftleft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.liftright.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.grabber.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.grabber.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
+        telemetry.addData("Say", "Test 1 Selected");
         telemetry.addData("Say", "Test 1 - Drive Forward 24 inches - Press X");
         telemetry.addData("Say", "Test 2 - Drive Right 24 inches - Press Y");
         telemetry.addData("Say", "Test 3 - Turn Right 90 degrees - Press A");
-        TestNumber = 1;
+        telemetry.addData("Say", "Test 4 - Raise Lift then Lower Lift - Press B");
+        telemetry.addData("Say", "Test 5 - Open,grab,open,close grabber - Press Start");
 
     }
 
@@ -60,23 +64,66 @@ public class ExTestRobotAuto extends OpMode {
     public void init_loop() {
 
         if (gamepad1.x) {
-            //TestNumber = ?????
+            TestNumber = 1;
             telemetry.addData("Say", "Test 1 Selected");
         }
         else if (gamepad1.a) {
-            //TestNumber = ?????
+            TestNumber = 3;
+            telemetry.addData("Say", "Test 3 Selected");
         }
         else if (gamepad1.y) {
-            //TestNumber = ?????
+            TestNumber = 2;
+            telemetry.addData("Say", "Test 2 Selected");
+        }
+        else if (gamepad1.b) {
+            TestNumber = 4;
+            telemetry.addData("Say", "Test 4 Selected");
+        }
+        else if (gamepad1.start) {
+            TestNumber = 5;
+            telemetry.addData("Say", "Test 5 Selected");
         }
         telemetry.addData("Say", "Test 1 - Drive Forward 24 inches - Press X");
-        telemetry.addData("Say", "Test 2 - Drive Right 24 inches - Press Y");
+        telemetry.addData("Say", "Test 2 - Drive Right 12 inches - Press Y");
         telemetry.addData("Say", "Test 3 - Turn Right 90 degrees - Press A");
+        telemetry.addData("Say", "Test 4 - Raise Lift then Lower Lift - Press B");
+        telemetry.addData("Say", "Test 5 - Open,grab,open,close grabber - Press Start");
     }
 
     @Override
+    public void start(){
+        if (TestNumber == 1) {
+
+            telemetry.addData("Say", "Test 1 running");
+            driveForward(DRIVE_SPEED, 24, 5);
+        }
+        else if (TestNumber == 2) {
+
+            telemetry.addData("Say", "Test 2 running");
+            driveRight(DRIVE_SPEED, 12, 5);
+        }
+        else if (TestNumber == 3) {
+
+            telemetry.addData("Say", "Test 3 running");
+            turnRight(TURN_SPEED, 90, 5);
+        }
+        else if (TestNumber == 4) {
+
+            telemetry.addData("Say", "Test 4 running");
+            raiseLift(5);
+            lowerLift(10);
+        }
+        else if (TestNumber == 5) {
+            telemetry.addData("Say", "Test 5 running");
+            openGrabber(5);
+            grabBlock(5);
+            openGrabber(5);
+            closeGrabber(5);
+
+        }
+    }
+    @Override
     public void loop() {
-        super.internalPostInitLoop();
     }
 
     public void driveForward(double speed,
@@ -280,17 +327,19 @@ public class ExTestRobotAuto extends OpMode {
         }
 
 
-        public void lowerLift(double timeout) {
+    public void lowerLift(double timeout) {
         // Ensure that the opmode is still active
         {
 
-            robot.lift.setTargetPosition(0);
+            robot.liftleft.setTargetPosition(0);
+            robot.liftright.setTargetPosition(0);
             // Turn On RUN_TO_POSITION
-            robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.liftleft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.liftright.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             // reset the timeout time and start motion.
             runtime.reset();
-            robot.lift.setPower(0.7);
-
+            robot.liftleft.setPower(0.25);
+            robot.liftright.setPower(0.25);
             // keep looping while we are still active, and there is time left, and both motors are running.
             // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
             // its target position, the motion will stop.  This is "safer" in the event that the robot will
@@ -299,32 +348,37 @@ public class ExTestRobotAuto extends OpMode {
             // onto the next step, use (isBusy() || isBusy()) in the loop test.
             while (
                     (runtime.seconds() < timeout) &&
-                            (robot.lift.isBusy()))
+                            (robot.liftleft.isBusy()) && robot.liftright.isBusy())
                 // Display it for the driver.
 
-                telemetry.addData("Path2", "lift position: %7d target position: %7d",
-                        robot.lift.getCurrentPosition(),
+                telemetry.addData("Path2", "lift left position: %7d lift left position: %7d target position: %7d",
+                        robot.liftleft.getCurrentPosition(), robot.liftright.getCurrentPosition(),
                         0);
             telemetry.update();
         }
 
         // Stop all motion;
-        robot.lift.setPower(0);
+        robot.liftright.setPower(0);
+        robot.liftleft.setPower(0);
 
 
-        robot.lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.liftleft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.liftright.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     public void raiseLift(double timeout) {
         // Ensure that the opmode is still active
         {
 
-            robot.lift.setTargetPosition(LIFT_TOP_POSITION);
+            robot.liftleft.setTargetPosition(LIFT_TOP_POSITION);
+            robot.liftright.setTargetPosition(-LIFT_TOP_POSITION);
             // Turn On RUN_TO_POSITION
-            robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.liftleft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.liftright.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             // reset the timeout time and start motion.
             runtime.reset();
-            robot.lift.setPower(0.7);
+            robot.liftleft.setPower(1);
+            robot.liftright.setPower(1);
 
             // keep looping while we are still active, and there is time left, and both motors are running.
             // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
@@ -334,20 +388,22 @@ public class ExTestRobotAuto extends OpMode {
             // onto the next step, use (isBusy() || isBusy()) in the loop test.
             while (
                     (runtime.seconds() < timeout) &&
-                    (robot.lift.isBusy()))
+                    (robot.liftleft.isBusy()) && (robot.liftright.isBusy()) )
                 // Display it for the driver.
 
-                telemetry.addData("Path2", "lift position: %7d target position: %7d",
-                        robot.lift.getCurrentPosition(),
+                telemetry.addData("Path2", "lift left position: %7d lift right position: %7d target position: %7d",
+                        robot.liftleft.getCurrentPosition(), robot.liftright.getCurrentPosition(),
                         LIFT_TOP_POSITION);
             telemetry.update();
         }
 
         // Stop all motion;
-        robot.lift.setPower(0);
+        robot.liftleft.setPower(0);
+        robot.liftright.setPower(0);
 
 
-        robot.lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.liftleft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.liftright.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         //  sleep(250);   // optional pause after each move
     }

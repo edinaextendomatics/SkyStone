@@ -54,12 +54,10 @@ public class ExtendomaticsBot_TeleOp extends OpMode{
     /* Declare OpMode members. */
      ExtendomaticsHardware robot       = new ExtendomaticsHardware(telemetry); // use the class created to define a Pushbot's hardware
 
-    static final double LIFT_SPEED = 0.6;
-    static final int Closed_Position = 0;
-    static final int Open_Position = 3200;
-    static final int Grabbing_Position = 2400;
+    static final double LIFT_SPEED = 1;
+    static final int Open_Position = 6100;
     static final double Grabber_Power = 1;
-    static final double LIFT_MAX_EXTENSION_LIMIT = 455;
+    static final double LIFT_MAX_EXTENSION_LIMIT = 460;
     static final boolean isDriveEnabled = true;
     static final boolean isLiftEnabled = true;
     static final boolean isGrabberEnabled = true;
@@ -105,56 +103,64 @@ public class ExtendomaticsBot_TeleOp extends OpMode{
         if(isLiftEnabled) {
             double liftInput = -gamepad2.left_stick_y;
             // do not allow movement beyond limits
-            if (robot.lift.getCurrentPosition() > LIFT_MAX_EXTENSION_LIMIT && liftInput > 0) {
+            if ((robot.liftleft.getCurrentPosition() > LIFT_MAX_EXTENSION_LIMIT
+                || -robot.liftright.getCurrentPosition() < -LIFT_MAX_EXTENSION_LIMIT)
+                && liftInput > 0) {
                 telemetry.addData("Lift", "You have reached the max position, please stop moving");
-                robot.lift.setPower(0);
+                robot.liftleft.setPower(0);
+                robot.liftright.setPower(0);
             }
-            else if (robot.lift.getCurrentPosition() < 0 && liftInput < 0) {
+            else if (robot.liftleft.getCurrentPosition() < 0 && robot.liftright.getCurrentPosition() > 0 && liftInput < 0) {
                 telemetry.addData("Lift", "You have reached the Minimum position, please stop moving");
-                robot.lift.setPower(0);
+                robot.liftleft.setPower(0);
+                robot.liftright.setPower(0);
             }
             else {
-                robot.lift.setPower(liftInput * LIFT_SPEED);
+                // use less power if we are going down
+                if (liftInput < 0)
+                {
+                    robot.liftleft.setPower(liftInput * LIFT_SPEED * 0.25);
+                    robot.liftright.setPower(-liftInput * LIFT_SPEED * 0.25);
+
+                }
+                else {
+                    robot.liftleft.setPower(liftInput * LIFT_SPEED);
+                    robot.liftright.setPower(-liftInput * LIFT_SPEED);
+                }
             }
 
-            telemetry.addData("lift input value (Gamepad 2 left stick)",
-                    "%.2f",
+            telemetry.addData("Lift",
+                    "lift input %.2f",
                     liftInput);
-            telemetry.addData("lift encoder value",
-                    "%7d",
-                    robot.lift.getCurrentPosition());
+            telemetry.addData("Lift",
+                    "left/right encoder %7d %7d",
+                    robot.liftleft.getCurrentPosition(), robot.liftright.getCurrentPosition());
         }
     }
 
     private void RunGrabber() {
         if(isGrabberEnabled) {
-
-            if (robot.grabber.getCurrentPosition() != robot.grabber.getTargetPosition()) {
-                robot.grabber.setPower(Grabber_Power);
-                telemetry.addData("Path2", "Running at %7d, moving towards %7d", robot.grabber.getCurrentPosition(), robot.grabber.getTargetPosition());
-            } else {
-                robot.grabber.setPower(0);
-                telemetry.addData("Path1", "grabber reached target of %7d", robot.grabber.getTargetPosition());
-            }
-            // GRABBER controls section
-            if (!robot.grabber.isBusy()) {
-                // x is open.
-                if (gamepad2.x) {
-                    robot.grabber.setTargetPosition(Open_Position);
+                double grabberInput = -gamepad2.right_stick_y;
+                int invertedPosition = -robot.grabber.getCurrentPosition();
+                // do not allow movement beyond limits
+                if (invertedPosition > Open_Position && grabberInput > 0) {
+                    telemetry.addData("grabber", "You have reached the Maximum position, please stop moving");
+                    robot.grabber.setPower(0);
                 }
-                // y is grab.
-                else if (gamepad2.y) {
-                    robot.grabber.setTargetPosition(Grabbing_Position);
-            }
-                // b is closed.
-                else if (gamepad2.b) {
-                    robot.grabber.setTargetPosition(Closed_Position);
+                else if (invertedPosition < 0 && grabberInput < 0) {
+                    telemetry.addData("grabber", "You have reached the Minimum position, please stop moving");
+                    robot.grabber.setPower(0);
+                }
+                else {
+                    robot.grabber.setPower(grabberInput * -Grabber_Power);
                 }
 
-            } else {
-                // Display it for the driver.);
-                telemetry.addData("grabber",  "grabber is running, no input accepted");
-            }
+                telemetry.addData("grabber",
+                        "grabber input %.2f",
+                        grabberInput);
+                telemetry.addData("grabber",
+                        "inverted encoder value %7d",
+                        invertedPosition);
         }
     }
 
@@ -176,9 +182,10 @@ public class ExtendomaticsBot_TeleOp extends OpMode{
             robot.leftRearDrive.setPower(Range.clip(Y - X + Z, -1, 1));
             robot.rightRearDrive.setPower(Range.clip(-X - Y + Z, -1, 1));
             // Send telemetry message to signify robot running;
-            telemetry.addData("leftpad Y", "%.2f", Y);
-            telemetry.addData("leftpad X", "%.2f", X);
-            telemetry.addData("rightpad Z", "%.2f", Z);
+            telemetry.addData("left front position", "%7d", robot.leftFrontDrive.getCurrentPosition());
+            telemetry.addData("right front position", "%7d", robot.rightFrontDrive.getCurrentPosition());
+            telemetry.addData("left rear position", "%7d", robot.leftRearDrive.getCurrentPosition());
+            telemetry.addData("right rear position", "%7d", robot.rightRearDrive.getCurrentPosition());
         }
     }
 
