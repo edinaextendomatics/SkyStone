@@ -53,7 +53,7 @@ public class ExTestRobotAuto extends OpMode {
 
         telemetry.addData("Say", "Test 1 Selected");
         telemetry.addData("Say", "Test 1 - Drive Forward 24 inches - Press X");
-        telemetry.addData("Say", "Test 2 - Drive Right 24 inches - Press Y");
+        telemetry.addData("Say", "Test 2 - Drive Right 12 inches - Press Y");
         telemetry.addData("Say", "Test 3 - Turn Right 90 degrees - Press A");
         telemetry.addData("Say", "Test 4 - Raise Lift then Lower Lift - Press B");
         telemetry.addData("Say", "Test 5 - Open,grab,open,close grabber - Press Start");
