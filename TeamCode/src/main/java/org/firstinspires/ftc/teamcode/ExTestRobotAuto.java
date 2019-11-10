@@ -13,7 +13,7 @@ public class ExTestRobotAuto extends OpMode {
     private ElapsedTime runtime = new ElapsedTime();
     static final double COUNTS_PER_INCH = 200;
     static final double COUNTS_PER_DEGREE = 100;
-    static final int LIFT_TOP_POSITION = 800;
+    static final int LIFT_TOP_POSITION = 455;
     static final double DRIVE_SPEED = 0.6;
     static final double TURN_SPEED = 0.5;
     static final int OPEN_POSITION = 600;

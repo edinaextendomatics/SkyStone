@@ -28,9 +28,8 @@
  */
 
 package org.firstinspires.ftc.teamcode;
-
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -60,24 +59,29 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
-
-@Autonomous(name="ExtendoBot: Pick up a block", group="ExtendoBot")
-public class ExPickUpBlock extends LinearOpMode {
-
+@Autonomous(name="ExtendoBot: Stones", group="ExtendoBot")
+public class ExPickUpBlock extends OpMode {
     /* Declare OpMode members. */
     ExtendomaticsHardware robot = new ExtendomaticsHardware(telemetry);
     private ElapsedTime runtime = new ElapsedTime();
-    //we will have to run alot of experiments to find this out
-    static final double COUNTS_PER_INCH = 200;
+    static final double COUNTS_PER_INCH = 98.3606557;
     static final double COUNTS_PER_DEGREE = 100;
-    static final int LIFT_TOP_POSITION = 800;
+    static final int LIFT_TOP_POSITION = 455;
     static final double DRIVE_SPEED = 0.6;
     static final double TURN_SPEED = 0.5;
     static final int OPEN_POSITION = 3200;
     static final int GRABBING_POSITION = 2400;
-
     @Override
-    public void runOpMode() {
+    public void init(){
+    }
+    @Override
+    public void init_loop(){
+    }
+    @Override
+    public void loop(){
+    }
+    @Override
+    public void start() {
 
         /*
          * Initialize the drive system variables.
@@ -111,12 +115,11 @@ public class ExPickUpBlock extends LinearOpMode {
         robot.grabber.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.grabber.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         // Wait for the game to start (driver presses PLAY)
-        waitForStart();
-
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        driveForward(DRIVE_SPEED, 30, 10.0);
-        /*driveRight(TURN_SPEED, 12, 3.0);
+        driveForward(DRIVE_SPEED, 24, 10.0);
+        driveRight(TURN_SPEED, 12, 3.0);
+        /*
         turnRight(DRIVE_SPEED, -90, 3.0);
         openGrabber( 10.0);
         grabBlock(10.0);
@@ -127,7 +130,6 @@ public class ExPickUpBlock extends LinearOpMode {
         telemetry.addData("Path", "Complete");
         telemetry.update();
     }
-
     public void driveForward(double speed,
                              double inches,
                              double timeoutS) {
@@ -137,8 +139,6 @@ public class ExPickUpBlock extends LinearOpMode {
         int newRightRearTarget;
 
         // Ensure that the opmode is still active
-        if (opModeIsActive()) {
-
             // Determine new target position, and pass to motor controller
             newLeftFrontTarget = robot.leftFrontDrive.getCurrentPosition() + (int) (inches * COUNTS_PER_INCH);
             newRightFrontTarget = robot.rightFrontDrive.getCurrentPosition() - (int) (inches * COUNTS_PER_INCH);
@@ -168,8 +168,7 @@ public class ExPickUpBlock extends LinearOpMode {
             // always end the motion as soon as possible.
             // However, if you require that BOTH motors have finished their moves before the robot continues
             // onto the next step, use (isBusy() || isBusy()) in the loop test.
-            while (opModeIsActive() &&
-                    (runtime.seconds() < timeoutS) &&
+            while ((runtime.seconds() < timeoutS) &&
                     (robot.leftFrontDrive.isBusy() && robot.rightFrontDrive.isBusy() && robot.leftRearDrive.isBusy() && robot.rightRearDrive.isBusy())) {
 
                 // Display it for the driver.
@@ -192,10 +191,7 @@ public class ExPickUpBlock extends LinearOpMode {
             robot.rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             robot.leftRearDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             robot.rightRearDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-            //  sleep(250);   // optional pause after each move
         }
-    }
 
     public void driveRight(double speed,
                            double inches,
@@ -206,8 +202,6 @@ public class ExPickUpBlock extends LinearOpMode {
         int newRightRearTarget;
 
         // Ensure that the opmode is still active
-        if (opModeIsActive()) {
-
             // Determine new target position, and pass to motor controller
             newLeftFrontTarget = robot.leftFrontDrive.getCurrentPosition() + (int) (inches * COUNTS_PER_INCH);
             newRightFrontTarget = robot.rightFrontDrive.getCurrentPosition() + (int) (inches * COUNTS_PER_INCH);
@@ -237,8 +231,7 @@ public class ExPickUpBlock extends LinearOpMode {
             // always end the motion as soon as possible.
             // However, if you require that BOTH motors have finished their moves before the robot continues
             // onto the next step, use (isBusy() || isBusy()) in the loop test.
-            while (opModeIsActive() &&
-                    (runtime.seconds() < timeoutS) &&
+            while ((runtime.seconds() < timeoutS) &&
                     (robot.leftFrontDrive.isBusy() && robot.rightFrontDrive.isBusy() && robot.leftRearDrive.isBusy() && robot.rightRearDrive.isBusy())) {
 
                 // Display it for the driver.
@@ -264,7 +257,6 @@ public class ExPickUpBlock extends LinearOpMode {
 
             //  sleep(250);   // optional pause after each move
         }
-    }
 
     public void turnRight(double speed,
                           double degrees,
@@ -275,8 +267,6 @@ public class ExPickUpBlock extends LinearOpMode {
         int newRightRearTarget;
 
         // Ensure that the opmode is still active
-        if (opModeIsActive()) {
-
             // Determine new target position, and pass to motor controller
             newLeftFrontTarget = robot.leftFrontDrive.getCurrentPosition() + (int) (degrees * COUNTS_PER_DEGREE);
             newRightFrontTarget = robot.rightFrontDrive.getCurrentPosition() + (int) (degrees * COUNTS_PER_DEGREE);
@@ -306,8 +296,7 @@ public class ExPickUpBlock extends LinearOpMode {
             // always end the motion as soon as possible.
             // However, if you require that BOTH motors have finished their moves before the robot continues
             // onto the next step, use (isBusy() || isBusy()) in the loop test.
-            while (opModeIsActive() &&
-                    (runtime.seconds() < timeoutS) &&
+            while ((runtime.seconds() < timeoutS) &&
                     (robot.leftFrontDrive.isBusy() && robot.rightFrontDrive.isBusy() && robot.leftRearDrive.isBusy() && robot.rightRearDrive.isBusy())) {
 
                 // Display it for the driver.
@@ -333,18 +322,15 @@ public class ExPickUpBlock extends LinearOpMode {
 
             //  sleep(250);   // optional pause after each move
         }
-    }
 
     public void raiseLift(double timeout) {
         // Ensure that the opmode is still active
-        if (opModeIsActive()) {
-
             robot.lift.setTargetPosition(LIFT_TOP_POSITION);
             // Turn On RUN_TO_POSITION
             robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             // reset the timeout time and start motion.
             runtime.reset();
-            robot.lift.setPower(0.7);
+            robot.lift.setPower(0.8);
 
             // keep looping while we are still active, and there is time left, and both motors are running.
             // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
@@ -352,8 +338,7 @@ public class ExPickUpBlock extends LinearOpMode {
             // always end the motion as soon as possible.
             // However, if you require that BOTH motors have finished their moves before the robot continues
             // onto the next step, use (isBusy() || isBusy()) in the loop test.
-            while (opModeIsActive() &&
-                    (runtime.seconds() < timeout) &&
+            while ((runtime.seconds() < timeout) &&
                     (robot.lift.isBusy()))
                 // Display it for the driver.
 
@@ -361,58 +346,42 @@ public class ExPickUpBlock extends LinearOpMode {
                         robot.lift.getCurrentPosition(),
                         LIFT_TOP_POSITION);
             telemetry.update();
-        }
-
         // Stop all motion;
         robot.lift.setPower(0);
-
-
         robot.lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        //  sleep(250);   // optional pause after each move
-    }
+        }
 
     public void lowerLift(double timeout) {
         // Ensure that the opmode is still active
-        if (opModeIsActive()) {
+        robot.lift.setTargetPosition(0);
+        // Turn On RUN_TO_POSITION
+        robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        // reset the timeout time and start motion.
+        runtime.reset();
+        robot.lift.setPower(0.4);
 
-            robot.lift.setTargetPosition(0);
-            // Turn On RUN_TO_POSITION
-            robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            // reset the timeout time and start motion.
-            runtime.reset();
-            robot.lift.setPower(0.7);
+        // keep looping while we are still active, and there is time left, and both motors are running.
+        // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
+        // its target position, the motion will stop.  This is "safer" in the event that the robot will
+        // always end the motion as soon as possible.
+        // However, if you require that BOTH motors have finished their moves before the robot continues
+        // onto the next step, use (isBusy() || isBusy()) in the loop test.
+        while ((runtime.seconds() < timeout) &&
+                robot.lift.isBusy()){
+            // Display it for the driver.
 
-            // keep looping while we are still active, and there is time left, and both motors are running.
-            // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
-            // its target position, the motion will stop.  This is "safer" in the event that the robot will
-            // always end the motion as soon as possible.
-            // However, if you require that BOTH motors have finished their moves before the robot continues
-            // onto the next step, use (isBusy() || isBusy()) in the loop test.
-            while (opModeIsActive() &&
-                    (runtime.seconds() < timeout) &&
-                    (robot.lift.isBusy()))
-                // Display it for the driver.
-
-                telemetry.addData("Path2", "lift position: %7d target position: %7d",
-                        robot.lift.getCurrentPosition(),
-                        0);
-            telemetry.update();
-        }
-
+            telemetry.addData("Path2", "lift position: %7d target position: %7d",
+                    robot.lift.getCurrentPosition(),
+                    0);
+        telemetry.update();
         // Stop all motion;
         robot.lift.setPower(0);
-
-
         robot.lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        //  sleep(250);   // optional pause after each move
+        }
     }
 
-    public void grabBlock(double timeout) {
+    public void grabBlock (double timeout) {
         // Ensure that the opmode is still active
-        if (opModeIsActive()) {
-
             robot.grabber.setTargetPosition(GRABBING_POSITION);
             // Turn On RUN_TO_POSITION
             robot.grabber.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -426,8 +395,7 @@ public class ExPickUpBlock extends LinearOpMode {
             // always end the motion as soon as possible.
             // However, if you require that BOTH motors have finished their moves before the robot continues
             // onto the next step, use (isBusy() || isBusy()) in the loop test.
-            while (opModeIsActive() &&
-                    (runtime.seconds() < timeout) &&
+            while ((runtime.seconds() < timeout) &&
                     (robot.grabber.isBusy()))
                 // Display it for the driver.
 
@@ -435,21 +403,14 @@ public class ExPickUpBlock extends LinearOpMode {
                         robot.grabber.getCurrentPosition(),
                         GRABBING_POSITION);
             telemetry.update();
+
+            // Stop all motion;
+            robot.grabber.setPower(0);
+            robot.grabber.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
-
-        // Stop all motion;
-        robot.grabber.setPower(0);
-
-
-        robot.grabber.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        //  sleep(250);   // optional pause after each move
-    }
 
     public void openGrabber(double timeout) {
         // Ensure that the opmode is still active
-        if (opModeIsActive()) {
-
             robot.grabber.setTargetPosition(OPEN_POSITION);
             // Turn On RUN_TO_POSITION
             robot.grabber.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -463,8 +424,7 @@ public class ExPickUpBlock extends LinearOpMode {
             // always end the motion as soon as possible.
             // However, if you require that BOTH motors have finished their moves before the robot continues
             // onto the next step, use (isBusy() || isBusy()) in the loop test.
-            while (opModeIsActive() &&
-                    (runtime.seconds() < timeout) &&
+            while ((runtime.seconds() < timeout) &&
                     (robot.grabber.isBusy()))
                 // Display it for the driver.
 
@@ -472,22 +432,14 @@ public class ExPickUpBlock extends LinearOpMode {
                         robot.grabber.getCurrentPosition(),
                         OPEN_POSITION);
             telemetry.update();
-        }
 
         // Stop all motion;
         robot.grabber.setPower(0);
-
-
         robot.grabber.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        //  sleep(250);   // optional pause after each move
-
     }
 
     public void closeGrabber(double timeout) {
         // Ensure that the opmode is still active
-        if (opModeIsActive()) {
-
             robot.grabber.setTargetPosition(0);
             // Turn On RUN_TO_POSITION
             robot.grabber.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -501,8 +453,7 @@ public class ExPickUpBlock extends LinearOpMode {
             // always end the motion as soon as possible.
             // However, if you require that BOTH motors have finished their moves before the robot continues
             // onto the next step, use (isBusy() || isBusy()) in the loop test.
-            while (opModeIsActive() &&
-                    (runtime.seconds() < timeout) &&
+            while ((runtime.seconds() < timeout) &&
                     (robot.grabber.isBusy()))
                 // Display it for the driver.
 
@@ -510,17 +461,14 @@ public class ExPickUpBlock extends LinearOpMode {
                         robot.grabber.getCurrentPosition(),
                         0);
             telemetry.update();
-        }
 
         // Stop all motion;
         robot.grabber.setPower(0);
-
-
         robot.grabber.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        //  sleep(250);   // optional pause after each move
-
+    }
+    @Override
+    public void stop(){
 
     }
-
 }

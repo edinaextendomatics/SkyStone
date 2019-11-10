@@ -54,7 +54,7 @@ public class ExtendomaticsBot_TeleOp extends OpMode{
     /* Declare OpMode members. */
      ExtendomaticsHardware robot       = new ExtendomaticsHardware(telemetry); // use the class created to define a Pushbot's hardware
 
-    static final double LIFT_SPEED = 0.6;
+    static final double LIFT_SPEED = 0.8;
     static final int Closed_Position = 0;
     static final int Open_Position = 3200;
     static final int Grabbing_Position = 2400;
@@ -112,6 +112,9 @@ public class ExtendomaticsBot_TeleOp extends OpMode{
             else if (robot.lift.getCurrentPosition() < 0 && liftInput < 0) {
                 telemetry.addData("Lift", "You have reached the Minimum position, please stop moving");
                 robot.lift.setPower(0);
+            }
+            else if (liftInput*LIFT_SPEED < 0) {
+                robot.lift.setPower(liftInput * LIFT_SPEED/1.5);
             }
             else {
                 robot.lift.setPower(liftInput * LIFT_SPEED);
