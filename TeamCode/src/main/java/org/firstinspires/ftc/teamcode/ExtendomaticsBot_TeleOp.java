@@ -58,6 +58,8 @@ public class ExtendomaticsBot_TeleOp extends OpMode{
     static final int Open_Position = 6100;
     static final double Grabber_Power = 1;
     static final double LIFT_MAX_EXTENSION_LIMIT = 460;
+    static final double LIFT_DOWN_POWER_FACTOR = 0.25;
+
     static final boolean isDriveEnabled = true;
     static final boolean isLiftEnabled = true;
     static final boolean isGrabberEnabled = true;
@@ -104,29 +106,25 @@ public class ExtendomaticsBot_TeleOp extends OpMode{
             double liftInput = -gamepad2.left_stick_y;
             // do not allow movement beyond limits
             if ((robot.liftleft.getCurrentPosition() > LIFT_MAX_EXTENSION_LIMIT
-                || -robot.liftright.getCurrentPosition() < -LIFT_MAX_EXTENSION_LIMIT)
+                || robot.liftright.getCurrentPosition() > LIFT_MAX_EXTENSION_LIMIT)
                 && liftInput > 0) {
-                telemetry.addData("Lift", "You have reached the max position, please stop moving");
+                telemetry.addData("Lift", "You have reached the Max position, please stop moving");
                 robot.liftleft.setPower(0);
                 robot.liftright.setPower(0);
             }
-            else if (robot.liftleft.getCurrentPosition() < 0 && robot.liftright.getCurrentPosition() > 0 && liftInput < 0) {
+            else if ((robot.liftleft.getCurrentPosition() < 0 || robot.liftright.getCurrentPosition() < 0) && liftInput < 0) {
                 telemetry.addData("Lift", "You have reached the Minimum position, please stop moving");
                 robot.liftleft.setPower(0);
                 robot.liftright.setPower(0);
             }
             else {
                 // use less power if we are going down
-                if (liftInput < 0)
-                {
-                    robot.liftleft.setPower(liftInput * LIFT_SPEED * 0.25);
-                    robot.liftright.setPower(-liftInput * LIFT_SPEED * 0.25);
+                double liftPower = liftInput > 0
+                        ? LIFT_SPEED
+                        : LIFT_SPEED * LIFT_DOWN_POWER_FACTOR;
 
-                }
-                else {
-                    robot.liftleft.setPower(liftInput * LIFT_SPEED);
-                    robot.liftright.setPower(-liftInput * LIFT_SPEED);
-                }
+                robot.liftleft.setPower(liftPower);
+                robot.liftright.setPower(liftPower);
             }
 
             telemetry.addData("Lift",
