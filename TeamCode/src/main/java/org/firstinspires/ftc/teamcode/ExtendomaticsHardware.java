@@ -135,8 +135,8 @@ public class ExtendomaticsHardware
         }
 
         if (initLift) {
-            liftleft = hwMap.get(DcMotor.class, "lift left");
-            liftright = hwMap.get(DcMotor.class, "lift right");
+            liftleft = hwMap.get(DcMotor.class, "liftleft");
+            liftright = hwMap.get(DcMotor.class, "liftright");
             liftleft .setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
             liftright .setDirection(DcMotor.Direction.REVERSE);
             liftleft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
