@@ -55,7 +55,7 @@ public class ExtendomaticsBot_TeleOp extends OpMode{
      ExtendomaticsHardware robot       = new ExtendomaticsHardware(telemetry); // use the class created to define a Pushbot's hardware
 
     static final double LIFT_SPEED = 1;
-    static final int Open_Position = 6100;
+    static final int Open_Position = 7600;
     static final double Grabber_Power = 1;
     static final double LIFT_MAX_EXTENSION_LIMIT = 460;
     static final boolean isDriveEnabled = true;
@@ -196,3 +196,4 @@ public class ExtendomaticsBot_TeleOp extends OpMode{
     public void stop() {
     }
 }
+
