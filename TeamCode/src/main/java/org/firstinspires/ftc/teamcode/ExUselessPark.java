@@ -48,29 +48,32 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Simple Park", group="Holonomic bot")
-public class ExHolonomicPark extends OpMode{
+@Autonomous(name="USELESS Park", group="Autonomous Park")
+public class ExUselessPark extends OpMode{
 
     /* Declare OpMode members. */
-    ExAutoDriveBot robot       = new ExAutoDriveBot(telemetry); // use the class created to define a Pushbot's hardware
+    ExtendomaticsHardware robot       = new ExtendomaticsHardware(telemetry); // use the class created to define a Pushbot's hardware
     private ElapsedTime runtime = new ElapsedTime();
 
     // Setting speed constants for turning and moving sideways or forward
-    static final double     FORWARD_SPEED = 0.5;
-    static final double     TURN_SPEED    = 0.5;
-    static final double     SIDE_SPEED    = 0.5;
+    static final double     FORWARD_SPEED = 1;
 
     static boolean isRed = false;
     static boolean isFoundationSide = false;
     static boolean parkCenter = false;
-    static double forwardDriveTime = 1.2;
-    static double sideDriveTime = 0.7;
+    static double WaitTime = 22.0;
+    static double uselessdrivetime = 2.5;
+    static double backwardscenterime = 1.25;
+    static double backwardssideime = 2;
+    static double sideDriveTime = 0.75;
+
+
     @Override
     public void init() {
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
          */
-        robot.init(hardwareMap);
+        robot.init(hardwareMap,true,false,false);
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Say", "Press X for Blue Team, B for Red Team");
         telemetry.addData("Say", "Press Y for Foundation Side, A for Blocks Side");
@@ -121,32 +124,55 @@ public class ExHolonomicPark extends OpMode{
         // driving forward for a number of seconds defined by forwardDrive time
         robot.setPowerForward(FORWARD_SPEED);
         runtime.reset();
-        while (runtime.seconds() < (parkCenter ? 1 : 0.2) * forwardDriveTime) {
+        while (runtime.seconds() <  uselessdrivetime) {
+            telemetry.addData("Path", " Drive: %2.5f S Elapsed", runtime.seconds());
+            telemetry.update();
+        }
+        robot.setPowerForward(0);
+        // WAIT in the middle for the wait time
+        runtime.reset();
+        while (runtime.seconds() < WaitTime) {
+            telemetry.addData("timer", "Countdown: %2.5f", (WaitTime - runtime.seconds()));
+            telemetry.update();
+        }
+        // back up to center or side
+
+        // move right or left depending on isRed
+
+        robot.setPowerForward(-FORWARD_SPEED);
+        runtime.reset();
+        while (runtime.seconds() < (parkCenter ? backwardscenterime:backwardssideime)) {
             telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
             telemetry.update();
         }
 
-        //this multiplies the 2 varibles foundation direction and right direction to output
-        // then drives right for sideDriveTime seconds
-        robot.setPowerRight(rightDirection * FORWARD_SPEED);
+        // stop the robot
+        robot.setPowerForward(0);
+        telemetry.addData("Say", "Robot stopped");
+        telemetry.update();
+
+
+
+        double colorDirection = isRed ? 1:-1;
+        double sidePosition = isFoundationSide ? -1:1;
+        robot.setPowerRight(colorDirection * sidePosition);
         runtime.reset();
         while (runtime.seconds() < sideDriveTime) {
-            telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
+            telemetry.addData("Path", "Side Drive: %2.5f S Elapsed", runtime.seconds());
             telemetry.update();
         }
+
         // stop the robot
-        robot.setPowerRight(0);
         robot.setPowerForward(0);
-        robot.setPowerTurnRight(0);
         telemetry.addData("Say", "Robot stopped");
         telemetry.update();
     }
-
     /*
      * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
      */
     @Override
     public void loop() {
+
     }
 
 
