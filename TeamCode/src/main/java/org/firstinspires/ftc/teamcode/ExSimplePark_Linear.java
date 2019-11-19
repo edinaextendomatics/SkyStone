@@ -30,6 +30,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -48,8 +49,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="USELESS Park", group="Autonomous Park")
-public class ExUselessPark extends OpMode{
+@Autonomous(name="Linear Simple Park", group="Autonomous Park")
+public class ExSimplePark_Linear extends LinearOpMode {
 
     /* Declare OpMode members. */
     ExtendomaticsHardware robot       = new ExtendomaticsHardware(telemetry); // use the class created to define a Pushbot's hardware
@@ -61,15 +62,15 @@ public class ExUselessPark extends OpMode{
     static boolean isRed = false;
     static boolean isFoundationSide = false;
     static boolean parkCenter = false;
-    static double WaitTime = 23.0;
-    static double uselessdrivetime = 2.5;
-    static double backwardscenterime = 1.5;
-    static double backwardssideime = 2.25;
+    static boolean finalChoices = false;
+    static double forwardDriveTime = 1;
     static double sideDriveTime = 0.75;
-
+    static double MaxTime = 3.0;
 
     @Override
-    public void init() {
+    public void runOpMode()
+    {
+
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
          */
@@ -78,13 +79,28 @@ public class ExUselessPark extends OpMode{
         telemetry.addData("Say", "Press X for Blue Team, B for Red Team");
         telemetry.addData("Say", "Press Y for Foundation Side, A for Blocks Side");
         telemetry.addData("Say", "Press Start for center parking, press back for side parking");
+        telemetry.addData("Say", "Press Right Trigger and left trigger at the same time to finalize your choices");
+        while (opModeIsActive() && !finalChoices)
+        {
+            userInput();
+        }
+        waitForStart();
+        double colorDirection = isRed ? 1:-1;
+        double sidePosition = isFoundationSide ? -1:1;
+        robot.setPowerRight(colorDirection * sidePosition);
+        runtime.reset();
+        while (runtime.seconds() < sideDriveTime) {
+            telemetry.addData("Path", "Side Drive: %2.5f S Elapsed", runtime.seconds());
+            telemetry.update();
+        }
+        robot.setPowerRight(0);
+        robot.setPowerForward(0);
+        robot.setPowerTurnRight(0);
+        telemetry.addData("Say", "Robot stopped");
+        telemetry.update();
     }
 
-    /*
-     * Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
-     */
-    @Override
-    public void init_loop() {
+    public void userInput() {
         if (gamepad1.start) {
             parkCenter = true;
         }
@@ -104,88 +120,21 @@ public class ExUselessPark extends OpMode{
         if (gamepad1.y) {
             isFoundationSide = true;
         }
+        if (gamepad1.right_trigger>0 && gamepad1.left_trigger>0)
+        {
+            finalChoices = true;
+        }
         String teamMessage = (isRed ? "Red " : "Blue ") + "Team selected";
         String positionMessage = (isFoundationSide ? "Foundation " : "Block ") + "Side selected";
         String parkMessage = (parkCenter ? "Center " : "Side ") + "park selected";
         telemetry.addData("Say", teamMessage);
         telemetry.addData("Say", positionMessage);
         telemetry.addData("Say", parkMessage);
+        telemetry.addData("Say", finalChoices);
         telemetry.addData("Say", "Press X for Blue Team, B for Red Team");
         telemetry.addData("Say", "Press Y for Foundation Side, A for Blocks Side");
         telemetry.addData("Say", "Press Start for center parking, press back for side parking");
+        telemetry.addData("Say", "Press Right Trigger to finalize your choices");
     }
 
-    /*
-     * Code to run ONCE when the driver hits PLAY
-     */
-    @Override
-    public void start() {
-
-    }
-    /*
-     * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
-     */
-    @Override
-    public void loop() {
-        int rightDirection = isRed ? -1 : 1;
-        // driving forward for a number of seconds defined by forwardDrive time
-        robot.setPowerForward(FORWARD_SPEED);
-        runtime.reset();
-        while (runtime.seconds() <  uselessdrivetime) {
-            telemetry.addData("Path", " Drive: %2.5f S Elapsed", runtime.seconds());
-            telemetry.update();
-        }
-        robot.setPowerForward(0);
-        // WAIT in the middle for the wait time
-        runtime.reset();
-        while (runtime.seconds() < WaitTime) {
-            telemetry.addData("timer", "Countdown: %2.5f", (WaitTime - runtime.seconds()));
-            telemetry.update();
-        }
-        // back up to center or side
-
-        // move right or left depending on isRed
-
-        robot.setPowerForward(-FORWARD_SPEED);
-        runtime.reset();
-        while (runtime.seconds() < (parkCenter ? backwardscenterime:backwardssideime)) {
-            telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
-            telemetry.update();
-        }
-
-        // stop the robot
-        robot.setPowerForward(0);
-        telemetry.addData("Say", "Robot stopped");
-        telemetry.update();
-
-
-
-        double colorDirection = isRed ? 1:-1;
-        double sidePosition = isFoundationSide ? -1:1;
-        robot.setPowerRight(colorDirection * sidePosition);
-        runtime.reset();
-        while (runtime.seconds() < sideDriveTime) {
-            telemetry.addData("Path", "Side Drive: %2.5f S Elapsed", runtime.seconds());
-            telemetry.update();
-        }
-
-        // stop the robot
-        robot.setPowerForward(0);
-        telemetry.addData("Say", "Robot stopped");
-        telemetry.update();
-        runtime.reset();
-        while (runtime.seconds() < 10) {
-
-        }
-    }
-
-
-
-
-    /*
-     * Code to run ONCE after the driver hits STOP
-     */
-    @Override
-    public void stop() {
-    }
 }
