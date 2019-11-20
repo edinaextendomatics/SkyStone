@@ -61,25 +61,32 @@ public class ExUselessPark_Linear extends LinearOpMode {
 
     static boolean isRed = false;
     static boolean isFoundationSide = false;
-    static boolean parkCenter = false;
+    static boolean parkCenter = true;
     static double WaitTime = 23.0;
     static double uselessdrivetime = 2.5;
     static double backwardscenterime = 1.5;
     static double backwardssideime = 2.25;
-    static double sideDriveTime = 0.75;
+    static double sideDriveTime = 0.8;
     static boolean finalChoices = false;
-
     @Override
     public void runOpMode() {
 
         robot.init(hardwareMap, true, false, false);
-        // Send telemetry message to signify robot waiting;
-        SayUserDirections();
 
-        while (opModeIsActive() && !finalChoices) {
+        while (!finalChoices)
+        {
+            telemetry.addData("bot", "we got to the while loop! yay!");
             userInput();
+            idle();
         }
-
+        String teamMessage = (isRed ? "Red " : "Blue ") + "Team selected";
+        String positionMessage = (isFoundationSide ? "Foundation " : "Block ") + "Side selected";
+        String parkMessage = (parkCenter ? "Center " : "Side ") + "park selected";
+        telemetry.addData("Say", "Final Choices are in");
+        telemetry.addData("Say", teamMessage);
+        telemetry.addData("Say", positionMessage);
+        telemetry.addData("Say", parkMessage);
+        telemetry.update();
         waitForStart();
 
         executeDriving();
@@ -130,7 +137,7 @@ public class ExUselessPark_Linear extends LinearOpMode {
         robot.setPowerForward(0);
         telemetry.addData("Say", "Robot stopped");
         telemetry.update();
-
+        finalChoices = false;
     }
 
     public void userInput() {
@@ -159,18 +166,12 @@ public class ExUselessPark_Linear extends LinearOpMode {
         String teamMessage = (isRed ? "Red " : "Blue ") + "Team selected";
         String positionMessage = (isFoundationSide ? "Foundation " : "Block ") + "Side selected";
         String parkMessage = (parkCenter ? "Center " : "Side ") + "park selected";
-        telemetry.addData("Say", teamMessage);
-        telemetry.addData("Say", positionMessage);
-        telemetry.addData("Say", parkMessage);
-        SayUserDirections();
+        telemetry.addData("Say", teamMessage+ " Press X for Blue Team, B for Red Team");
+        telemetry.addData("Say", positionMessage+" Press Y for Foundation Side, A for Blocks Side");
+        telemetry.addData("Say", parkMessage+"Press Start for center parking, press back for side parking");
+        telemetry.addData("Say", "Final Choices: "+finalChoices+" Press Right Trigger and Left Trigger to finalize your choices");
+        telemetry.update();
 
     }
-    public void SayUserDirections()
-    {
 
-        telemetry.addData("Say", "Press X for Blue Team, B for Red Team");
-        telemetry.addData("Say", "Press Y for Foundation Side, A for Blocks Side");
-        telemetry.addData("Say", "Press Start for center parking, press back for side parking");
-        telemetry.addData("Say", "Press Right Trigger and left trigger at the same time to finalize your choices");
-    }
 }

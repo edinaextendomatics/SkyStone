@@ -61,11 +61,10 @@ public class ExSimplePark_Linear extends LinearOpMode {
 
     static boolean isRed = false;
     static boolean isFoundationSide = false;
-    static boolean parkCenter = false;
+    static boolean parkCenter = true;
     static boolean finalChoices = false;
     static double forwardDriveTime = 1;
-    static double sideDriveTime = 0.75;
-    static double MaxTime = 3.0;
+    static double sideDriveTime = 0.8;
 
     @Override
     public void runOpMode()
@@ -76,15 +75,31 @@ public class ExSimplePark_Linear extends LinearOpMode {
          */
         robot.init(hardwareMap,true,false,false);
         // Send telemetry message to signify robot waiting;
-        telemetry.addData("Say", "Press X for Blue Team, B for Red Team");
-        telemetry.addData("Say", "Press Y for Foundation Side, A for Blocks Side");
-        telemetry.addData("Say", "Press Start for center parking, press back for side parking");
-        telemetry.addData("Say", "Press Right Trigger and left trigger at the same time to finalize your choices");
-        while (opModeIsActive() && !finalChoices)
+        while (!finalChoices)
         {
+            telemetry.addData("bot", "we got to the while loop! yay!");
             userInput();
+            idle();
         }
+        String teamMessage = (isRed ? "Red " : "Blue ") + "Team selected";
+        String positionMessage = (isFoundationSide ? "Foundation " : "Block ") + "Side selected";
+        String parkMessage = (parkCenter ? "Center " : "Side ") + "park selected";
+        telemetry.addData("Say", "Final Choices are in");
+        telemetry.addData("Say", teamMessage);
+        telemetry.addData("Say", positionMessage);
+        telemetry.addData("Say", parkMessage);
+        telemetry.update();
         waitForStart();
+        // drive to center or side!
+        robot.setPowerForward(1);
+        runtime.reset();
+        while (runtime.seconds() < forwardDriveTime * (parkCenter ? 1:0.2)) {
+            telemetry.addData("Path", "Forward Drive: %2.5f S Elapsed", runtime.seconds());
+            telemetry.update();
+        }
+        robot.setPowerForward(0);
+
+        // drive right or left
         double colorDirection = isRed ? 1:-1;
         double sidePosition = isFoundationSide ? -1:1;
         robot.setPowerRight(colorDirection * sidePosition);
@@ -93,11 +108,11 @@ public class ExSimplePark_Linear extends LinearOpMode {
             telemetry.addData("Path", "Side Drive: %2.5f S Elapsed", runtime.seconds());
             telemetry.update();
         }
-        robot.setPowerRight(0);
         robot.setPowerForward(0);
-        robot.setPowerTurnRight(0);
         telemetry.addData("Say", "Robot stopped");
         telemetry.update();
+        finalChoices = false;
+
     }
 
     public void userInput() {
@@ -127,14 +142,11 @@ public class ExSimplePark_Linear extends LinearOpMode {
         String teamMessage = (isRed ? "Red " : "Blue ") + "Team selected";
         String positionMessage = (isFoundationSide ? "Foundation " : "Block ") + "Side selected";
         String parkMessage = (parkCenter ? "Center " : "Side ") + "park selected";
-        telemetry.addData("Say", teamMessage);
-        telemetry.addData("Say", positionMessage);
-        telemetry.addData("Say", parkMessage);
-        telemetry.addData("Say", finalChoices);
-        telemetry.addData("Say", "Press X for Blue Team, B for Red Team");
-        telemetry.addData("Say", "Press Y for Foundation Side, A for Blocks Side");
-        telemetry.addData("Say", "Press Start for center parking, press back for side parking");
-        telemetry.addData("Say", "Press Right Trigger to finalize your choices");
+        telemetry.addData("Say", teamMessage+ " Press X for Blue Team, B for Red Team");
+        telemetry.addData("Say", positionMessage+" Press Y for Foundation Side, A for Blocks Side");
+        telemetry.addData("Say", parkMessage+"Press Start for center parking, press back for side parking");
+        telemetry.addData("Say", "Final Choices: "+finalChoices+" Press Right Trigger and Left Trigger to finalize your choices");
+        telemetry.update();
     }
 
 }
