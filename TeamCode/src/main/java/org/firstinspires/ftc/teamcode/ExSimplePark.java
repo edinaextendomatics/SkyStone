@@ -32,6 +32,7 @@ package org.firstinspires.ftc.teamcode;
 import android.graphics.Color;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -55,6 +56,7 @@ import java.util.Locale;
  */
 
 @Autonomous(name="Simple Park", group="Autonomous Park")
+@Disabled
 public class ExSimplePark extends OpMode{
 
     /* Declare OpMode members. */
