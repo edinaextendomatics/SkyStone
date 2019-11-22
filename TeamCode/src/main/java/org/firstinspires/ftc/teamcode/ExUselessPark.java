@@ -54,7 +54,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class ExUselessPark extends OpMode{
 
     /* Declare OpMode members. */
-    ExtendomaticsHardware robot       = new ExtendomaticsHardware(telemetry); // use the class created to define a Pushbot's hardware
+    ExtendomaticsHardware robot = new ExtendomaticsHardware(telemetry); // use the class created to define a Pushbot's hardware
     private ElapsedTime runtime = new ElapsedTime();
 
     // Setting speed constants for turning and moving sideways or forward
@@ -130,6 +130,8 @@ public class ExUselessPark extends OpMode{
     @Override
     public void loop() {
         int rightDirection = isRed ? -1 : 1;
+        double colorDirection = isRed ? -1:1;
+        double sidePosition = isFoundationSide ? 1:-1;
         // driving forward for a number of seconds defined by forwardDrive time
         robot.setPowerForward(FORWARD_SPEED);
         runtime.reset();
@@ -145,31 +147,25 @@ public class ExUselessPark extends OpMode{
             telemetry.update();
         }
         // back up to center or side
-
-        // move right or left depending on isRed
-
         robot.setPowerForward(-FORWARD_SPEED);
         runtime.reset();
         while (runtime.seconds() < (parkCenter ? backwardscenterime:backwardssideime)) {
             telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
             telemetry.update();
         }
-
+        // move right or left depending on isRed
         // stop the robot
         robot.setPowerForward(0);
         telemetry.addData("Say", "Robot stopped");
         telemetry.update();
 
-
-
-        double colorDirection = isRed ? 1:-1;
-        double sidePosition = isFoundationSide ? -1:1;
         robot.setPowerRight(colorDirection * sidePosition);
         runtime.reset();
         while (runtime.seconds() < sideDriveTime) {
             telemetry.addData("Path", "Side Drive: %2.5f S Elapsed", runtime.seconds());
             telemetry.update();
         }
+        telemetry.addData("There is no problem here", runtime.seconds());
 
         // stop the robot
         robot.setPowerForward(0);

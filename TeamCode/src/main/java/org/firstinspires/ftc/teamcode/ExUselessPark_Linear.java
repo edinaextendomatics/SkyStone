@@ -88,7 +88,6 @@ public class ExUselessPark_Linear extends LinearOpMode {
         telemetry.addData("Say", parkMessage);
         telemetry.update();
         waitForStart();
-
         executeDriving();
     }
 
@@ -109,9 +108,6 @@ public class ExUselessPark_Linear extends LinearOpMode {
             telemetry.update();
         }
         // back up to center or side
-
-        // move right or left depending on isRed
-
         robot.setPowerForward(-FORWARD_SPEED);
         runtime.reset();
         while (runtime.seconds() < (parkCenter ? backwardscenterime : backwardssideime)) {
