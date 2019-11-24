@@ -132,7 +132,7 @@ public class ExMoveFoundationandPark extends LinearOpMode {
         int    CYCLE_MS    =   50;
         double MAX_POS     =  1.0; // Initial Position
         double MIN_POS     =  0.0; // Closed/Hooked Position
-        
+
         double colorDirection = isRed ? 1:-1;
 
         /*
@@ -404,93 +404,5 @@ public class ExMoveFoundationandPark extends LinearOpMode {
         robot.rightRearDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         //  sleep(250);   // optional pause after each move
-    }
-
-    public void grabBlock (double timeout) {
-        // Ensure that the opmode is still active
-        robot.grabber.setTargetPosition(GRABBING_POSITION);
-        // Turn On RUN_TO_POSITION
-        robot.grabber.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        // reset the timeout time and start motion.
-        runtime.reset();
-        robot.grabber.setPower(0.7);
-
-        // keep looping while we are still active, and there is time left, and both motors are running.
-        // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
-        // its target position, the motion will stop.  This is "safer" in the event that the robot will
-        // always end the motion as soon as possible.
-        // However, if you require that BOTH motors have finished their moves before the robot continues
-        // onto the next step, use (isBusy() || isBusy()) in the loop test.
-        while ((runtime.seconds() < timeout) &&
-                (robot.grabber.isBusy()))
-            // Display it for the driver.
-
-            telemetry.addData("Path2", "grabber position: %7d target position: %7d",
-                    robot.grabber.getCurrentPosition(),
-                    GRABBING_POSITION);
-        telemetry.update();
-
-        // Stop all motion;
-        robot.grabber.setPower(0);
-        robot.grabber.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-    }
-
-    public void openGrabber(double timeout) {
-        // Ensure that the opmode is still active
-        robot.grabber.setTargetPosition(OPEN_POSITION);
-        // Turn On RUN_TO_POSITION
-        robot.grabber.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        // reset the timeout time and start motion.
-        runtime.reset();
-        robot.grabber.setPower(0.7);
-
-        // keep looping while we are still active, and there is time left, and both motors are running.
-        // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
-        // its target position, the motion will stop.  This is "safer" in the event that the robot will
-        // always end the motion as soon as possible.
-        // However, if you require that BOTH motors have finished their moves before the robot continues
-        // onto the next step, use (isBusy() || isBusy()) in the loop test.
-        while ((runtime.seconds() < timeout) &&
-                (robot.grabber.isBusy()))
-            // Display it for the driver.
-
-            telemetry.addData("Path2", "grabber position: %7d target position: %7d",
-                    robot.grabber.getCurrentPosition(),
-                    OPEN_POSITION);
-        telemetry.update();
-
-        // Stop all motion;
-        robot.grabber.setPower(0);
-        robot.grabber.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-    }
-
-    public void closeGrabber(double timeout) {
-        // Ensure that the opmode is still active
-        robot.grabber.setTargetPosition(0);
-        // Turn On RUN_TO_POSITION
-        robot.grabber.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        // reset the timeout time and start motion.
-        runtime.reset();
-        robot.grabber.setPower(0.7);
-
-        // keep looping while we are still active, and there is time left, and both motors are running.
-        // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
-        // its target position, the motion will stop.  This is "safer" in the event that the robot will
-        // always end the motion as soon as possible.
-        // However, if you require that BOTH motors have finished their moves before the robot continues
-        // onto the next step, use (isBusy() || isBusy()) in the loop test.
-        while ((runtime.seconds() < timeout) &&
-                (robot.grabber.isBusy()))
-            // Display it for the driver.
-
-            telemetry.addData("Path2", "grabber position: %7d target position: %7d",
-                    robot.grabber.getCurrentPosition(),
-                    0);
-        telemetry.update();
-
-        // Stop all motion;
-        robot.grabber.setPower(0);
-        robot.grabber.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
     }
 }
