@@ -110,7 +110,7 @@ public class ExMoveFoundationandPark extends LinearOpMode {
         robot.setPowerForward(0);
 
         // drive right or left
-        double colorDirection = isRed ? 1:-1;
+        double colorDirection = isRed ? -1:1; //flipped because robot is positioned backwards
         double sidePosition = isFoundationSide ? -1:1;
         robot.setPowerRight(colorDirection * sidePosition);
         runtime.reset();
@@ -130,7 +130,7 @@ public class ExMoveFoundationandPark extends LinearOpMode {
         double MAX_POS     =  1.0; // Initial Position
         double MIN_POS     =  0.0; // Closed/Hooked Position
 
-        double colorDirection = isRed ? 1:-1;
+        double colorDirection = isRed ? -1:1; // flipped because robot is positioned backwards
 
         /*
          * Initialize the drive system variables.
@@ -165,12 +165,12 @@ public class ExMoveFoundationandPark extends LinearOpMode {
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
         // Orientation is having the back of the bot face away from the drivers, set 2 feet away from alliance bridge marker
 
-        driveRight(DRIVE_SPEED, -colorDirection*28, 4.0);
+        driveRight(DRIVE_SPEED, colorDirection*28, 4.0);
         driveForward(DRIVE_SPEED, -28, 4.0);
         // IMPORTANT!!! add foundation hook going down code
         driveForward(DRIVE_SPEED, 28, 4.0);
         // IMPORTANT!!! add foundation hook going back up code
-        driveRight(DRIVE_SPEED, colorDirection*28, 4.0);
+        driveRight(DRIVE_SPEED, -colorDirection*28, 4.0);
 
 
         telemetry.addData("Path", "Complete");
