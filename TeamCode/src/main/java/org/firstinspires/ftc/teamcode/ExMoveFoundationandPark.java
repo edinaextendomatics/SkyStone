@@ -67,10 +67,12 @@ public class ExMoveFoundationandPark extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
     static final double COUNTS_PER_INCH = 98.3606557;
     static final double COUNTS_PER_DEGREE = 100;
-    static final double DRIVE_SPEED = 0.6;
-    static final double TURN_SPEED = 0.5;
+    static final double DRIVE_SPEED = 0.8;
     static double forwardDriveTime = 1;
     static double sideDriveTime = 0.8;
+    static double INCREMENT   = 0.02;
+    static double MAX_POS     =  1.0; // Initial Position
+    static double MIN_POS     =  0.0; // Closed/Hooked Position
     static boolean finalChoices = false;
     static boolean isRed = false;
     static boolean isFoundationSide = false;
@@ -125,10 +127,7 @@ public class ExMoveFoundationandPark extends LinearOpMode {
     }
 
     public void execute_foundation() {
-        double INCREMENT   = 0.01;
         int    CYCLE_MS    =   50;
-        double MAX_POS     =  1.0; // Initial Position
-        double MIN_POS     =  0.0; // Closed/Hooked Position
 
         double colorDirection = isRed ? -1:1; // flipped because robot is positioned backwards
 
@@ -167,15 +166,33 @@ public class ExMoveFoundationandPark extends LinearOpMode {
 
         driveRight(DRIVE_SPEED, colorDirection*27, 4.0);
         driveForward(DRIVE_SPEED, -28, 4.0);
-        // IMPORTANT!!! add foundation hook going down code
+        rampDown();
         driveForward(DRIVE_SPEED, 28, 4.0);
-        // IMPORTANT!!! add foundation hook going back up code
+        rampUp();
         driveRight(DRIVE_SPEED, -colorDirection*27, 4.0);
 
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
     }
+
+    public void rampDown(){
+       double position = MAX_POS;
+       position -= INCREMENT;
+       if(position <= MIN_POS) {
+           position = MIN_POS;
+       }
+       robot.foundation_hook.setPosition(position);
+    }
+    public void rampUp(){
+        double position = MIN_POS;
+        position += INCREMENT;
+        if(position >= MAX_POS) {
+            position = MAX_POS;
+        }
+        robot.foundation_hook.setPosition(position);
+    }
+
     public void userInput() {
         if (gamepad1.start) {
             parkCenter = true;
