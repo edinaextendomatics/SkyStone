@@ -153,7 +153,7 @@ public class ExtendomaticsHardware
         }
         if (initfoundation_hook) {
             foundation_hook = hwMap.get(Servo.class, "foundation_hook");
-            foundation_hook.setPosition(Servo.MIN_POSITION);
+            foundation_hook.setPosition(Servo.MAX_POSITION);
         }
 
     }
