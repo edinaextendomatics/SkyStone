@@ -67,11 +67,8 @@ public class ExMoveFoundationandPark extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
     static final double COUNTS_PER_INCH = 98.3606557;
     static final double COUNTS_PER_DEGREE = 100;
-    static final int LIFT_TOP_POSITION = 455;
     static final double DRIVE_SPEED = 0.6;
     static final double TURN_SPEED = 0.5;
-    static final int OPEN_POSITION = 3200;
-    static final int GRABBING_POSITION = 2400;
     static double forwardDriveTime = 1;
     static double sideDriveTime = 0.8;
     static boolean finalChoices = false;
