@@ -128,7 +128,7 @@ public class ExMoveFoundationandPark extends LinearOpMode {
     }
 
     public void execute_foundation() {
-
+        double colorDirection = isRed ? 1:-1;
         /*
          * Initialize the drive system variables.
          * The init() method of the hardware class does all the work here
@@ -156,19 +156,19 @@ public class ExMoveFoundationandPark extends LinearOpMode {
                 robot.rightRearDrive.getCurrentPosition());
 
         telemetry.update();
-        robot.liftright.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.liftright.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.liftleft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.liftleft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.grabber.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.grabber.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
         // Wait for the game to start (driver presses PLAY)
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
         // Orientation is having the back of the bot face away from the drivers, set 2 feet away from alliance bridge marker
-        driveRight(DRIVE_SPEED, -28, 4.0);
+
+        driveRight(DRIVE_SPEED, colorDirection*28, 4.0);
         driveForward(DRIVE_SPEED, -28, 4.0);
-        
+        // IMPORTANT!!! add foundation hook going down code
+        driveForward(DRIVE_SPEED, 28, 4.0);
+        // IMPORTANT!!! add foundation hook going back up code
+        driveRight(DRIVE_SPEED, -colorDirection*28, 4.0);
+
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
