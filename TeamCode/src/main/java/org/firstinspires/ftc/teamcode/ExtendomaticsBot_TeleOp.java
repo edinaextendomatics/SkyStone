@@ -59,17 +59,21 @@ public class ExtendomaticsBot_TeleOp extends OpMode{
     static final double Grabber_Power = 1;
     static final double LIFT_MAX_EXTENSION_LIMIT = 460;
     static final double LIFT_DOWN_POWER_FACTOR = 0.125;
+    static double INCREMENT   = 0.02;
+    static double MAX_POS     =  1.0; // Initial Position
+    static double MIN_POS     =  0.0; // Closed/Hooked Position
 
     static final boolean isDriveEnabled = true;
     static final boolean isLiftEnabled = true;
     static final boolean isGrabberEnabled = true;
+    static final boolean isFoundationHookEnabled = false;
 
     @Override
     public void init() {
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
          */
-        robot.init(super.hardwareMap, isDriveEnabled, isGrabberEnabled, isLiftEnabled);
+        robot.init(super.hardwareMap, isDriveEnabled, isGrabberEnabled, isLiftEnabled, isFoundationHookEnabled);
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Say", "Hello, Good Luck!");
     }
@@ -97,8 +101,23 @@ public class ExtendomaticsBot_TeleOp extends OpMode{
         RunLift();
         RunDrive();
         RunGrabber();
+        RunFoundationHook();
 
         telemetry.update();
+    }
+
+    private void RunFoundationHook() {
+        double position = MAX_POS;
+        if(gamepad2.dpad_down) {
+            position -= INCREMENT;
+        }
+        else if(gamepad2.dpad_up) {
+            position += INCREMENT;
+        }
+        position = Range.clip(position, MIN_POS, MAX_POS);
+        robot.foundation_hook.setPosition(position);
+
+        telemetry.addData("foundation hook position : ", "%.2f", position);
     }
 
     private void RunLift() {
