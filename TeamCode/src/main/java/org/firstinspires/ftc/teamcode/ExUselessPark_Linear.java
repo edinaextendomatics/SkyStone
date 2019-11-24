@@ -72,7 +72,7 @@ public class ExUselessPark_Linear extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-        robot.init(hardwareMap, true, false, false);
+        robot.init(hardwareMap, true, false, false, false);
 
         while (!finalChoices)
         {
