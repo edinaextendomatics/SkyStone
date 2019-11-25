@@ -183,7 +183,6 @@ public class ExMoveFoundationandPark extends LinearOpMode {
         telemetry.update();
     }
 
-        position += INCREMENT;
     public void userInput() {
         if (gamepad1.start) {
             parkCenter = true;
