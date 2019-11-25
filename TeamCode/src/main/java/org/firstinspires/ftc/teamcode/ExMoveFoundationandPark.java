@@ -169,9 +169,11 @@ public class ExMoveFoundationandPark extends LinearOpMode {
 
         driveRight(DRIVE_SPEED, colorDirection*27, 3.0);
         driveForward(DRIVE_SPEED, -28, 3.0);
-        rampDown();
+        robot.foundation_hook.setPosition(0);
+        sleep(2000);
         driveForward(DRIVE_SPEED, 28, 3.0);
-        rampUp();
+        robot.foundation_hook.setPosition(1);
+        sleep(2000);
         driveRight(DRIVE_SPEED, -colorDirection*27, 3.0);
         sleep(500);
         driveForward(DRIVE_SPEED,24*forwardParkCenter, 3.0);
@@ -181,23 +183,7 @@ public class ExMoveFoundationandPark extends LinearOpMode {
         telemetry.update();
     }
 
-    public void rampDown(){
-       double position = MAX_POS;
-       position -= INCREMENT;
-       if(position <= MIN_POS) {
-           position = MIN_POS;
-       }
-       robot.foundation_hook.setPosition(position);
-    }
-    public void rampUp(){
-        double position = MIN_POS;
         position += INCREMENT;
-        if(position >= MAX_POS) {
-            position = MAX_POS;
-        }
-        robot.foundation_hook.setPosition(position);
-    }
-
     public void userInput() {
         if (gamepad1.start) {
             parkCenter = true;
