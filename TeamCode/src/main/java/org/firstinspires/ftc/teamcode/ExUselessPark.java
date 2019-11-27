@@ -75,7 +75,7 @@ public class ExUselessPark extends OpMode{
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
          */
-        robot.init(hardwareMap,true,false,false);
+        robot.init(hardwareMap,true,false,false, false);
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Say", "Press X for Blue Team, B for Red Team");
         telemetry.addData("Say", "Press Y for Foundation Side, A for Blocks Side");

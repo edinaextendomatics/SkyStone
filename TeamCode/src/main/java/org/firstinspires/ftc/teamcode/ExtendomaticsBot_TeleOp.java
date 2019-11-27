@@ -59,17 +59,25 @@ public class ExtendomaticsBot_TeleOp extends OpMode{
     static final double Grabber_Power = 1;
     static final double LIFT_MAX_EXTENSION_LIMIT = 460;
     static final double LIFT_DOWN_POWER_FACTOR = 0.125;
+    static final double INCREMENT   = 0.01;     // amount to slew servo each CYCLE_MS cycle
+    static final int    CYCLE_MS    =   50;     // period of each cycle
+    static final double MAX_POS     =  1.0;     // Maximum rotational position
+    static final double MIN_POS     =  0.0;     // Minimum rotational position
 
     static final boolean isDriveEnabled = true;
     static final boolean isLiftEnabled = true;
     static final boolean isGrabberEnabled = true;
-
+    static final boolean isGrabberServosEnabled = true;
+    static final double Servo_Open_PositionF = 0.0;
+    static final double Servo_Close_PositionF = 0.75;
+    static final double Servo_Open_PositionG = 0.0;
+    static final double Servo_Close_PositionG = 0.75;
     @Override
     public void init() {
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
          */
-        robot.init(super.hardwareMap, isDriveEnabled, isGrabberEnabled, isLiftEnabled);
+        robot.init(super.hardwareMap, isDriveEnabled, isGrabberEnabled, isLiftEnabled, isGrabberServosEnabled);
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Say", "Hello, Good Luck!");
     }
@@ -97,6 +105,8 @@ public class ExtendomaticsBot_TeleOp extends OpMode{
         RunLift();
         RunDrive();
         RunGrabber();
+        RunGrabberServos();
+        RunFoundationServos();
 
         telemetry.update();
     }
@@ -138,6 +148,8 @@ public class ExtendomaticsBot_TeleOp extends OpMode{
 
     private void RunGrabber() {
         if(isGrabberEnabled) {
+
+                // Grabber Base Code
                 double grabberInput = -gamepad2.right_stick_y;
 
                 int invertedPosition = -robot.grabber.getCurrentPosition();
@@ -160,6 +172,30 @@ public class ExtendomaticsBot_TeleOp extends OpMode{
                 telemetry.addData("grabber",
                         "inverted encoder value %7d",
                         invertedPosition);
+
+                // Grabber Servo Code
+        }
+    }
+
+    private void RunGrabberServos(){
+        // grabber servo code
+        if(gamepad2.left_trigger > 0 && gamepad2.right_trigger <= 0) {
+
+            robot.grabberServo.setPosition(Servo_Open_PositionG);
+        }
+        if (gamepad2.right_trigger > 0 && gamepad2.left_trigger <= 0) {
+
+            robot.grabberServo.setPosition(Servo_Close_PositionG);
+        }
+    }
+
+    private void RunFoundationServos(){
+        // foundation servo code
+        if(gamepad2.dpad_down = true) {
+            robot.grabberServo.setPosition(Servo_Open_PositionF);
+        }
+        if (gamepad2.dpad_up = true) {
+            robot.grabberServo.setPosition(Servo_Close_PositionF);
         }
     }
 

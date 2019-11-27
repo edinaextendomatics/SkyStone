@@ -65,6 +65,10 @@ public class ExtendomaticsHardware
     public DcMotor  liftleft = null;
     public DcMotor  liftright = null;
     public DcMotor  grabber = null;
+    public Servo    grabberServo = null;
+    public Servo    foundationServo = null;
+
+    public static double SERVO_INITIAL_POSITION = 0;
 
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
@@ -76,10 +80,10 @@ public class ExtendomaticsHardware
     }
     /* Initialize standard Hardware interfaces */
     public void init(HardwareMap ahwMap) {
-        init(ahwMap, true, true, true);
+        init(ahwMap, true, true, true, true);
     }
 
-    public void init(HardwareMap ahwMap, boolean initDriveMotors, boolean initGrabber, boolean initLift) {
+    public void init(HardwareMap ahwMap, boolean initDriveMotors, boolean initGrabber, boolean initLift, boolean initGrabberServos) {
         // Save reference to Hardware map
         hwMap = ahwMap;
 
@@ -87,7 +91,8 @@ public class ExtendomaticsHardware
                 "initDriveMotors=%b; initGrabber=%b; initLift=%b",
                 initDriveMotors,
                 initGrabber,
-                initLift);
+                initLift,
+                initGrabberServos);
 
         if (initDriveMotors){
             leftFrontDrive  = hwMap.get(DcMotor.class, "left_front_drive");
@@ -149,6 +154,13 @@ public class ExtendomaticsHardware
             liftright.setPower(0);
             telemetry.addData("Init()", "Lift left motor initialized.");
             telemetry.addData("Init()", "Lift right motor initialized.");
+        }
+
+        if (initGrabberServos) {
+            grabberServo = hwMap.get(Servo.class, "servo_1");
+            foundationServo = hwMap.get(Servo.class, "servo_2");
+            grabberServo.setPosition(SERVO_INITIAL_POSITION);
+            foundationServo.setPosition(SERVO_INITIAL_POSITION);
         }
 
     }
