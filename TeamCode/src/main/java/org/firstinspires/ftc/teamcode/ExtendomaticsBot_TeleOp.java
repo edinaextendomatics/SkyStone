@@ -62,6 +62,7 @@ public class ExtendomaticsBot_TeleOp extends OpMode{
     static double INCREMENT   = 0.02;
     static double MAX_POS     =  1.0; // Initial Position
     static double MIN_POS     =  0.0; // Closed/Hooked Position
+    static int CYCLE_MS       =   50;
 
     static final boolean isDriveEnabled = true;
     static final boolean isLiftEnabled = true;
@@ -108,15 +109,14 @@ public class ExtendomaticsBot_TeleOp extends OpMode{
 
     private void RunFoundationHook() {
         double position = MAX_POS;
-        if(gamepad2.dpad_down) {
+        if(gamepad2.dpad_down = true) {
             position -= INCREMENT;
         }
-        else if(gamepad2.dpad_up) {
+        else if(gamepad2.dpad_up = true) {
             position += INCREMENT;
         }
         position = Range.clip(position, MIN_POS, MAX_POS);
         robot.foundation_hook.setPosition(position);
-
         telemetry.addData("foundation hook position : ", "%.2f", position);
     }
 
