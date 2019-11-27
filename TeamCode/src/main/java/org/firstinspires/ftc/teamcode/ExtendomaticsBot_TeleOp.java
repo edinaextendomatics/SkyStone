@@ -59,22 +59,23 @@ public class ExtendomaticsBot_TeleOp extends OpMode{
     static final double Grabber_Power = 1;
     static final double LIFT_MAX_EXTENSION_LIMIT = 460;
     static final double LIFT_DOWN_POWER_FACTOR = 0.125;
-    static double INCREMENT   = 0.02;
-    static double MAX_POS     =  1.0; // Initial Position
-    static double MIN_POS     =  0.0; // Closed/Hooked Position
-    static int CYCLE_MS       =   50;
+    static final double INCREMENT   = 0.02;
+    static final double MAX_POS     =  1.0; // Initial Position
+    static final double MIN_POS     =  0.0; // Closed/Hooked Position
+    static final int CYCLE_MS       =   50;
 
     static final boolean isDriveEnabled = true;
     static final boolean isLiftEnabled = true;
     static final boolean isGrabberEnabled = true;
-    static final boolean isFoundationHookEnabled = false;
+    static final boolean isFoundationHookEnabled = true;
+    static final boolean isGrabberServosEnabled = true;
 
     @Override
     public void init() {
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
          */
-        robot.init(super.hardwareMap, isDriveEnabled, isGrabberEnabled, isLiftEnabled, isFoundationHookEnabled);
+        robot.init(super.hardwareMap, isDriveEnabled, isGrabberEnabled, isLiftEnabled, isFoundationHookEnabled, isGrabberServosEnabled);
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Say", "Hello, Good Luck!");
     }
@@ -102,22 +103,36 @@ public class ExtendomaticsBot_TeleOp extends OpMode{
         RunLift();
         RunDrive();
         RunGrabber();
+        RunGrabberServos();
         RunFoundationHook();
 
         telemetry.update();
     }
 
     private void RunFoundationHook() {
-        double position = MAX_POS;
+        double foundation_hook_position = 0;
         if(gamepad2.dpad_down = true) {
-            position -= INCREMENT;
+            foundation_hook_position -= INCREMENT;
         }
         else if(gamepad2.dpad_up = true) {
-            position += INCREMENT;
+            foundation_hook_position += INCREMENT;
         }
-        position = Range.clip(position, MIN_POS, MAX_POS);
-        robot.foundation_hook.setPosition(position);
-        telemetry.addData("foundation hook position : ", "%.2f", position);
+        foundation_hook_position = Range.clip(foundation_hook_position, MIN_POS, MAX_POS);
+        robot.foundation_hook.setPosition(foundation_hook_position);
+        telemetry.addData("foundation hook position : ", "%.2f", foundation_hook_position);
+    }
+
+    private void RunGrabberServos() {
+        double grabber_servos_position = 0;
+        if(gamepad2.left_trigger > 0 && gamepad2.right_trigger <=0) {
+            grabber_servos_position -= INCREMENT;
+        } else if (gamepad2.right_trigger > 0 && gamepad2.left_trigger <=0){
+            grabber_servos_position += INCREMENT;
+        }
+        grabber_servos_position = Range.clip(grabber_servos_position, MIN_POS, MAX_POS);
+        robot.grabberServo_1.setPosition(grabber_servos_position);
+        robot.grabberServo_2.setPosition(grabber_servos_position);
+        telemetry.addData("grabber servo positons : ", "%.2f", grabber_servos_position);
     }
 
     private void RunLift() {

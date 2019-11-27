@@ -73,7 +73,7 @@ public class ExSimplePark_Linear extends LinearOpMode {
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
          */
-        robot.init(hardwareMap,true,false,false, false);
+        robot.init(hardwareMap,true,false,false, false, false);
         // Send telemetry message to signify robot waiting;
         while (!finalChoices)
         {

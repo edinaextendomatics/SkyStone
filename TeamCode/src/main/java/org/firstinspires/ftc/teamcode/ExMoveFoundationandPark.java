@@ -80,7 +80,7 @@ public class ExMoveFoundationandPark extends LinearOpMode {
 
     public void runOpMode(){
 
-        robot.init(hardwareMap, true, false, false, true);
+        robot.init(hardwareMap, true, false, false, true, false);
 
         while (!finalChoices)
         {
