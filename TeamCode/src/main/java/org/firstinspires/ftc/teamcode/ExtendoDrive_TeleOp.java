@@ -51,7 +51,7 @@ public class ExtendoDrive_TeleOp extends OpMode{
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
          */
-        robot.init(hardwareMap, true, false, false);
+        robot.init(hardwareMap, true, false, false, false, false);
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Say", "Hello, Good Luck!");
     }
@@ -97,7 +97,6 @@ public class ExtendoDrive_TeleOp extends OpMode{
         telemetry.addData("leftpad Y",  "%.2f", Y);
         telemetry.addData("leftpad X", "%.2f", X);
         telemetry.addData("rightpad Z", "%.2f", Z);
-
 
     }
     /*
