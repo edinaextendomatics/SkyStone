@@ -58,7 +58,7 @@ public class ExtendomaticsBot_TeleOp extends OpMode{
     static final int Open_Position = 7600;
     static final double Grabber_Power = 1;
     static final double LIFT_MAX_EXTENSION_LIMIT = 460;
-    static final double LIFT_DOWN_POWER_FACTOR = 0.125;
+    static final double LIFT_DOWN_POWER_FACTOR = 0.2;
     static final double INCREMENT   = 0.02;
     static final double MAX_POS     =  1.0; // Initial Position
     static final double MIN_POS     =  0.0; // Closed/Hooked Position
