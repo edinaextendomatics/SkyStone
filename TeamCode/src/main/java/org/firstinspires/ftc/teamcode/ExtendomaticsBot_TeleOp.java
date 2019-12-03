@@ -202,28 +202,28 @@ public class ExtendomaticsBot_TeleOp extends OpMode{
         double X;
         double Y;
         double Z;
-        double RightTriggerInput;
+        double TriggerInput;
 
         // collect user input from left and right gamepad controls and set internal variable X & Y & Z
         X = gamepad1.left_stick_x;
         Y = -gamepad1.left_stick_y;
         Z = -gamepad1.right_stick_x;
         if(gamepad1.left_trigger == 1 && gamepad1.right_trigger == 1) {
-            RightTriggerInput = 1;
+            TriggerInput = 1;
         } else if(gamepad1.right_trigger == 1){
-            RightTriggerInput = 0.25;
+            TriggerInput = 0.25;
         } else if(gamepad1.left_trigger == 1){
-            RightTriggerInput = 0.5;
+            TriggerInput = 0.5;
         }  else{
-            RightTriggerInput = 0.75;
+            TriggerInput = 0.75;
         }
 
         // use X, Y, & Z to set power for each of the motors
         if(isDriveEnabled) {
-            robot.leftFrontDrive.setPower((Range.clip(Y + X + Z, -RightTriggerInput, RightTriggerInput)));
-            robot.rightFrontDrive.setPower(Range.clip(X - Y + Z, -RightTriggerInput, RightTriggerInput));
-            robot.leftRearDrive.setPower(Range.clip(Y - X + Z, -RightTriggerInput, RightTriggerInput));
-            robot.rightRearDrive.setPower(Range.clip(-X - Y + Z, -RightTriggerInput, RightTriggerInput));
+            robot.leftFrontDrive.setPower((Range.clip(Y + X + Z, -TriggerInput, TriggerInput)));
+            robot.rightFrontDrive.setPower(Range.clip(X - Y + Z, -TriggerInput, TriggerInput));
+            robot.leftRearDrive.setPower(Range.clip(Y - X + Z, -TriggerInput, TriggerInput));
+            robot.rightRearDrive.setPower(Range.clip(-X - Y + Z, -TriggerInput, TriggerInput));
             // Send telemetry message to signify robot running;
             telemetry.addData("left front position", "%7d", robot.leftFrontDrive.getCurrentPosition());
             telemetry.addData("right front position", "%7d", robot.rightFrontDrive.getCurrentPosition());
