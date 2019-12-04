@@ -178,20 +178,15 @@ public class ExColorPark extends OpMode{
     {
         return  hueValue > low && hueValue < high;
     }
-    /*
-     * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
-     */
+    // Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
+
     @Override
     public void loop() {
 
     }
 
+    //Code to run ONCE after the driver hits STOP
 
-
-
-    /*
-     * Code to run ONCE after the driver hits STOP
-     */
     @Override
     public void stop() {
     }

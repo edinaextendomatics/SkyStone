@@ -68,10 +68,11 @@ public class ExUselessPark_Linear extends LinearOpMode {
     static double backwardssideime = 2.25;
     static double sideDriveTime = 0.8;
     static boolean finalChoices = false;
+    
     @Override
     public void runOpMode() {
 
-        robot.init(hardwareMap, true, false, false);
+        robot.init(hardwareMap, true, false, false, false, false);
 
         while (!finalChoices)
         {

@@ -59,7 +59,7 @@ public class ExMotorTest extends OpMode{
     static final double     FORWARD_SPEED = 0.5;
 
     public void init(){
-        robot.init(hardwareMap,true,false,false);
+        robot.init(hardwareMap,true,false,false,false, false);
     }
     public void init_loop() {
     }

@@ -58,18 +58,24 @@ public class ExtendomaticsBot_TeleOp extends OpMode{
     static final int Open_Position = 7600;
     static final double Grabber_Power = 1;
     static final double LIFT_MAX_EXTENSION_LIMIT = 460;
-    static final double LIFT_DOWN_POWER_FACTOR = 0.125;
+    static final double LIFT_DOWN_POWER_FACTOR = 0.2;
+    static final double INCREMENT   = 0.02;
+    static final double MAX_POS     =  1.0; // Initial Position
+    static final double MIN_POS     =  0.0; // Closed/Hooked Position
+    static final int CYCLE_MS       =   50;
 
     static final boolean isDriveEnabled = true;
     static final boolean isLiftEnabled = true;
     static final boolean isGrabberEnabled = true;
+    static final boolean isFoundationHookEnabled = true;
+    static final boolean isGrabberServosEnabled = true;
 
     @Override
     public void init() {
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
          */
-        robot.init(super.hardwareMap, isDriveEnabled, isGrabberEnabled, isLiftEnabled);
+        robot.init(super.hardwareMap, isDriveEnabled, isGrabberEnabled, isLiftEnabled, isFoundationHookEnabled, isGrabberServosEnabled);
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Say", "Hello, Good Luck!");
     }
@@ -97,8 +103,36 @@ public class ExtendomaticsBot_TeleOp extends OpMode{
         RunLift();
         RunDrive();
         RunGrabber();
+        RunGrabberServos();
+        RunFoundationHook();
 
         telemetry.update();
+    }
+
+    private void RunFoundationHook() {
+        double foundation_hook_position = 0;
+        if(gamepad2.dpad_down = true) {
+            foundation_hook_position -= INCREMENT;
+        }
+        else if(gamepad2.dpad_up = true) {
+            foundation_hook_position += INCREMENT;
+        }
+        foundation_hook_position = Range.clip(foundation_hook_position, MIN_POS, MAX_POS);
+        robot.foundation_hook.setPosition(foundation_hook_position);
+        telemetry.addData("foundation hook position : ", "%.2f", foundation_hook_position);
+    }
+
+    private void RunGrabberServos() {
+        double grabber_servos_position = 0;
+        if(gamepad2.left_trigger > 0 && gamepad2.right_trigger <=0) {
+            grabber_servos_position -= INCREMENT;
+        } else if (gamepad2.right_trigger > 0 && gamepad2.left_trigger <=0){
+            grabber_servos_position += INCREMENT;
+        }
+        grabber_servos_position = Range.clip(grabber_servos_position, MIN_POS, MAX_POS);
+        robot.grabberServo_1.setPosition(grabber_servos_position);
+        robot.grabberServo_2.setPosition(grabber_servos_position);
+        telemetry.addData("grabber servo positons : ", "%.2f", grabber_servos_position);
     }
 
     private void RunLift() {
@@ -168,28 +202,28 @@ public class ExtendomaticsBot_TeleOp extends OpMode{
         double X;
         double Y;
         double Z;
-        double RightTriggerInput;
+        double TriggerInput;
 
         // collect user input from left and right gamepad controls and set internal variable X & Y & Z
         X = gamepad1.left_stick_x;
         Y = -gamepad1.left_stick_y;
         Z = -gamepad1.right_stick_x;
         if(gamepad1.left_trigger == 1 && gamepad1.right_trigger == 1) {
-            RightTriggerInput = 1;
+            TriggerInput = 1;
         } else if(gamepad1.right_trigger == 1){
-            RightTriggerInput = 0.25;
+            TriggerInput = 0.25;
         } else if(gamepad1.left_trigger == 1){
-            RightTriggerInput = 0.5;
+            TriggerInput = 0.5;
         }  else{
-            RightTriggerInput = 0.75;
+            TriggerInput = 0.75;
         }
 
         // use X, Y, & Z to set power for each of the motors
         if(isDriveEnabled) {
-            robot.leftFrontDrive.setPower((Range.clip(Y + X + Z, -RightTriggerInput, RightTriggerInput)));
-            robot.rightFrontDrive.setPower(Range.clip(X - Y + Z, -RightTriggerInput, RightTriggerInput));
-            robot.leftRearDrive.setPower(Range.clip(Y - X + Z, -RightTriggerInput, RightTriggerInput));
-            robot.rightRearDrive.setPower(Range.clip(-X - Y + Z, -RightTriggerInput, RightTriggerInput));
+            robot.leftFrontDrive.setPower((Range.clip(Y + X + Z, -TriggerInput, TriggerInput)));
+            robot.rightFrontDrive.setPower(Range.clip(X - Y + Z, -TriggerInput, TriggerInput));
+            robot.leftRearDrive.setPower(Range.clip(Y - X + Z, -TriggerInput, TriggerInput));
+            robot.rightRearDrive.setPower(Range.clip(-X - Y + Z, -TriggerInput, TriggerInput));
             // Send telemetry message to signify robot running;
             telemetry.addData("left front position", "%7d", robot.leftFrontDrive.getCurrentPosition());
             telemetry.addData("right front position", "%7d", robot.rightFrontDrive.getCurrentPosition());
