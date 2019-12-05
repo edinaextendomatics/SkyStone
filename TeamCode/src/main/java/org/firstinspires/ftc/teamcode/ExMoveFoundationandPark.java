@@ -73,6 +73,8 @@ public class ExMoveFoundationandPark extends LinearOpMode {
     static double INCREMENT   = 0.02;
     static double MAX_POS     =  1.0; // Initial Position
     static double MIN_POS     =  0.0; // Closed/Hooked Position
+    static double up   = 1;
+    static double down = 0;
     static boolean finalChoices = false;
     static boolean isRed = false;
     static boolean isFoundationSide = false;
@@ -167,12 +169,13 @@ public class ExMoveFoundationandPark extends LinearOpMode {
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
         // Orientation is having the back of the bot face away from the drivers, set 2 feet away from alliance bridge marker
 
+
         driveRight(DRIVE_SPEED, colorDirection*27, 3.0);
-        driveForward(DRIVE_SPEED, -28, 3.0);
-        robot.foundation_hook.setPosition(0);
+        driveForward(DRIVE_SPEED, -30, 3.0);
+        robot.foundation_hook.setPosition(down);
         sleep(2000);
-        driveForward(DRIVE_SPEED, 28, 3.0);
-        robot.foundation_hook.setPosition(1);
+        driveForward(DRIVE_SPEED, 29, 3.0);
+        robot.foundation_hook.setPosition(up);
         sleep(2000);
         driveRight(DRIVE_SPEED, -colorDirection*27, 3.0);
         sleep(500);

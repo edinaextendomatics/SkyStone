@@ -63,7 +63,8 @@ public class ExtendomaticsBot_TeleOp extends OpMode{
     static final double MAX_POS     =  1.0; // Initial Position
     static final double MIN_POS     =  0.0; // Closed/Hooked Position
     static final int CYCLE_MS       =   50;
-
+    static double foundation_hook_position  = 0;
+    static double grabber_servos_position   = 0;
     static final boolean isDriveEnabled = true;
     static final boolean isLiftEnabled = true;
     static final boolean isGrabberEnabled = true;
@@ -110,20 +111,18 @@ public class ExtendomaticsBot_TeleOp extends OpMode{
     }
 
     private void RunFoundationHook() {
-        double foundation_hook_position = 0;
-        if(gamepad2.dpad_down = true) {
+        if(gamepad2.dpad_down) {
             foundation_hook_position -= INCREMENT;
         }
-        else if(gamepad2.dpad_up = true) {
+        else if(gamepad2.dpad_up) {
             foundation_hook_position += INCREMENT;
         }
-        foundation_hook_position = Range.clip(foundation_hook_position, MIN_POS, MAX_POS);
+        foundation_hook_position = Range.clip(foundation_hook_position, 0.48, MAX_POS);
         robot.foundation_hook.setPosition(foundation_hook_position);
         telemetry.addData("foundation hook position : ", "%.2f", foundation_hook_position);
     }
 
     private void RunGrabberServos() {
-        double grabber_servos_position = 0;
         if(gamepad2.left_trigger > 0 && gamepad2.right_trigger <=0) {
             grabber_servos_position -= INCREMENT;
         } else if (gamepad2.right_trigger > 0 && gamepad2.left_trigger <=0){
