@@ -68,13 +68,10 @@ public class ExMoveFoundationandPark extends LinearOpMode {
     static final double COUNTS_PER_INCH = 98.3606557;
     static final double COUNTS_PER_DEGREE = 100;
     static final double DRIVE_SPEED = 0.8;
-    static double forwardDriveTime = 1;
-    static double sideDriveTime = 0.8;
-    static double INCREMENT   = 0.02;
     static double MAX_POS     =  1.0; // Initial Position
     static double MIN_POS     =  0.0; // Closed/Hooked Position
     static double up   = 1;
-    static double down = 0;
+    static double down = 0.46;
     static boolean finalChoices = false;
     static boolean isRed = false;
     static boolean isFoundationSide = false;
@@ -102,37 +99,11 @@ public class ExMoveFoundationandPark extends LinearOpMode {
         waitForStart();
         // executes foundation grabbing sequence
         execute_foundation();
-
-        // executes parking procedure
-        // drive to center or side!
-
-        /*
-        robot.setPowerForward(1);
-        runtime.reset();
-        while (runtime.seconds() < forwardDriveTime * (parkCenter ? 1:0.2)) {
-            telemetry.addData("Path", "Forward Drive: %2.5f S Elapsed", runtime.seconds());
-            telemetry.update();
-        }
-        robot.setPowerForward(0);
-
-        // drive right or left
-        double colorDirection = isRed ? -1:1; //flipped because robot is positioned backwards
-        double sidePosition = isFoundationSide ? -1:1;
-        robot.setPowerRight(colorDirection * sidePosition);
-        runtime.reset();
-        while (runtime.seconds() < sideDriveTime) {
-            telemetry.addData("Path", "Side Drive: %2.5f S Elapsed", runtime.seconds());
-            telemetry.update();
-        }
-        robot.setPowerForward(0);
-        telemetry.addData("Say", "Robot stopped");
-        telemetry.update();
-        finalChoices = false; */
     }
 
     public void execute_foundation() {
         int    CYCLE_MS    =   50;
-        double forwardParkCenter = parkCenter ? -1:-0.2;
+        double forwardParkCenter = parkCenter ? -10:19;
         double colorDirection = isRed ? -1:1; // flipped because robot is positioned backwards
         double sidePosition = isFoundationSide ? -1:1;
 
@@ -167,20 +138,23 @@ public class ExMoveFoundationandPark extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        // Orientation is having the back of the bot face away from the drivers, set 2 feet away from alliance bridge marker
+        // Orientation is having the back of the bot face away from the drivers, set as close to building site as possible
 
 
-        driveRight(DRIVE_SPEED, colorDirection*27, 3.0);
-        driveForward(DRIVE_SPEED, -30, 3.0);
+        driveRight(DRIVE_SPEED, colorDirection*11.5, 3.0);
+        driveForward(DRIVE_SPEED, -29.5, 5.0);
         robot.foundation_hook.setPosition(down);
         sleep(2000);
-        driveForward(DRIVE_SPEED, 29, 3.0);
+        driveForward(DRIVE_SPEED, 28, 4.5);
         robot.foundation_hook.setPosition(up);
         sleep(2000);
-        driveRight(DRIVE_SPEED, -colorDirection*27, 3.0);
+        driveRight(DRIVE_SPEED, -colorDirection*37.5, 5.0);
+        driveForward(DRIVE_SPEED, -18.5, 3.0);
+        driveRight(DRIVE_SPEED, colorDirection*4, 1.0);
         sleep(500);
-        driveForward(DRIVE_SPEED,24*forwardParkCenter, 3.0);
-        driveRight(DRIVE_SPEED, sidePosition*colorDirection*32, 3.0);
+        // parking sequence
+        driveForward(DRIVE_SPEED,forwardParkCenter, 4.0);
+        driveRight(DRIVE_SPEED, sidePosition*colorDirection*30, 5.0);
 
         telemetry.addData("Path", "Complete");
         telemetry.update();

@@ -67,7 +67,6 @@ public class ExtendomaticsHardware
     public DcMotor  grabber = null;
     public Servo    foundation_hook = null;
     public Servo    grabberServo_1 = null;
-    public Servo    grabberServo_2 = null;
     public static double INITIAL_SERVO_POSITION = 0;
     public static double INITIAL_FOUNDATION_SERVO_POSITION = 0.5;
 
@@ -161,9 +160,7 @@ public class ExtendomaticsHardware
         }
         if (initGrabberServos) {
             grabberServo_1 = hwMap.get(Servo.class, "grabberServo_1");
-            grabberServo_2 = hwMap.get(Servo.class, "grabberServo_2");
             grabberServo_1.setPosition(INITIAL_SERVO_POSITION);
-            grabberServo_2.setPosition(INITIAL_SERVO_POSITION);
         }
 
     }

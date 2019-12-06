@@ -111,10 +111,10 @@ public class ExtendomaticsBot_TeleOp extends OpMode{
     }
 
     private void RunFoundationHook() {
-        if(gamepad2.dpad_down) {
+        if(gamepad1.dpad_down) {
             foundation_hook_position -= INCREMENT;
         }
-        else if(gamepad2.dpad_up) {
+        else if(gamepad1.dpad_up) {
             foundation_hook_position += INCREMENT;
         }
         foundation_hook_position = Range.clip(foundation_hook_position, 0.48, MAX_POS);
@@ -128,9 +128,8 @@ public class ExtendomaticsBot_TeleOp extends OpMode{
         } else if (gamepad2.right_trigger > 0 && gamepad2.left_trigger <=0){
             grabber_servos_position += INCREMENT;
         }
-        grabber_servos_position = Range.clip(grabber_servos_position, MIN_POS, MAX_POS);
+        grabber_servos_position = Range.clip(grabber_servos_position, MIN_POS, 1.25);
         robot.grabberServo_1.setPosition(grabber_servos_position);
-        robot.grabberServo_2.setPosition(grabber_servos_position);
         telemetry.addData("grabber servo positons : ", "%.2f", grabber_servos_position);
     }
 
