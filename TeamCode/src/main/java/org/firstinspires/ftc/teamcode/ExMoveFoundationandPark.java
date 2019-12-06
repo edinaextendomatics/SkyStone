@@ -100,7 +100,6 @@ public class ExMoveFoundationandPark extends LinearOpMode {
     }
 
     public void execute_foundation() {
-        int    CYCLE_MS    =   50;
         double forwardParkCenter = parkCenter ? -10:19;
         double colorDirection = isRed ? -1:1; // flipped because robot is positioned backwards
         double sidePosition = isFoundationSide ? -1:1;
@@ -134,10 +133,10 @@ public class ExMoveFoundationandPark extends LinearOpMode {
         telemetry.update();
 
         // Wait for the game to start (driver presses PLAY)
-        // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
         // Orientation is having the back of the bot face away from the drivers, set as close to building site as possible
 
+        // Sequence initiated
 
         driveRight(DRIVE_SPEED, colorDirection*11.5, 3.0);
         driveForward(DRIVE_SPEED, -29.5, 5.0);
@@ -227,11 +226,8 @@ public class ExMoveFoundationandPark extends LinearOpMode {
         robot.rightRearDrive.setPower(Math.abs(speed));
 
         // keep looping while we are still active, and there is time left, and both motors are running.
-        // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
-        // its target position, the motion will stop.  This is "safer" in the event that the robot will
-        // always end the motion as soon as possible.
-        // However, if you require that BOTH motors have finished their moves before the robot continues
-        // onto the next step, use (isBusy() || isBusy()) in the loop test.
+        // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits its target position, the motion will stop.  This is "safer" in the event that the robot will always end the motion as soon as possible.
+        // However, if you require that BOTH motors have finished their moves before the robot continues onto the next step, use (isBusy() || isBusy()) in the loop test.
         while ((runtime.seconds() < timeoutS) &&
                 (robot.leftFrontDrive.isBusy() && robot.rightFrontDrive.isBusy() && robot.leftRearDrive.isBusy() && robot.rightRearDrive.isBusy())) {
 
@@ -290,11 +286,9 @@ public class ExMoveFoundationandPark extends LinearOpMode {
         robot.rightRearDrive.setPower(Math.abs(speed));
 
         // keep looping while we are still active, and there is time left, and both motors are running.
-        // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
-        // its target position, the motion will stop.  This is "safer" in the event that the robot will
-        // always end the motion as soon as possible.
-        // However, if you require that BOTH motors have finished their moves before the robot continues
-        // onto the next step, use (isBusy() || isBusy()) in the loop test.
+        // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits its target position, the motion will stop.  This is "safer" in the event that the robot will always end the motion as soon as possible.
+        // However, if you require that BOTH motors have finished their moves before the robot continues onto the next step, use (isBusy() || isBusy()) in the loop test.
+
         while ((runtime.seconds() < timeoutS) &&
                 (robot.leftFrontDrive.isBusy() && robot.rightFrontDrive.isBusy() && robot.leftRearDrive.isBusy() && robot.rightRearDrive.isBusy())) {
 
