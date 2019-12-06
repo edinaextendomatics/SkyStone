@@ -68,8 +68,6 @@ public class ExMoveFoundationandPark extends LinearOpMode {
     static final double COUNTS_PER_INCH = 98.3606557;
     static final double COUNTS_PER_DEGREE = 100;
     static final double DRIVE_SPEED = 0.8;
-    static double MAX_POS     =  1.0; // Initial Position
-    static double MIN_POS     =  0.0; // Closed/Hooked Position
     static double up   = 1;
     static double down = 0.46;
     static boolean finalChoices = false;
@@ -79,7 +77,7 @@ public class ExMoveFoundationandPark extends LinearOpMode {
 
     public void runOpMode(){
 
-        robot.init(hardwareMap, true, false, false, true, false);
+        robot.init(hardwareMap, true, false, false, true, true);
 
         while (!finalChoices)
         {
@@ -151,7 +149,9 @@ public class ExMoveFoundationandPark extends LinearOpMode {
         driveRight(DRIVE_SPEED, -colorDirection*37.5, 5.0);
         driveForward(DRIVE_SPEED, -18.5, 3.0);
         driveRight(DRIVE_SPEED, colorDirection*4, 1.0);
-        sleep(500);
+        // brings foundation hook down so robot can fit under alliance bridge
+        robot.grabberServo_1.setPosition(1.25);
+        sleep(1000);
         // parking sequence
         driveForward(DRIVE_SPEED,forwardParkCenter, 4.0);
         driveRight(DRIVE_SPEED, sidePosition*colorDirection*30, 5.0);
