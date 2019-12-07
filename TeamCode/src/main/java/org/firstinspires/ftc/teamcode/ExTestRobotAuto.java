@@ -59,10 +59,8 @@ public class ExTestRobotAuto extends OpMode {
         telemetry.addData("Say", "Test 5 - Open,grab,open,close grabber - Press Start");
 
     }
-
     @Override
     public void init_loop() {
-
         if (gamepad1.x) {
             TestNumber = 1;
             telemetry.addData("Say", "Test 1 Selected");
@@ -89,7 +87,6 @@ public class ExTestRobotAuto extends OpMode {
         telemetry.addData("Say", "Test 4 - Raise Lift then Lower Lift - Press B");
         telemetry.addData("Say", "Test 5 - Open,grab,open,close grabber - Press Start");
     }
-
     @Override
     public void start(){
         if (TestNumber == 1) {

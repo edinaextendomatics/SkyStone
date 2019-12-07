@@ -46,7 +46,7 @@ public class ExMoveFoundationandPark extends LinearOpMode {
     static double down = 0.46;
     static boolean finalChoices = false;
     static boolean isRed = false;
-    static boolean isFoundationSide = false;
+    static boolean isFoundationSide = true;
     static boolean parkCenter = true;
 
     public void runOpMode(){
