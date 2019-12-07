@@ -140,11 +140,11 @@ public class ExtendomaticsHardware
         }
         if (initfoundation_hook) {
             foundation_hook = hwMap.get(Servo.class, "foundation_hook");
-            foundation_hook.setPosition(INITIAL_FOUNDATION_SERVO_POSITION);
+            //foundation_hook.setPosition(INITIAL_FOUNDATION_SERVO_POSITION);
         }
         if (initGrabberServos) {
             grabberServo_1 = hwMap.get(Servo.class, "grabberServo_1");
-            grabberServo_1.setPosition(INITIAL_SERVO_POSITION);
+            //grabberServo_1.setPosition(INITIAL_SERVO_POSITION);
         }
 
     }
