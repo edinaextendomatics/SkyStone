@@ -52,7 +52,7 @@ public class ExtendomaticsHardware
     public Servo    foundation_hook = null;
     public Servo    grabberServo_1 = null;
     public static double INITIAL_SERVO_POSITION = 0;
-    public static double INITIAL_FOUNDATION_SERVO_POSITION = 0.5;
+    public static double INITIAL_FOUNDATION_SERVO_POSITION = 1;
 
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
@@ -140,7 +140,7 @@ public class ExtendomaticsHardware
         }
         if (initfoundation_hook) {
             foundation_hook = hwMap.get(Servo.class, "foundation_hook");
-            //foundation_hook.setPosition(INITIAL_FOUNDATION_SERVO_POSITION);
+            foundation_hook.setPosition(INITIAL_FOUNDATION_SERVO_POSITION);
         }
         if (initGrabberServos) {
             grabberServo_1 = hwMap.get(Servo.class, "grabberServo_1");
