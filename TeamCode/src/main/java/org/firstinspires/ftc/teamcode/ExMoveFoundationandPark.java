@@ -122,7 +122,7 @@ public class ExMoveFoundationandPark extends LinearOpMode {
         driveRight(DRIVE_SPEED, -colorDirection*37.5, 5.0);
         driveForward(DRIVE_SPEED, -18.5, 3.0);
         driveRight(DRIVE_SPEED, colorDirection*4, 1.0);
-        // brings foundation hook down so robot can fit under alliance bridge
+        // brings grabber servo down so robot can fit under alliance bridge
         robot.grabberServo_1.setPosition(1.25);
         sleep(1000);
         // parking sequence
