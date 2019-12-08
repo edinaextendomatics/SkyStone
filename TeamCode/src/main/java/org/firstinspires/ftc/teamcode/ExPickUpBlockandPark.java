@@ -117,10 +117,16 @@ public class ExPickUpBlockandPark {
         public void userInput() {
             if (gamepad1.dpad_left){
                 run_1_Block -= 1;
+                if(run_1_Block<=0){
+                    run_1_Block = 0;
+                }
                 telemetry.addData("1st run block number : ",run_1_Block);
             }
             if (gamepad1.dpad_right){
                 run_1_Block += 1;
+                if(run_1_Block>=2){
+                    run_1_Block = 2;
+                }
                 telemetry.addData("1st run block number : ",run_1_Block);
             }
             if (gamepad1.start) {
