@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -92,21 +91,21 @@ public class ExPickUpBlockandPark {
             // first sequence
             driveForward(DRIVE_SPEED, 29.75, 3.5);
             driveRight(DRIVE_SPEED,-colorDirection*sidePosition*first_run_position, 3);
-            robot.grabberServo_1.setPosition(0);
+            robot.grabberServo_1.setPosition(1.25);
             sleep(1000);
             driveForward(DRIVE_SPEED, forwardParkCenter, 4.0);
             driveRight(DRIVE_SPEED,colorDirection*sidePosition*(first_run_position+48), 6);
-            robot.grabberServo_1.setPosition(0.5);
+            robot.grabberServo_1.setPosition(0.75);
             sleep(1000);
             driveRight(DRIVE_SPEED, -48, 5);
             // second sequence
             driveForward(DRIVE_SPEED, 30, 3.5);
             driveRight(DRIVE_SPEED,-colorDirection*sidePosition*second_run_position, 5);
-            robot.grabberServo_1.setPosition(0);
+            robot.grabberServo_1.setPosition(1.25);
             sleep(1000);
             driveForward(DRIVE_SPEED, forwardParkCenter, 4.0);
             driveRight(DRIVE_SPEED,colorDirection*sidePosition*(second_run_position+48), 5);
-            robot.grabberServo_1.setPosition(0.5);
+            robot.grabberServo_1.setPosition(0.75);
             driveRight(DRIVE_SPEED, -24, 3);
             sleep(500);
 
