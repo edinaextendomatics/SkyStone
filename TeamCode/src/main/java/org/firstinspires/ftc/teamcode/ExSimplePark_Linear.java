@@ -75,6 +75,9 @@ public class ExSimplePark_Linear extends LinearOpMode {
         telemetry.addData("Say", parkMessage);
         telemetry.update();
         waitForStart();
+
+        robot.grabberServo_1.setPosition(1.25);
+
         // drive to center or side!
         robot.setPowerForward(1);
         runtime.reset();

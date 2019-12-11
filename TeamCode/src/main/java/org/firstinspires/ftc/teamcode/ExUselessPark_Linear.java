@@ -80,6 +80,7 @@ public class ExUselessPark_Linear extends LinearOpMode {
     public void executeDriving()
     {
         // driving forward for a number of seconds defined by forwardDrive time
+        robot.grabberServo_1.setPosition(1.25);
         robot.setPowerForward(FORWARD_SPEED);
         runtime.reset();
         while (runtime.seconds() < uselessdrivetime) {
