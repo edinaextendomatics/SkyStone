@@ -74,7 +74,7 @@ public class ExMoveFoundationandPark extends LinearOpMode {
     }
 
     public void execute_foundation() {
-        double forwardParkCenter = parkCenter ? -5:19;
+        double forwardParkCenter = parkCenter ? -3:19;
         double colorDirection = isRed ? -1:1; // flipped because robot is positioned backwards
         double sidePosition = isFoundationSide ? -1:1;
 
