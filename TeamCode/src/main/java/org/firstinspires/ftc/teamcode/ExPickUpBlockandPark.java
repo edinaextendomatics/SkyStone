@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -16,9 +15,9 @@ public class ExPickUpBlockandPark {
         private ElapsedTime runtime = new ElapsedTime();
         static final double COUNTS_PER_INCH = 98.3606557;
         static final double COUNTS_PER_DEGREE = 100;
-        static final double DRIVE_SPEED = 0.8;
-        static final double up   = 1;
-        static final double down = 0.46;
+        static final double DRIVE_SPEED = 0.9;
+        static final double up   = 0.75;
+        static final double down = 1.25;
         double run_1_Block =0;
         double run_2_Block = run_1_Block+3;
         boolean finalChoices = false;
@@ -47,11 +46,11 @@ public class ExPickUpBlockandPark {
             telemetry.update();
             waitForStart();
             // executes foundation grabbing sequence
-            execute_foundation();
+            execute_block();
         }
 
-        public void execute_foundation() {
-            double forwardParkCenter = parkCenter ? -4:-30;
+        public void execute_block() {
+            double forwardParkCenter = parkCenter ? -4:-28;
             double colorDirection = isRed ? 1:-1;
             double sidePosition = isFoundationSide ? -1:1;
             double first_run_position = 8*run_1_Block;
@@ -90,26 +89,24 @@ public class ExPickUpBlockandPark {
 
             // Sequence initiated
             // first sequence
-            driveForward(DRIVE_SPEED, 30, 5.0);
+            driveForward(DRIVE_SPEED, 29.75, 3.5);
             driveRight(DRIVE_SPEED,-colorDirection*sidePosition*first_run_position, 3);
-            robot.grabberServo_1.setPosition(0);
+            robot.grabberServo_1.setPosition(down);
             sleep(1000);
-            driveRight(DRIVE_SPEED,colorDirection*sidePosition*first_run_position, 3);
             driveForward(DRIVE_SPEED, forwardParkCenter, 4.0);
-            driveRight(DRIVE_SPEED, 48, 5);
-            robot.grabberServo_1.setPosition(0.5);
+            driveRight(DRIVE_SPEED,colorDirection*sidePosition*(first_run_position+48), 6);
+            robot.grabberServo_1.setPosition(0.75);
             sleep(1000);
             driveRight(DRIVE_SPEED, -48, 5);
-            // second sequence
-            driveForward(DRIVE_SPEED, 30, 5.0);
-            driveRight(DRIVE_SPEED,-colorDirection*sidePosition*second_run_position, 3);
-            robot.grabberServo_1.setPosition(0);
-            sleep(1000);
-            driveRight(DRIVE_SPEED,colorDirection*sidePosition*second_run_position, 3);
-            driveForward(DRIVE_SPEED, forwardParkCenter, 4.0);
-            driveRight(DRIVE_SPEED, 48, 5);
-            robot.grabberServo_1.setPosition(0.5);
-            driveRight(DRIVE_SPEED, -24, 3);
+            //second sequence
+            //driveForward(DRIVE_SPEED, 30, 3.5);
+            //driveRight(DRIVE_SPEED,-colorDirection*sidePosition*second_run_position, 5);
+            //robot.grabberServo_1.setPosition(1.25);
+            //sleep(1000);
+            //driveForward(DRIVE_SPEED, forwardParkCenter, 4.0);
+            //driveRight(DRIVE_SPEED,colorDirection*sidePosition*(second_run_position+48), 5);
+            //robot.grabberServo_1.setPosition(0.75);
+            //driveRight(DRIVE_SPEED, -24, 3);
             sleep(500);
 
             telemetry.addData("Path", "Complete");
@@ -119,10 +116,16 @@ public class ExPickUpBlockandPark {
         public void userInput() {
             if (gamepad1.dpad_left){
                 run_1_Block -= 1;
+                if(run_1_Block<=0){
+                    run_1_Block = 0;
+                }
                 telemetry.addData("1st run block number : ",run_1_Block);
             }
             if (gamepad1.dpad_right){
                 run_1_Block += 1;
+                if(run_1_Block>=2){
+                    run_1_Block = 2;
+                }
                 telemetry.addData("1st run block number : ",run_1_Block);
             }
             if (gamepad1.start) {

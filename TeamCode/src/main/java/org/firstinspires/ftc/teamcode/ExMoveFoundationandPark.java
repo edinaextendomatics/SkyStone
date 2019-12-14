@@ -42,7 +42,7 @@ public class ExMoveFoundationandPark extends LinearOpMode {
     static final double COUNTS_PER_INCH = 98.3606557;
     static final double COUNTS_PER_DEGREE = 100;
     static final double DRIVE_SPEED = 0.8;
-    static double up   = 1.5;
+    static double up   = 1;
     static double down = 0;
     static boolean finalChoices = false;
     static boolean isRed = false;
@@ -74,26 +74,64 @@ public class ExMoveFoundationandPark extends LinearOpMode {
     }
 
     public void execute_foundation() {
-        double forwardParkCenter = parkCenter ? -8:18;
+        double forwardParkCenter = parkCenter ? -3:16;
         double colorDirection = isRed ? -1:1; // flipped because robot is positioned backwards
         double sidePosition = isFoundationSide ? -1:1;
 
-        driveRight(DRIVE_SPEED, colorDirection*11.5, 3.0);
-        driveForward(DRIVE_SPEED, -28.5, 5.0);
+        /*
+         * Initialize the drive system variables.
+         * The init() method of the hardware class does all the work here
+         */
+        robot.init(hardwareMap);
+
+        // Send telemetry message to signify robot waiting;
+        telemetry.addData("Status", "Resetting Encoders");    //
+        telemetry.update();
+
+        robot.leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.leftRearDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.rightRearDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        robot.leftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.leftRearDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.rightRearDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        // Send telemetry message to indicate successful Encoder reset
+        telemetry.addData("Path0", "Starting at %7d :%7d :%7d :%7d",
+                robot.leftFrontDrive.getCurrentPosition(),
+                robot.leftRearDrive.getCurrentPosition(),
+                robot.rightFrontDrive.getCurrentPosition(),
+                robot.rightRearDrive.getCurrentPosition());
+
+        telemetry.update();
+
+        // Wait for the game to start (driver presses PLAY)
+        // Note: Reverse movement is obtained by setting a negative distance (not speed)
+        // Orientation is having the back of the bot face away from the drivers, set as close to building site as possible
+
+        // Sequence initiated
+
+        driveRight(DRIVE_SPEED, colorDirection*13.5, 3.0);
+        driveForward(DRIVE_SPEED, -27.5, 5.0);
         robot.foundation_hook.setPosition(down);
         sleep(2000);
-        driveForward(DRIVE_SPEED, 27, 4.5);
+        // slower draging messed up the measurements
+        driveForward(0.3, 32.5, 4.5);
+        /*while(runtime.seconds() < 4.5 && robot.grabberServo_1.getPosition() != down){
+            robot.foundation_hook.setPosition(down);
+        }*/
         robot.foundation_hook.setPosition(up);
         sleep(2000);
-        driveRight(DRIVE_SPEED, -colorDirection*27, 5.0);
-        driveForward(DRIVE_SPEED, -18.5, 3.0);
-        driveRight(DRIVE_SPEED, colorDirection*9, 1.0);
-        // brings foundation hook down so robot can fit under alliance bridge
+        driveRight(DRIVE_SPEED, -colorDirection*(29.5), 5.0);
+        driveForward(DRIVE_SPEED, -16.5, 3.0);
+        driveRight(DRIVE_SPEED, colorDirection*6, 1.0);
+        // brings grabber servo down so robot can fit under alliance bridge
         robot.grabberServo_1.setPosition(1.25);
         sleep(1000);
         // parking sequence
         driveForward(DRIVE_SPEED,forwardParkCenter, 4.0);
-        driveRight(DRIVE_SPEED, sidePosition*colorDirection*24, 5.0);
+        driveRight(DRIVE_SPEED, sidePosition*colorDirection*22, 5.0);
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
