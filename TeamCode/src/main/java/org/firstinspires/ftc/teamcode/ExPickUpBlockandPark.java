@@ -16,8 +16,8 @@ public class ExPickUpBlockandPark {
         static final double COUNTS_PER_INCH = 98.3606557;
         static final double COUNTS_PER_DEGREE = 100;
         static final double DRIVE_SPEED = 0.9;
-        static final double up   = 1;
-        static final double down = 0.46;
+        static final double down   = 1.25;
+        static final double up = 0.75;
         double run_1_Block =0;
         double run_2_Block = run_1_Block+3;
         boolean finalChoices = false;
@@ -50,7 +50,7 @@ public class ExPickUpBlockandPark {
         }
 
         public void execute_block() {
-            double forwardParkCenter = parkCenter ? -4:-29.75;
+            double forwardParkCenter = parkCenter ? -6:-28;
             double colorDirection = isRed ? 1:-1;
             double sidePosition = isFoundationSide ? -1:1;
             double first_run_position = 8*run_1_Block;
@@ -91,22 +91,22 @@ public class ExPickUpBlockandPark {
             // first sequence
             driveForward(DRIVE_SPEED, 29.75, 3.5);
             driveRight(DRIVE_SPEED,-colorDirection*sidePosition*first_run_position, 3);
-            robot.grabberServo_1.setPosition(1.25);
+            robot.grabberServo_1.setPosition(down);
             sleep(1000);
             driveForward(DRIVE_SPEED, forwardParkCenter, 4.0);
             driveRight(DRIVE_SPEED,colorDirection*sidePosition*(first_run_position+48), 6);
-            robot.grabberServo_1.setPosition(0.75);
+            robot.grabberServo_1.setPosition(up);
             sleep(1000);
-            driveRight(DRIVE_SPEED, -48, 5);
+            driveRight(DRIVE_SPEED, -colorDirection*sidePosition*48, 5);
             // second sequence
             driveForward(DRIVE_SPEED, 30, 3.5);
             driveRight(DRIVE_SPEED,-colorDirection*sidePosition*second_run_position, 5);
-            robot.grabberServo_1.setPosition(1.25);
+            robot.grabberServo_1.setPosition(down);
             sleep(1000);
             driveForward(DRIVE_SPEED, forwardParkCenter, 4.0);
             driveRight(DRIVE_SPEED,colorDirection*sidePosition*(second_run_position+48), 5);
-            robot.grabberServo_1.setPosition(0.75);
-            driveRight(DRIVE_SPEED, -24, 3);
+            robot.grabberServo_1.setPosition(up);
+            driveRight(DRIVE_SPEED, -colorDirection*sidePosition*24, 3);
             sleep(500);
 
             telemetry.addData("Path", "Complete");
