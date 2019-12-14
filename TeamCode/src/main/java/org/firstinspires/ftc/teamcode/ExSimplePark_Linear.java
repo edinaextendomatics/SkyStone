@@ -34,21 +34,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-/**
- * This file provides basic Telop driving for a Pushbot robot.
- * The code is structured as an Iterative OpMode
- *
- * This OpMode uses the common Pushbot hardware class to define the devices on the robot.
- * All device access is managed through the HardwarePushbot class.
- *
- * This particular OpMode executes a basic Tank Drive Teleop for a PushBot
- * It raises and lowers the claw using the Gampad Y and A buttons respectively.
- * It also opens and closes the claws slowly using the left and right Bumper buttons.
- *
- * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
- * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
- */
-
 @Autonomous(name="Linear Simple Park", group="Autonomous Park")
 public class ExSimplePark_Linear extends LinearOpMode {
 
@@ -73,7 +58,7 @@ public class ExSimplePark_Linear extends LinearOpMode {
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
          */
-        robot.init(hardwareMap,true,false,false, false, false);
+        robot.init(hardwareMap,true,false,false, true, true);
         // Send telemetry message to signify robot waiting;
         while (!finalChoices)
         {
@@ -90,15 +75,22 @@ public class ExSimplePark_Linear extends LinearOpMode {
         telemetry.addData("Say", parkMessage);
         telemetry.update();
         waitForStart();
+
+        // set grabber down
+        robot.grabberServo_1.setPosition(1.25);
+        sleep(200);
         // drive to center or side!
+        robot.grabberServo_1.setPosition(1.25);
+        sleep(2500);
+        robot.foundation_hook.setPosition(0);
+        sleep(500);
         robot.setPowerForward(1);
         runtime.reset();
-        while (runtime.seconds() < forwardDriveTime * (parkCenter ? 1:0.2)) {
+        while (runtime.seconds() < forwardDriveTime * (parkCenter ? 0.8:0.1)) {
             telemetry.addData("Path", "Forward Drive: %2.5f S Elapsed", runtime.seconds());
             telemetry.update();
         }
         robot.setPowerForward(0);
-
         // drive right or left
         double colorDirection = isRed ? 1:-1;
         double sidePosition = isFoundationSide ? -1:1;

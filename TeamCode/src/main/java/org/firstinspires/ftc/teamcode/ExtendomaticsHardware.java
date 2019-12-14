@@ -37,22 +37,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-/**
- * This is NOT an opmode.
- *
- * This class can be used to define all the specific hardware for a single robot.
- * In this case that robot is a Pushbot.
- * See PushbotTeleopTank_Iterative and others classes starting with "Pushbot" for usage examples.
- *
- * This hardware class assumes the following device names have been configured on the robot:
- * Note:  All names are lower case and some have single spaces between words.
- *
- * Motor channel:  Left  drive motor:        "left_drive"
- * Motor channel:  Right drive motor:        "right_drive"
- * Motor channel:  Manipulator drive motor:  "left_arm"
- * Servo channel:  Servo to open left claw:  "left_hand"
- * Servo channel:  Servo to open right claw: "right_hand"
- */
 public class ExtendomaticsHardware
 {
     Telemetry telemetry;
@@ -67,9 +51,8 @@ public class ExtendomaticsHardware
     public DcMotor  grabber = null;
     public Servo    foundation_hook = null;
     public Servo    grabberServo_1 = null;
-    public Servo    grabberServo_2 = null;
-
-    public static double INITIAL_SERVO_POSITION = 0.0;
+    public static double INITIAL_SERVO_POSITION = 0;
+    public static double INITIAL_FOUNDATION_SERVO_POSITION = 1;
 
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
@@ -157,13 +140,11 @@ public class ExtendomaticsHardware
         }
         if (initfoundation_hook) {
             foundation_hook = hwMap.get(Servo.class, "foundation_hook");
-            foundation_hook.setPosition(INITIAL_SERVO_POSITION);
+            foundation_hook.setPosition(INITIAL_FOUNDATION_SERVO_POSITION);
         }
         if (initGrabberServos) {
             grabberServo_1 = hwMap.get(Servo.class, "grabberServo_1");
-            grabberServo_2 = hwMap.get(Servo.class, "grabberServo_2");
-            grabberServo_1.setPosition(INITIAL_SERVO_POSITION);
-            grabberServo_2.setPosition(INITIAL_SERVO_POSITION);
+            //grabberServo_1.setPosition(INITIAL_SERVO_POSITION);
         }
 
     }

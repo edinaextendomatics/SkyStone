@@ -33,21 +33,6 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.Range;
 
-/**
- * This file provides basic Telop driving for a Pushbot robot.
- * The code is structured as an Iterative OpMode
- *
- * This OpMode uses the common Pushbot hardware class to define the devices on the robot.
- * All device access is managed through the HardwarePushbot class.
- *
- * This particular OpMode executes a basic Tank Drive Teleop for a PushBot
- * It raises and lowers the claw using the Gampad Y and A buttons respectively.
- * It also opens and closes the claws slowly using the left and right Bumper buttons.
- *
- * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
- * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
- */
-
 @TeleOp(name="Pushbot:Extendomatic TeleOp", group="Pushbot")
 public class ExtendomaticsBot_TeleOp extends OpMode{
 
@@ -59,10 +44,12 @@ public class ExtendomaticsBot_TeleOp extends OpMode{
     static final double Grabber_Power = 1;
     static final double LIFT_MAX_EXTENSION_LIMIT = 460;
     static final double LIFT_DOWN_POWER_FACTOR = 0.2;
-    static final double INCREMENT   = 0.02;
-    static final double MAX_POS     =  1.0; // Initial Position
-    static final double MIN_POS     =  0.0; // Closed/Hooked Position
-    static final int CYCLE_MS       =   50;
+    static final double MAX_GRABBER_POS     =  1.25; // Initial Position
+    static final double MIN_GRABBER_POS     =  0.0; // Closed/Hooked Position
+    static final double MAX_DRAGGER_POS     =  1.0;
+    static final double MIN_DRAGGER_POS     =  0;
+    double target_dragger_position = MIN_DRAGGER_POS;
+    double target_grabber_position = MIN_GRABBER_POS;
 
     static final boolean isDriveEnabled = true;
     static final boolean isLiftEnabled = true;
@@ -76,8 +63,22 @@ public class ExtendomaticsBot_TeleOp extends OpMode{
          * The init() method of the hardware class does all the work here
          */
         robot.init(super.hardwareMap, isDriveEnabled, isGrabberEnabled, isLiftEnabled, isFoundationHookEnabled, isGrabberServosEnabled);
+
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Say", "Hello, Good Luck!");
+        if (isFoundationHookEnabled)
+        {
+            telemetry.addData("Say","dragger position %.2f",robot.foundation_hook.getPosition());
+            target_dragger_position = robot.foundation_hook.getPosition();
+            //robot.foundation_hook.setPosition(MAX_DRAGGER_POS);
+            //telemetry.addData("Say","dragger position %.2f",robot.foundation_hook.getPosition());
+        }
+        if (isGrabberServosEnabled)
+        {
+            telemetry.addData("Say","grabber position %.2f",robot.grabberServo_1.getPosition());
+            target_grabber_position = robot.grabberServo_1.getPosition();
+            //robot.grabberServo_1.setPosition(target_grabber_position);
+        }
     }
 
     /*
@@ -110,29 +111,49 @@ public class ExtendomaticsBot_TeleOp extends OpMode{
     }
 
     private void RunFoundationHook() {
-        double foundation_hook_position = 0;
-        if(gamepad2.dpad_down = true) {
-            foundation_hook_position -= INCREMENT;
-        }
-        else if(gamepad2.dpad_up = true) {
-            foundation_hook_position += INCREMENT;
-        }
-        foundation_hook_position = Range.clip(foundation_hook_position, MIN_POS, MAX_POS);
-        robot.foundation_hook.setPosition(foundation_hook_position);
-        telemetry.addData("foundation hook position : ", "%.2f", foundation_hook_position);
+        double INCREMENT = 0.05;
+        double current_dragger_position = robot.foundation_hook.getPosition();
+//        if (Math.abs(current_dragger_position - target_dragger_position )<=INCREMENT*0.5)
+//        {
+
+            if(gamepad1.dpad_down) {
+                target_dragger_position -= INCREMENT;
+            }
+            else if(gamepad1.dpad_up) {
+                target_dragger_position += INCREMENT;
+            }
+ //           telemetry.addData("foundation", "dragger taking input");
+            target_dragger_position = Range.clip(target_dragger_position, MIN_DRAGGER_POS, MAX_DRAGGER_POS);
+            robot.foundation_hook.setPosition(target_dragger_position);
+
+ //       }
+ //       else
+ //       {
+ //           telemetry.addData("foundation", "dragger NOT taking input");
+ //       }
+        telemetry.addData("foundation", "dragger current %.2f target %.2f", current_dragger_position,target_dragger_position);
     }
 
     private void RunGrabberServos() {
-        double grabber_servos_position = 0;
-        if(gamepad2.left_trigger > 0 && gamepad2.right_trigger <=0) {
-            grabber_servos_position -= INCREMENT;
-        } else if (gamepad2.right_trigger > 0 && gamepad2.left_trigger <=0){
-            grabber_servos_position += INCREMENT;
-        }
-        grabber_servos_position = Range.clip(grabber_servos_position, MIN_POS, MAX_POS);
-        robot.grabberServo_1.setPosition(grabber_servos_position);
-        robot.grabberServo_2.setPosition(grabber_servos_position);
-        telemetry.addData("grabber servo positons : ", "%.2f", grabber_servos_position);
+        double INCREMENT = 0.05;
+        double current_grabber_position = robot.grabberServo_1.getPosition();
+//        if (Math.abs(current_grabber_position - target_grabber_position )<=INCREMENT*0.5)
+//        {
+            if(gamepad2.dpad_up) {
+                target_grabber_position -= INCREMENT;
+            }
+            else if(gamepad2.dpad_down) {
+                target_grabber_position += INCREMENT;
+            }
+//            telemetry.addData("foundation", "grabber taking input");
+            target_grabber_position = Range.clip(target_grabber_position, MIN_GRABBER_POS, MAX_GRABBER_POS);
+            robot.grabberServo_1.setPosition(target_grabber_position);
+//        }
+//        else
+//        {
+//            telemetry.addData("foundation", "grabber NOT taking input");
+//        }
+        telemetry.addData("foundation", "grabber current %.2f target %.2f", current_grabber_position,target_grabber_position);
     }
 
     private void RunLift() {
