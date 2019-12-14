@@ -74,7 +74,7 @@ public class ExMoveFoundationandPark extends LinearOpMode {
     }
 
     public void execute_foundation() {
-        double forwardParkCenter = parkCenter ? 3:19;
+        double forwardParkCenter = parkCenter ? -3:16;
         double colorDirection = isRed ? -1:1; // flipped because robot is positioned backwards
         double sidePosition = isFoundationSide ? -1:1;
 
@@ -112,25 +112,22 @@ public class ExMoveFoundationandPark extends LinearOpMode {
 
         // Sequence initiated
 
-        driveRight(DRIVE_SPEED, colorDirection*10, 3.0);
+        driveRight(DRIVE_SPEED, colorDirection*13.5, 3.0);
         driveForward(DRIVE_SPEED, -27.5, 5.0);
         robot.foundation_hook.setPosition(down);
         sleep(2000);
-        driveForward(0.3, 26, 4.5);
-        while(runtime.seconds() < 4.5 && robot.grabberServo_1.getPosition() != down){
-            robot.foundation_hook.setPosition(down);
-        }
+        driveForward(0.3, 32.5, 4.5);
         robot.foundation_hook.setPosition(up);
         sleep(2000);
-        driveRight(DRIVE_SPEED, -colorDirection*(28), 5.0);
+        driveRight(DRIVE_SPEED, -colorDirection*(29.5), 5.0);
         driveForward(DRIVE_SPEED, -16.5, 3.0);
-        driveRight(DRIVE_SPEED, colorDirection*4, 1.0);
+        driveRight(DRIVE_SPEED, colorDirection*6, 1.0);
         // brings grabber servo down so robot can fit under alliance bridge
         robot.grabberServo_1.setPosition(1.25);
         sleep(1000);
         // parking sequence
         driveForward(DRIVE_SPEED,forwardParkCenter, 4.0);
-        driveRight(DRIVE_SPEED, sidePosition*colorDirection*20, 5.0);
+        driveRight(DRIVE_SPEED, sidePosition*colorDirection*22, 5.0);
 
         telemetry.addData("Path", "Complete");
         telemetry.update();

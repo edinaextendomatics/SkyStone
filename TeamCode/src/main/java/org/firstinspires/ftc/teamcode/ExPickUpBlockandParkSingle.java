@@ -5,21 +5,19 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-public class ExPickUpBlockandPark {
 
-    @Autonomous(name="ExtendoBot: Block", group="Autonomous")
+    @Autonomous(name="ExtendoBot: Block Single", group="Autonomous")
 
-    public class ExMoveFoundationandPark extends LinearOpMode {
+    public class ExPickUpBlockandParkSingle extends LinearOpMode {
         /* Declare OpMode members. */
         ExtendomaticsHardware robot = new ExtendomaticsHardware(telemetry);
         private ElapsedTime runtime = new ElapsedTime();
         static final double COUNTS_PER_INCH = 98.3606557;
-        static final double COUNTS_PER_DEGREE = 100;
+        double COUNTS_PER_90_DEGREE = -19;
         static final double DRIVE_SPEED = 0.9;
         static final double down   = 1.25;
-        static final double up = 0.75;
-        double run_1_Block =0;
-        double run_2_Block = run_1_Block+3;
+        static final double up = 0;
+        double run_1_Block = 0;
         boolean finalChoices = false;
         boolean isRed = false;
         boolean isFoundationSide = true;
@@ -54,14 +52,7 @@ public class ExPickUpBlockandPark {
             double colorDirection = isRed ? 1:-1;
             double sidePosition = isFoundationSide ? -1:1;
             double first_run_position = 8*run_1_Block;
-            double second_run_position = 8*run_2_Block;
-            /*
-             * Initialize the drive system variables.
-             * The init() method of the hardware class does all the work here
-             */
-            robot.init(hardwareMap);
 
-            // Send telemetry message to signify robot waiting;
             telemetry.addData("Status", "Resetting Encoders");    //
             telemetry.update();
 
@@ -83,30 +74,21 @@ public class ExPickUpBlockandPark {
 
             telemetry.update();
 
-            // Wait for the game to start (driver presses PLAY)
-            // Note: Reverse movement is obtained by setting a negative distance (not speed)
             // Orientation is having the front of the bot face away from the drivers, set 2ft from alliance bridge
-
             // Sequence initiated
-            // first sequence
+
             driveForward(DRIVE_SPEED, 29.75, 3.5);
             driveRight(DRIVE_SPEED,-colorDirection*sidePosition*first_run_position, 3);
             robot.grabberServo_1.setPosition(down);
             sleep(1000);
             driveForward(DRIVE_SPEED, forwardParkCenter, 4.0);
-            driveRight(DRIVE_SPEED,colorDirection*sidePosition*(first_run_position+48), 6);
+            turnRight(DRIVE_SPEED, colorDirection*sidePosition*90, 2);
+            driveForward(DRIVE_SPEED,-colorDirection*sidePosition*(first_run_position+48), 6);
             robot.grabberServo_1.setPosition(up);
             sleep(1000);
-            driveRight(DRIVE_SPEED, -colorDirection*sidePosition*48, 5);
-            // second sequence
-            driveForward(DRIVE_SPEED, 30, 3.5);
-            driveRight(DRIVE_SPEED,-colorDirection*sidePosition*second_run_position, 5);
+            driveForward(DRIVE_SPEED, colorDirection*sidePosition*8, 1);
             robot.grabberServo_1.setPosition(down);
-            sleep(1000);
-            driveForward(DRIVE_SPEED, forwardParkCenter, 4.0);
-            driveRight(DRIVE_SPEED,colorDirection*sidePosition*(second_run_position+48), 5);
-            robot.grabberServo_1.setPosition(up);
-            driveRight(DRIVE_SPEED, -colorDirection*sidePosition*24, 3);
+            driveForward(DRIVE_SPEED, colorDirection*sidePosition*20, 3);
             sleep(500);
 
             telemetry.addData("Path", "Complete");
@@ -123,8 +105,8 @@ public class ExPickUpBlockandPark {
             }
             if (gamepad1.dpad_right){
                 run_1_Block += 1;
-                if(run_1_Block>=1){
-                    run_1_Block = 1;
+                if(run_1_Block>=2){
+                    run_1_Block = 2;
                 }
                 telemetry.addData("1st run block number : ",run_1_Block);
             }
@@ -294,10 +276,10 @@ public class ExPickUpBlockandPark {
 
             // Ensure that the opmode is still active
             // Determine new target position, and pass to motor controller
-            newLeftFrontTarget = robot.leftFrontDrive.getCurrentPosition() + (int) (degrees * COUNTS_PER_DEGREE);
-            newRightFrontTarget = robot.rightFrontDrive.getCurrentPosition() + (int) (degrees * COUNTS_PER_DEGREE);
-            newLeftRearTarget = robot.leftRearDrive.getCurrentPosition() + (int) (degrees * COUNTS_PER_DEGREE);
-            newRightRearTarget = robot.rightRearDrive.getCurrentPosition() + (int) (degrees * COUNTS_PER_DEGREE);
+            newLeftFrontTarget = robot.leftFrontDrive.getCurrentPosition() + (int) (degrees * COUNTS_PER_90_DEGREE);
+            newRightFrontTarget = robot.rightFrontDrive.getCurrentPosition() + (int) (degrees * COUNTS_PER_90_DEGREE);
+            newLeftRearTarget = robot.leftRearDrive.getCurrentPosition() + (int) (degrees * COUNTS_PER_90_DEGREE);
+            newRightRearTarget = robot.rightRearDrive.getCurrentPosition() + (int) (degrees * COUNTS_PER_90_DEGREE);
 
             robot.leftFrontDrive.setTargetPosition(newLeftFrontTarget);
             robot.rightFrontDrive.setTargetPosition(newRightFrontTarget);
@@ -349,4 +331,4 @@ public class ExPickUpBlockandPark {
             //  sleep(250);   // optional pause after each move
         }
     }
-}
+
