@@ -123,8 +123,8 @@ public class ExPickUpBlockandPark {
             }
             if (gamepad1.dpad_right){
                 run_1_Block += 1;
-                if(run_1_Block>=2){
-                    run_1_Block = 2;
+                if(run_1_Block>=1){
+                    run_1_Block = 1;
                 }
                 telemetry.addData("1st run block number : ",run_1_Block);
             }

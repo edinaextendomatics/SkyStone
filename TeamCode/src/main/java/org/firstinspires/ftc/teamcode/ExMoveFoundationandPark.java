@@ -117,9 +117,9 @@ public class ExMoveFoundationandPark extends LinearOpMode {
         robot.foundation_hook.setPosition(down);
         sleep(2000);
         driveForward(0.3, 26, 4.5);
-        /*while(runtime.seconds() < 4.5 && robot.grabberServo_1.getPosition() != down){
+        while(runtime.seconds() < 4.5 && robot.grabberServo_1.getPosition() != down){
             robot.foundation_hook.setPosition(down);
-        }*/
+        }
         robot.foundation_hook.setPosition(up);
         sleep(2000);
         driveRight(DRIVE_SPEED, -colorDirection*(28), 5.0);
