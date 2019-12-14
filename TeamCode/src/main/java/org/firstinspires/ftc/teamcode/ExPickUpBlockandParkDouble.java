@@ -52,6 +52,7 @@ public class ExPickUpBlockandParkDouble extends LinearOpMode {
         double colorDirection = isRed ? 1:-1;
         double sidePosition = isFoundationSide ? -1:1;
         double first_run_position = 8*run_1_Block;
+        double second_run_position = 8*(run_1_Block+2);
 
         telemetry.addData("Status", "Resetting Encoders");    //
         telemetry.update();
@@ -76,6 +77,7 @@ public class ExPickUpBlockandParkDouble extends LinearOpMode {
 
         // Orientation is having the front of the bot face away from the drivers, set 2ft from alliance bridge
         // Sequence initiated
+        // first sequence
 
         driveForward(DRIVE_SPEED, 29.75, 3.5);
         driveRight(DRIVE_SPEED,-colorDirection*sidePosition*first_run_position, 3);
@@ -88,9 +90,27 @@ public class ExPickUpBlockandParkDouble extends LinearOpMode {
         sleep(1000);
         driveForward(DRIVE_SPEED, colorDirection*sidePosition*8, 1);
         robot.grabberServo_1.setPosition(down);
-        driveForward(DRIVE_SPEED, colorDirection*sidePosition*20, 3);
+        driveForward(DRIVE_SPEED, colorDirection*sidePosition*(20+24), 3);
+        turnRight(DRIVE_SPEED, -colorDirection*sidePosition*90, 2);
         sleep(500);
 
+        // second sequence
+
+        driveForward(DRIVE_SPEED, 29.75, 3.5);
+        driveRight(DRIVE_SPEED,-colorDirection*sidePosition*(second_run_position), 3);
+        robot.grabberServo_1.setPosition(down);
+        sleep(1000);
+        driveForward(DRIVE_SPEED, forwardParkCenter, 4.0);
+        turnRight(DRIVE_SPEED, colorDirection*sidePosition*90, 2);
+        driveForward(DRIVE_SPEED,-colorDirection*sidePosition*(second_run_position+48), 6);
+        robot.grabberServo_1.setPosition(up);
+        sleep(1000);
+        driveForward(DRIVE_SPEED, colorDirection*sidePosition*8, 1);
+        robot.grabberServo_1.setPosition(down);
+        driveForward(DRIVE_SPEED, colorDirection*sidePosition*(20), 3);
+        turnRight(DRIVE_SPEED, -colorDirection*sidePosition*90, 2);
+        sleep(500);
+        
         telemetry.addData("Path", "Complete");
         telemetry.update();
     }
