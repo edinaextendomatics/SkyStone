@@ -85,7 +85,8 @@ public class ExSimplePark_Linear extends LinearOpMode {
             telemetry.update();
         }
         robot.setPowerForward(0);
-
+        robot.grabberServo_1.setPosition(1.25);
+        sleep(50);
         // drive right or left
         double colorDirection = isRed ? 1:-1;
         double sidePosition = isFoundationSide ? -1:1;
