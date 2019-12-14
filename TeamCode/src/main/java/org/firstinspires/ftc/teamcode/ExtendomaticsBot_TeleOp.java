@@ -46,8 +46,8 @@ public class ExtendomaticsBot_TeleOp extends OpMode{
     static final double LIFT_DOWN_POWER_FACTOR = 0.2;
     static final double MAX_GRABBER_POS     =  1.25; // Initial Position
     static final double MIN_GRABBER_POS     =  0.0; // Closed/Hooked Position
-    static final double MAX_DRAGGER_POS     =  1.2;
-    static final double MIN_DRAGGER_POS     =  0.0;
+    static final double MAX_DRAGGER_POS     =  1.0;
+    static final double MIN_DRAGGER_POS     =  0;
     double target_dragger_position = MIN_DRAGGER_POS;
     double target_grabber_position = MIN_GRABBER_POS;
 
@@ -63,13 +63,15 @@ public class ExtendomaticsBot_TeleOp extends OpMode{
          * The init() method of the hardware class does all the work here
          */
         robot.init(super.hardwareMap, isDriveEnabled, isGrabberEnabled, isLiftEnabled, isFoundationHookEnabled, isGrabberServosEnabled);
+
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Say", "Hello, Good Luck!");
         if (isFoundationHookEnabled)
         {
             telemetry.addData("Say","dragger position %.2f",robot.foundation_hook.getPosition());
             target_dragger_position = robot.foundation_hook.getPosition();
-            //robot.foundation_hook.setPosition(target_dragger_position);
+            //robot.foundation_hook.setPosition(MAX_DRAGGER_POS);
+            //telemetry.addData("Say","dragger position %.2f",robot.foundation_hook.getPosition());
         }
         if (isGrabberServosEnabled)
         {
