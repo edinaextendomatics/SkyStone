@@ -14,8 +14,9 @@ public class ExPickUpBlockandPark {
         ExtendomaticsHardware robot = new ExtendomaticsHardware(telemetry);
         private ElapsedTime runtime = new ElapsedTime();
         static final double COUNTS_PER_INCH = 98.3606557;
-        static final double COUNTS_PER_DEGREE = 100;
+        static final double COUNTS_PER_DEGREE = -19;
         static final double DRIVE_SPEED = 0.9;
+        static final double TURN_SPEED = 0.65;
         static final double up   = 0.75;
         static final double down = 1.25;
         double run_1_Block =0;
@@ -55,11 +56,6 @@ public class ExPickUpBlockandPark {
             double sidePosition = isFoundationSide ? -1:1;
             double first_run_position = 8*run_1_Block;
             double second_run_position = 8*run_2_Block;
-            /*
-             * Initialize the drive system variables.
-             * The init() method of the hardware class does all the work here
-             */
-            robot.init(hardwareMap);
 
             // Send telemetry message to signify robot waiting;
             telemetry.addData("Status", "Resetting Encoders");    //
@@ -94,20 +90,14 @@ public class ExPickUpBlockandPark {
             robot.grabberServo_1.setPosition(down);
             sleep(1000);
             driveForward(DRIVE_SPEED, forwardParkCenter, 4.0);
-            driveRight(DRIVE_SPEED,colorDirection*sidePosition*(first_run_position+48), 6);
-            robot.grabberServo_1.setPosition(0.75);
+            turnRight(TURN_SPEED,colorDirection*sidePosition*90,4);
+            driveForward(DRIVE_SPEED,colorDirection*sidePosition*(first_run_position+48), 6);
+            robot.grabberServo_1.setPosition(up);
             sleep(1000);
-            driveRight(DRIVE_SPEED, -48, 5);
-            //second sequence
-            //driveForward(DRIVE_SPEED, 30, 3.5);
-            //driveRight(DRIVE_SPEED,-colorDirection*sidePosition*second_run_position, 5);
-            //robot.grabberServo_1.setPosition(1.25);
-            //sleep(1000);
-            //driveForward(DRIVE_SPEED, forwardParkCenter, 4.0);
-            //driveRight(DRIVE_SPEED,colorDirection*sidePosition*(second_run_position+48), 5);
-            //robot.grabberServo_1.setPosition(0.75);
-            //driveRight(DRIVE_SPEED, -24, 3);
-            sleep(500);
+            driveForward(DRIVE_SPEED,colorDirection*sidePosition*(-4), 1);
+            robot.grabberServo_1.setPosition(down);
+            sleep(1000);
+            driveForward(DRIVE_SPEED,colorDirection*sidePosition*(-20), 1);
 
             telemetry.addData("Path", "Complete");
             telemetry.update();

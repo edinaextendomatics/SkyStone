@@ -58,7 +58,7 @@ public class ExSimplePark_Linear extends LinearOpMode {
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
          */
-        robot.init(hardwareMap,true,false,false, false, true);
+        robot.init(hardwareMap,true,false,false, true, true);
         // Send telemetry message to signify robot waiting;
         while (!finalChoices)
         {
@@ -78,16 +78,16 @@ public class ExSimplePark_Linear extends LinearOpMode {
 
         // set grabber down
         robot.grabberServo_1.setPosition(1.25);
-        sleep(200);
+        sleep(2000);
         // drive to center or side!
         robot.setPowerForward(1);
         runtime.reset();
-        while (runtime.seconds() < forwardDriveTime * (parkCenter ? 1:0.2)) {
+        while (runtime.seconds() < forwardDriveTime * (parkCenter ? 0.85:0.15)) {
             telemetry.addData("Path", "Forward Drive: %2.5f S Elapsed", runtime.seconds());
             telemetry.update();
         }
         robot.setPowerForward(0);
-
+        robot.foundation_hook.setPosition(1.2);
         // drive right or left
         double colorDirection = isRed ? 1:-1;
         double sidePosition = isFoundationSide ? -1:1;
