@@ -18,7 +18,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
         static final double down   = 1.25;
         static final double up = 0.75;
         double run_1_Block = 0;
-        double run_2_Block = run_1_Block+3;
+        static final double up   = 0.75;
+        static final double down = 1.25;
+        static final double run_1_Block = 0;
         boolean finalChoices = false;
         boolean isRed = false;
         boolean isFoundationSide = true;
@@ -49,11 +51,10 @@ import com.qualcomm.robotcore.util.ElapsedTime;
         }
 
         public void execute_block() {
-            double forwardParkCenter = parkCenter ? -6:-28;
+            double forwardParkCenter = parkCenter ? -4:-28;
             double colorDirection = isRed ? 1:-1;
             double sidePosition = isFoundationSide ? -1:1;
             double first_run_position = 8*run_1_Block;
-            double second_run_position = 8*run_2_Block;
 
             // Send telemetry message to signify robot waiting;
             telemetry.addData("Status", "Resetting Encoders");    //
@@ -96,16 +97,15 @@ import com.qualcomm.robotcore.util.ElapsedTime;
             robot.grabberServo_1.setPosition(down);
             driveForward(DRIVE_SPEED, colorDirection*sidePosition*20, 3);
             sleep(500);
-            // second sequence
-            driveForward(DRIVE_SPEED, 30, 3.5);
-            driveRight(DRIVE_SPEED,-colorDirection*sidePosition*second_run_position, 5);
-            robot.grabberServo_1.setPosition(down);
-            sleep(1000);
-            driveForward(DRIVE_SPEED, forwardParkCenter, 4.0);
-            turnRight(DRIVE_SPEED, colorDirection*sidePosition*90, 2);
-            driveForward(DRIVE_SPEED,colorDirection*sidePosition*(second_run_position+48), 5);
-            robot.grabberServo_1.setPosition(up);
-            driveForward(DRIVE_SPEED, -colorDirection*sidePosition*24, 3);
+            //second sequence
+            //driveForward(DRIVE_SPEED, 30, 3.5);
+            //driveRight(DRIVE_SPEED,-colorDirection*sidePosition*second_run_position, 5);
+            //robot.grabberServo_1.setPosition(1.25);
+            //sleep(1000);
+            //driveForward(DRIVE_SPEED, forwardParkCenter, 4.0);
+            //driveRight(DRIVE_SPEED,colorDirection*sidePosition*(second_run_position+48), 5);
+            //robot.grabberServo_1.setPosition(0.75);
+            //driveRight(DRIVE_SPEED, -24, 3);
             sleep(500);
 
             telemetry.addData("Path", "Complete");

@@ -50,7 +50,7 @@ public class ExMoveFoundationandPark extends LinearOpMode {
     static boolean parkCenter = true;
 
     public void runOpMode(){
-
+        finalChoices = false;
         robot.init(hardwareMap, true, false, false, true, true);
 
         while (!finalChoices)
@@ -117,6 +117,11 @@ public class ExMoveFoundationandPark extends LinearOpMode {
         robot.foundation_hook.setPosition(down);
         sleep(2000);
         driveForward(0.3, 32.5, 4.5);
+        // slower draging messed up the measurements
+        driveForward(0.3, 32.5, 4.5);
+        /*while(runtime.seconds() < 4.5 && robot.grabberServo_1.getPosition() != down){
+            robot.foundation_hook.setPosition(down);
+        }*/
         robot.foundation_hook.setPosition(up);
         sleep(2000);
         driveRight(DRIVE_SPEED, -colorDirection*(29.5), 5.0);
@@ -134,6 +139,7 @@ public class ExMoveFoundationandPark extends LinearOpMode {
     }
 
     public void userInput() {
+
         if (gamepad1.start) {
             parkCenter = true;
         }

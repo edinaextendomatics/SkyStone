@@ -77,6 +77,8 @@ public class ExSimplePark_Linear extends LinearOpMode {
         waitForStart();
 
         // set grabber down
+        robot.grabberServo_1.setPosition(1.25);
+        sleep(200);
         // drive to center or side!
         robot.grabberServo_1.setPosition(1.25);
         sleep(2500);
