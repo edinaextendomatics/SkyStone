@@ -96,8 +96,8 @@ public class ExPickUpBlockandParkDouble extends LinearOpMode {
 
         // second sequence
 
-        driveForward(DRIVE_SPEED, 29.75, 3.5);
         driveRight(DRIVE_SPEED,-colorDirection*sidePosition*(second_run_position), 3);
+        driveForward(DRIVE_SPEED, -forwardParkCenter, 3.5);
         robot.grabberServo_1.setPosition(down);
         sleep(1000);
         driveForward(DRIVE_SPEED, forwardParkCenter, 4.0);
@@ -110,7 +110,7 @@ public class ExPickUpBlockandParkDouble extends LinearOpMode {
         driveForward(DRIVE_SPEED, colorDirection*sidePosition*(20), 3);
         turnRight(DRIVE_SPEED, -colorDirection*sidePosition*90, 2);
         sleep(500);
-        
+
         telemetry.addData("Path", "Complete");
         telemetry.update();
     }

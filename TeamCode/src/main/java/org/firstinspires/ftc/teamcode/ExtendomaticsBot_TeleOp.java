@@ -236,7 +236,7 @@ public class ExtendomaticsBot_TeleOp extends OpMode{
         } else if(gamepad1.left_trigger == 1){
             TriggerInput = 0.5;
         }  else{
-            TriggerInput = 0.75;
+            TriggerInput = 0.9;
         }
 
         // use X, Y, & Z to set power for each of the motors
