@@ -80,9 +80,12 @@ public class ExSimplePark_Linear extends LinearOpMode {
         robot.grabberServo_1.setPosition(1.25);
         sleep(2000);
         // drive to center or side!
+        robot.grabberServo_1.setPosition(1.25);
+        sleep(2500);
+        sleep(500);
         robot.setPowerForward(1);
         runtime.reset();
-        while (runtime.seconds() < forwardDriveTime * (parkCenter ? 0.85:0.15)) {
+        while (runtime.seconds() < forwardDriveTime * (parkCenter ? 0.8:0.1)) {
             telemetry.addData("Path", "Forward Drive: %2.5f S Elapsed", runtime.seconds());
             telemetry.update();
         }

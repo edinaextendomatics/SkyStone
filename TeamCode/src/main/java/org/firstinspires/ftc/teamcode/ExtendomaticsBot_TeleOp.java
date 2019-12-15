@@ -139,7 +139,6 @@ public class ExtendomaticsBot_TeleOp extends OpMode{
         double current_grabber_position = robot.grabberServo_1.getPosition();
 //        if (Math.abs(current_grabber_position - target_grabber_position )<=INCREMENT*0.5)
 //        {
-
             if(gamepad2.dpad_up) {
                 target_grabber_position -= INCREMENT;
             }

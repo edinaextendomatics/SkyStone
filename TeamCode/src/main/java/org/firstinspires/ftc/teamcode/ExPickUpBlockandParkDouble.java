@@ -1,57 +1,31 @@
-/* Copyright (c) 2017 FIRST. All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted (subject to the limitations in the disclaimer below) provided that
- * the following conditions are met:
- *
- * Redistributions of source code must retain the above copyright notice, this list
- * of conditions and the following disclaimer.
- *
- * Redistributions in binary form must reproduce the above copyright notice, this
- * list of conditions and the following disclaimer in the documentation and/or
- * other materials provided with the distribution.
- *
- * Neither the name of FIRST nor the names of its contributors may be used to endorse or
- * promote products derived from this software without specific prior written permission.
- *
- * NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE GRANTED BY THIS
- * LICENSE. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-
 package org.firstinspires.ftc.teamcode;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@Autonomous(name="ExtendoBot: Foundation", group="Autonomous")
-public class ExMoveFoundationandPark extends LinearOpMode {
+
+@Autonomous(name="ExtendoBot: Block Double", group="Autonomous")
+
+public class ExPickUpBlockandParkDouble extends LinearOpMode {
     /* Declare OpMode members. */
     ExtendomaticsHardware robot = new ExtendomaticsHardware(telemetry);
     private ElapsedTime runtime = new ElapsedTime();
     static final double COUNTS_PER_INCH = 98.3606557;
-    static final double COUNTS_PER_DEGREE = 100;
-    static final double DRIVE_SPEED = 0.8;
-    static double up   = 1;
-    static double down = 0;
-    static boolean finalChoices = false;
-    static boolean isRed = false;
-    static boolean isFoundationSide = true;
-    static boolean parkCenter = true;
+    double COUNTS_PER_90_DEGREE = -19;
+    static final double DRIVE_SPEED = 0.9;
+    static final double down   = 1.25;
+    static final double up = 0;
+    double run_1_Block = 0;
+    boolean finalChoices = false;
+    boolean isRed = false;
+    boolean isFoundationSide = true;
+    boolean parkCenter = true;
 
     public void runOpMode(){
-        finalChoices = false;
-        robot.init(hardwareMap, true, false, false, true, true);
+
+        robot.init(hardwareMap, true, false, false, false, true);
 
         while (!finalChoices)
         {
@@ -70,15 +44,16 @@ public class ExMoveFoundationandPark extends LinearOpMode {
         telemetry.update();
         waitForStart();
         // executes foundation grabbing sequence
-        execute_foundation();
+        execute_block();
     }
 
-    public void execute_foundation() {
-        double forwardParkCenter = parkCenter ? -3:17.5;
-        double colorDirection = isRed ? -1:1; // flipped because robot is positioned backwards
+    public void execute_block() {
+        double forwardParkCenter = parkCenter ? -6:-28;
+        double colorDirection = isRed ? 1:-1;
         double sidePosition = isFoundationSide ? -1:1;
+        double first_run_position = 8*run_1_Block;
+        double second_run_position = 8*(run_1_Block+2);
 
-        // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Resetting Encoders");    //
         telemetry.update();
 
@@ -100,42 +75,61 @@ public class ExMoveFoundationandPark extends LinearOpMode {
 
         telemetry.update();
 
-        // Wait for the game to start (driver presses PLAY)
-        // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        // Orientation is having the back of the bot face away from the drivers, set as close to building site as possible
-
+        // Orientation is having the front of the bot face away from the drivers, set 2ft from alliance bridge
         // Sequence initiated
-        double redStartAdjustment= isRed ? 2 : 0;
-        driveRight(DRIVE_SPEED, colorDirection*13.5+redStartAdjustment, 3.0);
-        driveForward(DRIVE_SPEED, -27.5, 5.0);
-        robot.foundation_hook.setPosition(down);
-        sleep(2000);
+        // first sequence
 
-        driveForward(0.3, 32.5, 4.5);
-        robot.foundation_hook.setPosition(up);
-        sleep(2000);
-        driveRight(DRIVE_SPEED, -colorDirection*(29.5), 5.0);
-        double redCenter = isRed ? -6 : 0;
-        driveForward(DRIVE_SPEED, -16.5+redCenter, 5.0);
-        double redPush = isRed ? colorDirection*18 : 0;
-        driveRight(DRIVE_SPEED, colorDirection*6+redPush, 6.0);
-        // brings grabber servo down so robot can fit under alliance bridge
-        robot.grabberServo_1.setPosition(1.25);
+        driveForward(DRIVE_SPEED, 29.75, 3.5);
+        driveRight(DRIVE_SPEED,-colorDirection*sidePosition*first_run_position, 3);
+        robot.grabberServo_1.setPosition(down);
         sleep(1000);
-        // parking sequence
-        if (isRed)
-        {
-            forwardParkCenter = forwardParkCenter+9;
-        }
-        driveForward(DRIVE_SPEED,forwardParkCenter, 5.0);
-        driveRight(DRIVE_SPEED, sidePosition*colorDirection*22, 5.0);
+        driveForward(DRIVE_SPEED, forwardParkCenter, 4.0);
+        turnRight(DRIVE_SPEED, colorDirection*sidePosition*90, 2);
+        driveForward(DRIVE_SPEED,-colorDirection*sidePosition*(first_run_position+48), 6);
+        robot.grabberServo_1.setPosition(up);
+        sleep(1000);
+        driveForward(DRIVE_SPEED, colorDirection*sidePosition*8, 1);
+        robot.grabberServo_1.setPosition(down);
+        driveForward(DRIVE_SPEED, colorDirection*sidePosition*(20+24), 3);
+        turnRight(DRIVE_SPEED, -colorDirection*sidePosition*90, 2);
+        sleep(500);
 
+        // second sequence
+
+        driveForward(DRIVE_SPEED, 29.75, 3.5);
+        driveRight(DRIVE_SPEED,-colorDirection*sidePosition*(second_run_position), 3);
+        robot.grabberServo_1.setPosition(down);
+        sleep(1000);
+        driveForward(DRIVE_SPEED, forwardParkCenter, 4.0);
+        turnRight(DRIVE_SPEED, colorDirection*sidePosition*90, 2);
+        driveForward(DRIVE_SPEED,-colorDirection*sidePosition*(second_run_position+48), 6);
+        robot.grabberServo_1.setPosition(up);
+        sleep(1000);
+        driveForward(DRIVE_SPEED, colorDirection*sidePosition*8, 1);
+        robot.grabberServo_1.setPosition(down);
+        driveForward(DRIVE_SPEED, colorDirection*sidePosition*(20), 3);
+        turnRight(DRIVE_SPEED, -colorDirection*sidePosition*90, 2);
+        sleep(500);
+        
         telemetry.addData("Path", "Complete");
         telemetry.update();
     }
 
     public void userInput() {
-
+        if (gamepad1.dpad_left){
+            run_1_Block -= 1;
+            if(run_1_Block<=0){
+                run_1_Block = 0;
+            }
+            telemetry.addData("1st run block number : ",run_1_Block);
+        }
+        if (gamepad1.dpad_right){
+            run_1_Block += 1;
+            if(run_1_Block>=2){
+                run_1_Block = 2;
+            }
+            telemetry.addData("1st run block number : ",run_1_Block);
+        }
         if (gamepad1.start) {
             parkCenter = true;
         }
@@ -302,10 +296,10 @@ public class ExMoveFoundationandPark extends LinearOpMode {
 
         // Ensure that the opmode is still active
         // Determine new target position, and pass to motor controller
-        newLeftFrontTarget = robot.leftFrontDrive.getCurrentPosition() + (int) (degrees * COUNTS_PER_DEGREE);
-        newRightFrontTarget = robot.rightFrontDrive.getCurrentPosition() + (int) (degrees * COUNTS_PER_DEGREE);
-        newLeftRearTarget = robot.leftRearDrive.getCurrentPosition() + (int) (degrees * COUNTS_PER_DEGREE);
-        newRightRearTarget = robot.rightRearDrive.getCurrentPosition() + (int) (degrees * COUNTS_PER_DEGREE);
+        newLeftFrontTarget = robot.leftFrontDrive.getCurrentPosition() + (int) (degrees * COUNTS_PER_90_DEGREE);
+        newRightFrontTarget = robot.rightFrontDrive.getCurrentPosition() + (int) (degrees * COUNTS_PER_90_DEGREE);
+        newLeftRearTarget = robot.leftRearDrive.getCurrentPosition() + (int) (degrees * COUNTS_PER_90_DEGREE);
+        newRightRearTarget = robot.rightRearDrive.getCurrentPosition() + (int) (degrees * COUNTS_PER_90_DEGREE);
 
         robot.leftFrontDrive.setTargetPosition(newLeftFrontTarget);
         robot.rightFrontDrive.setTargetPosition(newRightFrontTarget);
@@ -357,3 +351,4 @@ public class ExMoveFoundationandPark extends LinearOpMode {
         //  sleep(250);   // optional pause after each move
     }
 }
+
