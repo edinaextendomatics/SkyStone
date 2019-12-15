@@ -78,11 +78,10 @@ public class ExSimplePark_Linear extends LinearOpMode {
 
         // set grabber down
         robot.grabberServo_1.setPosition(1.25);
-        sleep(200);
+        sleep(2000);
         // drive to center or side!
         robot.grabberServo_1.setPosition(1.25);
         sleep(2500);
-        robot.foundation_hook.setPosition(0);
         sleep(500);
         robot.setPowerForward(1);
         runtime.reset();
@@ -91,6 +90,7 @@ public class ExSimplePark_Linear extends LinearOpMode {
             telemetry.update();
         }
         robot.setPowerForward(0);
+        robot.foundation_hook.setPosition(1.2);
         // drive right or left
         double colorDirection = isRed ? 1:-1;
         double sidePosition = isFoundationSide ? -1:1;

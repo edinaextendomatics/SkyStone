@@ -13,6 +13,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
         ExtendomaticsHardware robot = new ExtendomaticsHardware(telemetry);
         private ElapsedTime runtime = new ElapsedTime();
         static final double COUNTS_PER_INCH = 98.3606557;
+
         double COUNTS_PER_90_DEGREE = -19;
         static final double DRIVE_SPEED = 0.9;
         static final double down   = 1.25;
@@ -52,7 +53,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
             double colorDirection = isRed ? 1:-1;
             double sidePosition = isFoundationSide ? -1:1;
             double first_run_position = 8*run_1_Block;
-
             telemetry.addData("Status", "Resetting Encoders");    //
             telemetry.update();
 
@@ -90,7 +90,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
             robot.grabberServo_1.setPosition(down);
             driveForward(DRIVE_SPEED, colorDirection*sidePosition*20, 3);
             sleep(500);
-
             telemetry.addData("Path", "Complete");
             telemetry.update();
         }
