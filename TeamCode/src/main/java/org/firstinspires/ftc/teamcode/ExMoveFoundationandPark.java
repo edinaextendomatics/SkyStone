@@ -117,11 +117,11 @@ public class ExMoveFoundationandPark extends LinearOpMode {
         driveRight(DRIVE_SPEED, -colorDirection*(29.5), 5.0);
         double redCenter = isRed ? -6 : 0;
         driveForward(DRIVE_SPEED, -16.5+redCenter, 5.0);
-        double redPush = isRed ? colorDirection*18 : 0;
+        double redPush = isRed ? colorDirection*11 : 0;
         driveRight(DRIVE_SPEED, colorDirection*6+redPush, 6.0);
         // brings grabber servo down so robot can fit under alliance bridge
         robot.grabberServo_1.setPosition(1.25);
-        sleep(1000);
+        sleep(2000);
         // parking sequence
         if (isRed)
         {
